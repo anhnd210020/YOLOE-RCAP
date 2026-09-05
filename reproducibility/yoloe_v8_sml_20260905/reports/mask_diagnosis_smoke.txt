@@ -1,0 +1,285 @@
+Synthetic OpenCV channel checks: {"1": {"success": true, "output_shape": [4, 6]}, "300": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "512": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "513": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "1000": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}}
+Diagnosis call: model.val(**{'data': 'ultralytics/cfg/datasets/lvis.yaml', 'imgsz': 640, 'batch': 1, 'split': 'minival', 'rect': False, 'conf': 0.001, 'iou': 0.7, 'max_det': 1000, 'save_json': True, 'half': False, 'load_vp': False, 'device': 0, 'project': '/workspace/YOLOE-RCAP/baseline_logs', 'name': 'mask_diagnosis_one_image', 'exist_ok': False})
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+Validate using the text prompt.
+Build text model mobileclip:blt
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+YOLOe-v8s-seg summary (fused): 239 layers, 14,095,097 parameters, 81,312 gradients, 42.5 GFLOPs
+[34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017...:   0%|          | 0/4809 [00:00<?, ?it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 154 images, 1 backgrounds, 0 corrupt:   3%|▎         | 155/4809 [00:00<00:03, 1541.91it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 313 images, 2 backgrounds, 0 corrupt:   7%|▋         | 315/4809 [00:00<00:02, 1572.85it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 467 images, 6 backgrounds, 0 corrupt:  10%|▉         | 473/4809 [00:00<00:02, 1574.41it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 624 images, 8 backgrounds, 0 corrupt:  13%|█▎        | 632/4809 [00:00<00:02, 1574.71it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 781 images, 9 backgrounds, 0 corrupt:  16%|█▋        | 790/4809 [00:00<00:02, 1539.79it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 940 images, 11 backgrounds, 0 corrupt:  20%|█▉        | 951/4809 [00:00<00:02, 1557.69it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1093 images, 14 backgrounds, 0 corrupt:  23%|██▎       | 1107/4809 [00:00<00:02, 1547.33it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1247 images, 15 backgrounds, 0 corrupt:  26%|██▌       | 1262/4809 [00:00<00:02, 1526.74it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1400 images, 16 backgrounds, 0 corrupt:  29%|██▉       | 1416/4809 [00:00<00:02, 1527.21it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1551 images, 18 backgrounds, 0 corrupt:  33%|███▎      | 1569/4809 [00:01<00:02, 1501.41it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1703 images, 20 backgrounds, 0 corrupt:  36%|███▌      | 1723/4809 [00:01<00:02, 1508.57it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 1858 images, 23 backgrounds, 0 corrupt:  39%|███▉      | 1881/4809 [00:01<00:01, 1524.76it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2025 images, 25 backgrounds, 0 corrupt:  43%|████▎     | 2050/4809 [00:01<00:01, 1564.38it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2183 images, 29 backgrounds, 0 corrupt:  46%|████▌     | 2212/4809 [00:01<00:01, 1580.01it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2362 images, 33 backgrounds, 0 corrupt:  50%|████▉     | 2395/4809 [00:01<00:01, 1651.04it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2528 images, 33 backgrounds, 0 corrupt:  53%|█████▎    | 2561/4809 [00:01<00:01, 1641.72it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2721 images, 36 backgrounds, 0 corrupt:  57%|█████▋    | 2757/4809 [00:01<00:01, 1735.55it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 2905 images, 37 backgrounds, 0 corrupt:  61%|██████    | 2942/4809 [00:01<00:01, 1768.78it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3083 images, 37 backgrounds, 0 corrupt:  65%|██████▍   | 3120/4809 [00:01<00:00, 1764.70it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3257 images, 40 backgrounds, 0 corrupt:  69%|██████▊   | 3297/4809 [00:02<00:00, 1744.11it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3429 images, 43 backgrounds, 0 corrupt:  72%|███████▏  | 3472/4809 [00:02<00:00, 1707.38it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3599 images, 44 backgrounds, 0 corrupt:  76%|███████▌  | 3643/4809 [00:02<00:00, 1703.15it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3768 images, 46 backgrounds, 0 corrupt:  79%|███████▉  | 3814/4809 [00:02<00:00, 1686.18it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 3936 images, 47 backgrounds, 0 corrupt:  83%|████████▎ | 3983/4809 [00:02<00:00, 1658.77it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4101 images, 49 backgrounds, 0 corrupt:  86%|████████▋ | 4150/4809 [00:02<00:00, 1633.75it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4274 images, 54 backgrounds, 0 corrupt:  90%|████████▉ | 4328/4809 [00:02<00:00, 1664.82it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4451 images, 55 backgrounds, 0 corrupt:  94%|█████████▎| 4506/4809 [00:02<00:00, 1684.14it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4621 images, 57 backgrounds, 0 corrupt:  97%|█████████▋| 4678/4809 [00:02<00:00, 1687.23it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:02<00:00, 1633.54it/s]
+[34m[1mval: [0mNew cache created: /workspace/YOLOE-RCAP/baseline_logs/mask_diagnosis_cache/val2017.cache
+Diagnosis guard: exactly ONE dataset batch; official backend warmup is preserved.
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95)     Mask(P          R      mAP50  mAP50-95):   0%|          | 0/1 [00:00<?, ?it/s]Captured original cv2.resize inputs and completed bbox predictions: {"start_time": "2026-09-05T05:58:31.632699+00:00", "git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b", "opencv": "5.0.0", "dataset_batches_started": 1, "fix_applied": false, "synthetic_opencv_channel_checks": {"1": {"success": true, "output_shape": [4, 6]}, "300": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "512": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "513": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}, "1000": {"success": false, "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}}, "official_bbox_field_expressions_identical": true, "validator": "YOLOESegValidator", "configuration": {"task": "segment", "mode": "val", "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt", "data": "ultralytics/cfg/datasets/lvis.yaml", "epochs": 100, "time": null, "patience": 100, "batch": 1, "imgsz": 640, "save": true, "save_period": -1, "cache": false, "device": 0, "workers": 8, "project": "/workspace/YOLOE-RCAP/baseline_logs", "name": "mask_diagnosis_one_image", "exist_ok": false, "pretrained": true, "optimizer": "auto", "verbose": true, "seed": 0, "deterministic": true, "single_cls": false, "rect": false, "cos_lr": false, "close_mosaic": 10, "resume": false, "amp": true, "fraction": 1.0, "profile": false, "freeze": null, "multi_scale": false, "overlap_mask": false, "mask_ratio": 4, "dropout": 0.0, "val": true, "split": "minival", "save_json": true, "save_hybrid": false, "conf": 0.001, "iou": 0.7, "max_det": 1000, "half": false, "dnn": false, "plots": true, "source": null, "vid_stride": 1, "stream_buffer": false, "visualize": false, "augment": false, "agnostic_nms": false, "classes": null, "retina_masks": false, "embed": null, "show": false, "save_frames": false, "save_txt": false, "save_conf": false, "save_crop": false, "show_labels": true, "show_conf": true, "show_boxes": true, "line_width": null, "format": "torchscript", "keras": false, "optimize": false, "int8": false, "dynamic": false, "simplify": true, "opset": null, "workspace": null, "nms": false, "lr0": 0.01, "lrf": 0.01, "momentum": 0.937, "weight_decay": 0.0005, "warmup_epochs": 3.0, "warmup_momentum": 0.8, "warmup_bias_lr": 0.1, "box": 7.5, "cls": 0.5, "dfl": 1.5, "pose": 12.0, "kobj": 1.0, "nbs": 64, "hsv_h": 0.015, "hsv_s": 0.7, "hsv_v": 0.4, "degrees": 0.0, "translate": 0.1, "scale": 0.5, "shear": 0.0, "perspective": 0.0, "flipud": 0.0, "fliplr": 0.5, "bgr": 0.0, "mosaic": 1.0, "mixup": 0.0, "copy_paste": 0.0, "copy_paste_mode": "flip", "auto_augment": "randaugment", "erasing": 0.4, "crop_fraction": 1.0, "cfg": null, "tracker": "botsort.yaml", "val_interval": 20, "text_model": "mobileclip:blt", "load_vp": false, "train_pe_path": null}, "scale_image_input_shape": [640, 640, 1000], "failing_resize_array_shape": [426, 640, 1000], "failing_resize_array_dtype": "uint8", "failing_resize_array_strides": [640000, 1000, 1], "resize_target_wh": [640, 426], "original_image_shape": [426, 640], "ratio_pad": [[1.0, 1.0], [0, 107]], "processed_mask_tensor_shape": [1000, 640, 640], "post_nms_prediction_shape": [1000, 38], "scaled_prediction_shape": [1000, 38], "bbox_tensor_shape": [1000, 6], "number_of_detections": 1000, "bbox_values_finite": true, "scores_classes_unchanged_by_rescaling": true, "bbox_sample": [[216.26889038085938, 233.42791748046875, 293.77972412109375, 303.96295166015625, 0.9780043363571167, 864.0], [218.82711791992188, 0.509613037109375, 326.8459167480469, 61.574615478515625, 0.9494671821594238, 625.0], [216.26889038085938, 233.42791748046875, 293.77972412109375, 303.96295166015625, 0.9223287105560303, 553.0]], "bbox_tensor_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff", "image_file": "/workspace/datasets/lvis/images/val2017/000000000139.jpg", "mask_processing_function": "process_mask_native", "save_json": true, "json_entries_before_failure": 0}
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95)     Mask(P          R      mAP50  mAP50-95):   0%|          | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/mask_diagnosis_smoke.py", line 132, in <module>
+    model.val(**cfg)
+  File "/workspace/YOLOE-RCAP/ultralytics/engine/model.py", line 657, in val
+    validator(model=self.model)
+  File "/workspace/yoloe-env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/YOLOE-RCAP/ultralytics/models/yolo/yoloe/val.py", line 114, in __call__
+    tp_stats = super().__call__(trainer, deepcopy(model))
+  File "/workspace/yoloe-env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/YOLOE-RCAP/ultralytics/engine/validator.py", line 191, in __call__
+    self.update_metrics(preds, batch)
+  File "/workspace/YOLOE-RCAP/ultralytics/models/yolo/segment/val.py", line 153, in update_metrics
+    ops.scale_image(
+  File "/workspace/YOLOE-RCAP/ultralytics/utils/ops.py", line 384, in scale_image
+    masks = cv2.resize(masks, (im0_shape[1], im0_shape[0]))
+cv2.error: OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'
+
+
+DIAGNOSIS OBSERVATIONS:
+{
+  "start_time": "2026-09-05T05:58:31.632699+00:00",
+  "git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+  "opencv": "5.0.0",
+  "dataset_batches_started": 1,
+  "fix_applied": false,
+  "synthetic_opencv_channel_checks": {
+    "1": {
+      "success": true,
+      "output_shape": [
+        4,
+        6
+      ]
+    },
+    "300": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "512": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "513": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "1000": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    }
+  },
+  "official_bbox_field_expressions_identical": true,
+  "validator": "YOLOESegValidator",
+  "configuration": {
+    "task": "segment",
+    "mode": "val",
+    "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+    "data": "ultralytics/cfg/datasets/lvis.yaml",
+    "epochs": 100,
+    "time": null,
+    "patience": 100,
+    "batch": 1,
+    "imgsz": 640,
+    "save": true,
+    "save_period": -1,
+    "cache": false,
+    "device": 0,
+    "workers": 8,
+    "project": "/workspace/YOLOE-RCAP/baseline_logs",
+    "name": "mask_diagnosis_one_image",
+    "exist_ok": false,
+    "pretrained": true,
+    "optimizer": "auto",
+    "verbose": true,
+    "seed": 0,
+    "deterministic": true,
+    "single_cls": false,
+    "rect": false,
+    "cos_lr": false,
+    "close_mosaic": 10,
+    "resume": false,
+    "amp": true,
+    "fraction": 1.0,
+    "profile": false,
+    "freeze": null,
+    "multi_scale": false,
+    "overlap_mask": false,
+    "mask_ratio": 4,
+    "dropout": 0.0,
+    "val": true,
+    "split": "minival",
+    "save_json": true,
+    "save_hybrid": false,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 1000,
+    "half": false,
+    "dnn": false,
+    "plots": true,
+    "source": null,
+    "vid_stride": 1,
+    "stream_buffer": false,
+    "visualize": false,
+    "augment": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "retina_masks": false,
+    "embed": null,
+    "show": false,
+    "save_frames": false,
+    "save_txt": false,
+    "save_conf": false,
+    "save_crop": false,
+    "show_labels": true,
+    "show_conf": true,
+    "show_boxes": true,
+    "line_width": null,
+    "format": "torchscript",
+    "keras": false,
+    "optimize": false,
+    "int8": false,
+    "dynamic": false,
+    "simplify": true,
+    "opset": null,
+    "workspace": null,
+    "nms": false,
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.1,
+    "box": 7.5,
+    "cls": 0.5,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0,
+    "nbs": 64,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0,
+    "fliplr": 0.5,
+    "bgr": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "copy_paste_mode": "flip",
+    "auto_augment": "randaugment",
+    "erasing": 0.4,
+    "crop_fraction": 1.0,
+    "cfg": null,
+    "tracker": "botsort.yaml",
+    "val_interval": 20,
+    "text_model": "mobileclip:blt",
+    "load_vp": false,
+    "train_pe_path": null
+  },
+  "scale_image_input_shape": [
+    640,
+    640,
+    1000
+  ],
+  "failing_resize_array_shape": [
+    426,
+    640,
+    1000
+  ],
+  "failing_resize_array_dtype": "uint8",
+  "failing_resize_array_strides": [
+    640000,
+    1000,
+    1
+  ],
+  "resize_target_wh": [
+    640,
+    426
+  ],
+  "original_image_shape": [
+    426,
+    640
+  ],
+  "ratio_pad": [
+    [
+      1.0,
+      1.0
+    ],
+    [
+      0,
+      107
+    ]
+  ],
+  "processed_mask_tensor_shape": [
+    1000,
+    640,
+    640
+  ],
+  "post_nms_prediction_shape": [
+    1000,
+    38
+  ],
+  "scaled_prediction_shape": [
+    1000,
+    38
+  ],
+  "bbox_tensor_shape": [
+    1000,
+    6
+  ],
+  "number_of_detections": 1000,
+  "bbox_values_finite": true,
+  "scores_classes_unchanged_by_rescaling": true,
+  "bbox_sample": [
+    [
+      216.26889038085938,
+      233.42791748046875,
+      293.77972412109375,
+      303.96295166015625,
+      0.9780043363571167,
+      864.0
+    ],
+    [
+      218.82711791992188,
+      0.509613037109375,
+      326.8459167480469,
+      61.574615478515625,
+      0.9494671821594238,
+      625.0
+    ],
+    [
+      216.26889038085938,
+      233.42791748046875,
+      293.77972412109375,
+      303.96295166015625,
+      0.9223287105560303,
+      553.0
+    ]
+  ],
+  "bbox_tensor_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff",
+  "image_file": "/workspace/datasets/lvis/images/val2017/000000000139.jpg",
+  "mask_processing_function": "process_mask_native",
+  "save_json": true,
+  "json_entries_before_failure": 0,
+  "observed_scale_image_exception": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n",
+  "error_reproduced": true,
+  "exception": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n",
+  "git_diff_exit_code": 0,
+  "git_cached_diff_exit_code": 0,
+  "end_time": "2026-09-05T05:58:38.867553+00:00"
+}
+Diagnosis complete. No fix, bbox export, or full LVIS evaluation was performed.
+
+Additional tiny synthetic-array channel checks; no additional model or dataset inference.
+2 {'success': True, 'output_shape': [4, 6, 2]}
+3 {'success': True, 'output_shape': [4, 6, 3]}
+4 {'success': True, 'output_shape': [4, 6, 4]}
+5 {'success': True, 'output_shape': [4, 6, 5]}
+8 {'success': True, 'output_shape': [4, 6, 8]}
+16 {'success': True, 'output_shape': [4, 6, 16]}
+32 {'success': True, 'output_shape': [4, 6, 32]}
+64 {'success': True, 'output_shape': [4, 6, 64]}
+128 {'success': True, 'output_shape': [4, 6, 128]}
+256 {'success': False, 'error': "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}
+OpenCV module: /workspace/yoloe-env/lib/python3.10/site-packages/cv2/__init__.py
+Boundary confirmation, channels: 127 {'success': True, 'output_shape': [4, 6, 127]}
+Boundary confirmation, channels: 129 {'success': False, 'error': "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"}

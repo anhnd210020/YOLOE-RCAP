@@ -1,0 +1,92 @@
+{
+  "project": "YOLOE official baseline reproduction",
+  "date": "2026-09-05",
+  "official_git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+  "task": "LVIS zero-shot text-prompt detection",
+  "evaluation": "Fixed AP on LVIS minival",
+  "environment": {
+    "python": "3.10.21",
+    "pytorch": "2.5.1+cu121",
+    "torch_cuda": "12.1",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "ultralytics": "8.3.39"
+  },
+  "models": {
+    "YOLOE-v8-S": {
+      "checkpoint": "yoloe-v8s-seg.pt",
+      "sha256": "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536",
+      "paper": {
+        "AP": 27.9,
+        "APr": 22.3,
+        "APc": 27.8,
+        "APf": 29.0
+      },
+      "reproduced": {
+        "AP": 27.9,
+        "APr": 22.32,
+        "APc": 27.81,
+        "APf": 29.0
+      }
+    },
+    "YOLOE-v8-M": {
+      "checkpoint": "yoloe-v8m-seg.pt",
+      "sha256": "35845d446ac851c7498bade9ba7067fcff5afd22a1e064e1f424657432621a0d",
+      "paper": {
+        "AP": 32.6,
+        "APr": 26.9,
+        "APc": 31.9,
+        "APf": 34.4
+      },
+      "reproduced": {
+        "AP": 32.64,
+        "APr": 26.87,
+        "APc": 31.87,
+        "APf": 34.35
+      }
+    },
+    "YOLOE-v8-L": {
+      "checkpoint": "yoloe-v8l-seg.pt",
+      "sha256": "14e9c146f7f7efa0bfea8c5f82952c9f95fb1f9c3bf0f18b3727b76624f9d746",
+      "paper": {
+        "AP": 35.9,
+        "APr": 33.2,
+        "APc": 34.8,
+        "APf": 37.3
+      },
+      "reproduced": {
+        "AP": 35.87,
+        "APr": 33.24,
+        "APc": 34.78,
+        "APf": 37.31
+      }
+    }
+  },
+  "mobileclip": {
+    "filename": "mobileclip_blt.pt",
+    "sha256": "670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a"
+  },
+  "dataset": {
+    "lvis_minival_images": 4809,
+    "categories": 1203,
+    "minival_txt_sha256": "1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df",
+    "annotation_sha256": "02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce"
+  },
+  "predictions": {
+    "v8s": {
+      "path": "baseline_logs/bbox_fixed_ap/predictions.json",
+      "sha256": "601412632b9d8d3751b74480e8a1a088055768cb013a28cd89ad985f8eb7c2b0"
+    },
+    "v8m": {
+      "path": "baseline_logs/v8m_fixed_ap/predictions.json",
+      "sha256": "71a951914c94dedd12837008f347d3eb93784dad36e6de16517fee9c77a2e5e6"
+    },
+    "v8l": {
+      "path": "baseline_logs/v8l_fixed_ap/predictions.json",
+      "sha256": "10d5741e724ca10e19643ea4d2767ce9f283f373706132007cf600c6fb7a8770"
+    }
+  },
+  "evaluation_note": "Official-equivalent bbox Fixed AP workaround. The original segmentation JSON serialization path encountered an OpenCV mask-resize limitation with max_det=1000. Detection preprocessing, YOLOE text prompting, segmentation validator postprocess/multi-label NMS, native box preparation, category mapping and official bbox JSON serialization were preserved. Mask decoding/serialization only was bypassed.",
+  "tracked_official_source_modified": false,
+  "overall_status": "PASS"
+}

@@ -1,0 +1,42 @@
+{
+  "m": {
+    "filename": "yoloe-v8m-seg.pt",
+    "path": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8m-seg.pt",
+    "size_bytes": 65800690,
+    "sha256": "35845d446ac851c7498bade9ba7067fcff5afd22a1e064e1f424657432621a0d",
+    "official_source": "https://huggingface.co/jameslahm/yoloe/blob/main/yoloe-v8m-seg.pt",
+    "download_url": "https://huggingface.co/jameslahm/yoloe/resolve/b584da188a198a2e6aa0e013d3fef6d55b212603/yoloe-v8m-seg.pt",
+    "hf_revision": "b584da188a198a2e6aa0e013d3fef6d55b212603",
+    "official_metadata": {
+      "rfilename": "yoloe-v8m-seg.pt",
+      "blobId": "a7e3e8ad36c786a4e802e0ea8abd4ec8f4f2968e",
+      "size": 65800690,
+      "lfs": {
+        "sha256": "35845d446ac851c7498bade9ba7067fcff5afd22a1e064e1f424657432621a0d",
+        "size": 65800690,
+        "pointerSize": 133
+      }
+    },
+    "sha256_matches_official_lfs": true
+  },
+  "l": {
+    "filename": "yoloe-v8l-seg.pt",
+    "path": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8l-seg.pt",
+    "size_bytes": 107405586,
+    "sha256": "14e9c146f7f7efa0bfea8c5f82952c9f95fb1f9c3bf0f18b3727b76624f9d746",
+    "official_source": "https://huggingface.co/jameslahm/yoloe/blob/main/yoloe-v8l-seg.pt",
+    "download_url": "https://huggingface.co/jameslahm/yoloe/resolve/b584da188a198a2e6aa0e013d3fef6d55b212603/yoloe-v8l-seg.pt",
+    "hf_revision": "b584da188a198a2e6aa0e013d3fef6d55b212603",
+    "official_metadata": {
+      "rfilename": "yoloe-v8l-seg.pt",
+      "blobId": "da3aab199373e16c80a712c7b99fb2d7b17e4ee7",
+      "size": 107405586,
+      "lfs": {
+        "sha256": "14e9c146f7f7efa0bfea8c5f82952c9f95fb1f9c3bf0f18b3727b76624f9d746",
+        "size": 107405586,
+        "pointerSize": 134
+      }
+    },
+    "sha256_matches_official_lfs": true
+  }
+}

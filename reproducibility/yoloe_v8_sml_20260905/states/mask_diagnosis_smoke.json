@@ -1,0 +1,327 @@
+{
+  "start_time": "2026-09-05T05:58:31.632699+00:00",
+  "git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+  "opencv": "5.0.0",
+  "dataset_batches_started": 1,
+  "fix_applied": false,
+  "synthetic_opencv_channel_checks": {
+    "1": {
+      "success": true,
+      "output_shape": [
+        4,
+        6
+      ]
+    },
+    "300": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "512": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "513": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "1000": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "2": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        2
+      ]
+    },
+    "3": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        3
+      ]
+    },
+    "4": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        4
+      ]
+    },
+    "5": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        5
+      ]
+    },
+    "8": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        8
+      ]
+    },
+    "16": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        16
+      ]
+    },
+    "32": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        32
+      ]
+    },
+    "64": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        64
+      ]
+    },
+    "128": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        128
+      ]
+    },
+    "256": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    },
+    "127": {
+      "success": true,
+      "output_shape": [
+        4,
+        6,
+        127
+      ]
+    },
+    "129": {
+      "success": false,
+      "error": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n"
+    }
+  },
+  "official_bbox_field_expressions_identical": true,
+  "validator": "YOLOESegValidator",
+  "configuration": {
+    "task": "segment",
+    "mode": "val",
+    "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+    "data": "ultralytics/cfg/datasets/lvis.yaml",
+    "epochs": 100,
+    "time": null,
+    "patience": 100,
+    "batch": 1,
+    "imgsz": 640,
+    "save": true,
+    "save_period": -1,
+    "cache": false,
+    "device": 0,
+    "workers": 8,
+    "project": "/workspace/YOLOE-RCAP/baseline_logs",
+    "name": "mask_diagnosis_one_image",
+    "exist_ok": false,
+    "pretrained": true,
+    "optimizer": "auto",
+    "verbose": true,
+    "seed": 0,
+    "deterministic": true,
+    "single_cls": false,
+    "rect": false,
+    "cos_lr": false,
+    "close_mosaic": 10,
+    "resume": false,
+    "amp": true,
+    "fraction": 1.0,
+    "profile": false,
+    "freeze": null,
+    "multi_scale": false,
+    "overlap_mask": false,
+    "mask_ratio": 4,
+    "dropout": 0.0,
+    "val": true,
+    "split": "minival",
+    "save_json": true,
+    "save_hybrid": false,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 1000,
+    "half": false,
+    "dnn": false,
+    "plots": true,
+    "source": null,
+    "vid_stride": 1,
+    "stream_buffer": false,
+    "visualize": false,
+    "augment": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "retina_masks": false,
+    "embed": null,
+    "show": false,
+    "save_frames": false,
+    "save_txt": false,
+    "save_conf": false,
+    "save_crop": false,
+    "show_labels": true,
+    "show_conf": true,
+    "show_boxes": true,
+    "line_width": null,
+    "format": "torchscript",
+    "keras": false,
+    "optimize": false,
+    "int8": false,
+    "dynamic": false,
+    "simplify": true,
+    "opset": null,
+    "workspace": null,
+    "nms": false,
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "warmup_momentum": 0.8,
+    "warmup_bias_lr": 0.1,
+    "box": 7.5,
+    "cls": 0.5,
+    "dfl": 1.5,
+    "pose": 12.0,
+    "kobj": 1.0,
+    "nbs": 64,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0,
+    "fliplr": 0.5,
+    "bgr": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "copy_paste_mode": "flip",
+    "auto_augment": "randaugment",
+    "erasing": 0.4,
+    "crop_fraction": 1.0,
+    "cfg": null,
+    "tracker": "botsort.yaml",
+    "val_interval": 20,
+    "text_model": "mobileclip:blt",
+    "load_vp": false,
+    "train_pe_path": null
+  },
+  "scale_image_input_shape": [
+    640,
+    640,
+    1000
+  ],
+  "failing_resize_array_shape": [
+    426,
+    640,
+    1000
+  ],
+  "failing_resize_array_dtype": "uint8",
+  "failing_resize_array_strides": [
+    640000,
+    1000,
+    1
+  ],
+  "resize_target_wh": [
+    640,
+    426
+  ],
+  "original_image_shape": [
+    426,
+    640
+  ],
+  "ratio_pad": [
+    [
+      1.0,
+      1.0
+    ],
+    [
+      0,
+      107
+    ]
+  ],
+  "processed_mask_tensor_shape": [
+    1000,
+    640,
+    640
+  ],
+  "post_nms_prediction_shape": [
+    1000,
+    38
+  ],
+  "scaled_prediction_shape": [
+    1000,
+    38
+  ],
+  "bbox_tensor_shape": [
+    1000,
+    6
+  ],
+  "number_of_detections": 1000,
+  "bbox_values_finite": true,
+  "scores_classes_unchanged_by_rescaling": true,
+  "bbox_sample": [
+    [
+      216.26889038085938,
+      233.42791748046875,
+      293.77972412109375,
+      303.96295166015625,
+      0.9780043363571167,
+      864.0
+    ],
+    [
+      218.82711791992188,
+      0.509613037109375,
+      326.8459167480469,
+      61.574615478515625,
+      0.9494671821594238,
+      625.0
+    ],
+    [
+      216.26889038085938,
+      233.42791748046875,
+      293.77972412109375,
+      303.96295166015625,
+      0.9223287105560303,
+      553.0
+    ]
+  ],
+  "bbox_tensor_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff",
+  "image_file": "/workspace/datasets/lvis/images/val2017/000000000139.jpg",
+  "mask_processing_function": "process_mask_native",
+  "save_json": true,
+  "json_entries_before_failure": 0,
+  "observed_scale_image_exception": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n",
+  "error_reproduced": true,
+  "exception": "OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'\n",
+  "git_diff_exit_code": 0,
+  "git_cached_diff_exit_code": 0,
+  "end_time": "2026-09-05T05:58:38.867553+00:00",
+  "opencv_module": "/workspace/yoloe-env/lib/python3.10/site-packages/cv2/__init__.py",
+  "opencv_5_channel_limit": 128,
+  "opencv_5_header_reference": "https://github.com/opencv/opencv/blob/5.0.0/modules/core/include/opencv2/core/hal/interface.h#L47"
+}

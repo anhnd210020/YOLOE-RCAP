@@ -1,0 +1,27 @@
+{
+  "repository": "jameslahm/yoloe",
+  "revision": "b584da188a198a2e6aa0e013d3fef6d55b212603",
+  "metadata_source": "https://huggingface.co/api/models/jameslahm/yoloe?blobs=true",
+  "files": {
+    "yoloe-v8l-seg.pt": {
+      "rfilename": "yoloe-v8l-seg.pt",
+      "blobId": "da3aab199373e16c80a712c7b99fb2d7b17e4ee7",
+      "size": 107405586,
+      "lfs": {
+        "sha256": "14e9c146f7f7efa0bfea8c5f82952c9f95fb1f9c3bf0f18b3727b76624f9d746",
+        "size": 107405586,
+        "pointerSize": 134
+      }
+    },
+    "yoloe-v8m-seg.pt": {
+      "rfilename": "yoloe-v8m-seg.pt",
+      "blobId": "a7e3e8ad36c786a4e802e0ea8abd4ec8f4f2968e",
+      "size": 65800690,
+      "lfs": {
+        "sha256": "35845d446ac851c7498bade9ba7067fcff5afd22a1e064e1f424657432621a0d",
+        "size": 65800690,
+        "pointerSize": 133
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+=== MASK SERIALIZATION DIAGNOSIS ===
+Root cause:
+The official YOLOESegValidator generates 1000 retained detections and corresponding masks with max_det=1000. Its JSON path passes the whole HWC mask stack to ops.scale_image, which calls cv2.resize with more channels than OpenCV 5.0.0 supports. This is a mask serialization failure after successful box prediction and native-coordinate rescaling.
+
+Failing tensor/array shape:
+One-image smoke test: /workspace/datasets/lvis/images/val2017/000000000139.jpg.
+Post-NMS predictions: (1000, 38), with 6 box/score/class columns and 32 mask coefficients.
+Native-coordinate bbox/score/class view: (1000, 6); every value finite.
+Processed mask tensor: (1000, 640, 640).
+Input to scale_image: (640, 640, 1000), uint8.
+After padding removal, the actual cv2.resize input: (426, 640, 1000), uint8.
+Resize target (width, height): (640, 426).
+
+Why cv2.resize fails:
+OpenCV 5.0.0 defines CV_CN_MAX=128. Its normal NumPy-to-Mat conversion cannot interpret this 1000-channel array as a supported 2D multichannel image; resize fails with m->dims <= 2 in function size. Tiny synthetic tests on the installed package confirm 128 channels succeed and 129, 256, 300, 512, 513, and 1000 channels fail. Thus max_det=1000 exceeds the limit, but reducing it to 300 would still not solve this installed-version limitation. No max_det or package changes were made.
+Official versioned header: https://github.com/opencv/opencv/blob/5.0.0/modules/core/include/opencv2/core/hal/interface.h#L47
+
+Does bbox prediction itself succeed before mask serialization: YES
+The one-image trace captured 1000 finite, native-coordinate box predictions before the failing call. Scores/classes were exactly equal before and after box-coordinate scaling. The failure precedes pred_to_json, so jdict still had zero entries. BaseValidator writes predictions.json only after the validation loop.
+
+Does tools/eval_fixed_ap.py require masks: NO
+For the requested default --type bbox, required prediction fields are image_id, category_id, bbox, and score. The script groups by category_id, stably sorts by descending score, retains the top 10000/category, and passes results to LVISResults(max_dets=-1) and LVISEval(iou_type='bbox'). The LVIS bbox IoU path selects bbox, not segmentation. LVISResults computes detection area as bbox width*height whether or not segmentation is present, and synthesizes an unused box polygon when segmentation is absent. Masks are required for the separate --type segm mode, which is not this baseline.
+
+Can we generate official-equivalent bbox JSON without changing tracked source: YES
+The four bbox field expressions in DetectionValidator.pred_to_json and SegmentationValidator.pred_to_json are identical (confirmed by AST comparison). The segmentation validator already obtains its native-coordinate boxes from DetectionValidator._prepare_pred. Therefore the unchanged official bbox serializer can consume those same predictions before any mask decoding/serialization.
+
+Proposed execution method:
+Proposal only; no bbox-export implementation or fix has been applied.
+1. Create an untracked subclass of YOLOESegValidator in baseline_logs and pass it through model.val(validator=...). Preserve the official YOLOE text-prompt setup, complete segmentation model, AutoBackend/fusion/warmup, dataset, preprocessing, and SegmentationValidator.postprocess.
+2. Preserve all numerical settings: 1203 first-alias text prompts; imgsz=640; batch=1; split=minival; rect=False; conf=0.001; iou=0.7; max_det=1000; half=False. Keeping the segmentation postprocess preserves nc=1203, multi_label=True, class-aware NMS, and the existing NMS defaults. Do not substitute a plain detection NMS call that could interpret the 32 mask coefficients as extra classes.
+3. Override update_metrics solely to iterate the detection tensors from the existing (detections, prototypes) postprocess result. For each image, increment seen, call DetectionValidator._prepare_batch and DetectionValidator._prepare_pred explicitly, then call DetectionValidator.pred_to_json with that exact native-coordinate prediction tensor and original filename. These are the official functions, invoked directly; no box/scoring implementation is rewritten. Preserve image/detection order and retain all post-NMS detections.
+4. Keep save_json=True. Set plots=False and override get_stats, finalize_metrics, print_results, and eval_json to omit the unused built-in standard box/mask metrics and mask plotting/evaluation. BaseValidator can then write its normal self.jdict to predictions.json after the single loop. This changes ancillary metric/output work, not the model forward, NMS, coordinates, class IDs, scores, or requested standalone Fixed AP metric.
+5. The resulting records contain image_id=int(filename stem), category_id=official class_map[class]+1, bbox=[x_min,y_min,width,height] in original-image pixels rounded to 3 decimals, and score rounded to 5 decimals, using the official serializer. After approval, evaluate that file with the unchanged tools/eval_fixed_ap.py using --type bbox and its existing top-10000/category, unlimited-per-image defaults.
+
+Would bbox scores/classes/boxes remain unchanged: YES
+By preserving the exact inference, NMS, coordinate preparation, serializer, rounding, and ordering above. This is supported by code identity and the one-image trace; no full-dataset bbox export or AP equivalence measurement has been performed.
+
+Tracked source modification required: NO
+
+Recommended next step:
+Approve the proposed bbox-only export method before implementation/full execution. No further model test, fix, or full 4809-image evaluation has been launched. The previous baseline remains BLOCKED, and its runner/retry guards were left unchanged.
+
+Additional save_json findings:
+SegmentationValidator.init_metrics chooses process_mask_native when save_json OR save_txt is true. SegmentationValidator.update_metrics invokes the failing mask-to-JSON scaling only when save_json is true. DetectionValidator.init_metrics automatically re-enables save_json for LVIS when val=True, so merely passing save_json=False is not a reliable bypass. Overriding pred_to_json alone cannot prevent the failure, since Python evaluates the ops.scale_image argument before calling that method.
+
+Relevant source locations:
+ultralytics/models/yolo/yoloe/val.py:99-133 (official text-prompt/segmentation path)
+ultralytics/models/yolo/segment/val.py:46-52 (native mask processing selection)
+ultralytics/models/yolo/segment/val.py:70-103 (NMS and shared native-box preparation)
+ultralytics/models/yolo/segment/val.py:149-158 (failing serialization argument)
+ultralytics/utils/ops.py:358-388 (mask crop and cv2.resize)
+ultralytics/models/yolo/detect/val.py:68-80 (LVIS JSON auto-enable)
+ultralytics/models/yolo/detect/val.py:106-125 (box preparation)
+ultralytics/models/yolo/detect/val.py:283-300 (bbox JSON serializer)
+ultralytics/models/yolo/segment/val.py:259-291 (same bbox fields plus segmentation)
+ultralytics/engine/validator.py:223-226 (predictions.json write after the loop)
+tools/eval_fixed_ap.py:17-64 (bbox default, top-k, LVIS evaluation)
+third_party/lvis-api/lvis/results.py:42-60 (optional segmentation and bbox area)
+third_party/lvis-api/lvis/eval.py:70-73,179-190 (masks only for segm; bbox IoU)
+
+Evidence artifacts:
+baseline_logs/mask_diagnosis_smoke.py (diagnostic script only)
+baseline_logs/mask_diagnosis_smoke.txt (complete one-image output and synthetic-array checks)
+baseline_logs/mask_diagnosis_smoke.json (captured shapes and verification results)
+
+Final integrity checks:
+git rev-parse HEAD: exit=0
+40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+git status --short: exit=0
+?? baseline_logs/
+git diff --exit-code: exit=0
+(no output)
+git diff --cached --exit-code: exit=0
+(no output)
+pretrain/yoloe-v8s-seg.pt: SHA256 unchanged
+/workspace/datasets/lvis/minival.txt: SHA256 unchanged
+/workspace/datasets/lvis/annotations/lvis_v1_minival.json: SHA256 unchanged
+Tracked source modified: NO. No package changes. Exactly one dataset image was used for diagnosis.

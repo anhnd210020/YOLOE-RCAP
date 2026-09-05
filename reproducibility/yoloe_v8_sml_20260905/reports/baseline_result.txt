@@ -1,0 +1,2110 @@
+Start time: 2026-09-05T05:26:49.770587+00:00
+Git commit: 40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+Git status before artifact creation: CLEAN (verified with git status --porcelain=v1 --untracked-files=all before mkdir).
+Python: 3.10.21
+Python executable: /workspace/yoloe-env/bin/python
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/workspace/YOLOE-RCAP/baseline_logs/ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+PyTorch: 2.5.1+cu121
+Torch CUDA: 12.1
+CUDA available: True
+GPU: NVIDIA GeForce RTX 3090
+Ultralytics: 8.3.39 /workspace/YOLOE-RCAP/ultralytics/__init__.py
+pycocotools: 2.0.11 IMPORT PASS
+LVIS: 0.5.3 /workspace/YOLOE-RCAP/third_party/lvis-api/lvis/__init__.py
+Checkpoint: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt exists: True
+Checkpoint task: segment
+Checkpoint model class: YOLOESegModel
+Checkpoint model overrides: {'task': 'segment', 'data': {'train': {'yolo_data': ['Objects365v1.yaml'], 'grounding_data': [{'img_path': '../datasets/flickr/full_images/', 'json_file': '../datasets/flickr/annotations/final_flickr_separateGT_train_segm.json'}, {'img_path': '../datasets/mixed_grounding/gqa/images', 'json_file': '../datasets/mixed_grounding/annotations/final_mixed_train_no_coco_segm.json'}]}, 'val': {'yolo_data': ['lvis.yaml']}}, 'imgsz': 640, 'single_cls': False, 'text_model': 'mobileclip:blt', 'model': '/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt'}
+Checkpoint text_model: mobileclip:blt
+Checkpoint has pe: False
+Checkpoint clip_model: NoneType
+Default validation settings: {
+  "imgsz": 640,
+  "batch": 16,
+  "conf": null,
+  "iou": 0.7,
+  "max_det": 300,
+  "rect": false,
+  "half": false,
+  "save_json": false,
+  "load_vp": false,
+  "text_model": "mobileclip:blt",
+  "single_cls": false,
+  "classes": null,
+  "agnostic_nms": false,
+  "augment": false,
+  "workers": 8,
+  "plots": true
+}
+Dataset: /workspace/datasets/lvis
+DATASETS_DIR: /workspace/datasets
+Minival entries: 4809 unique: 4809 missing images: 0
+Annotation images: 4809 annotations: 50672 categories: 1203
+YAML classes: 1203
+Dataset paths and image-ID match: PASS
+MobileCLIP path required by official code: /workspace/YOLOE-RCAP/mobileclip_blt.pt
+MobileCLIP required path exists: False
+Preflight runtime seconds: 2.7999935150146484
+
+Additional required text encoder acquired from the URL in official README.md:123.
+Text encoder URL: https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_blt.pt
+Text encoder path: /workspace/YOLOE-RCAP/mobileclip_blt.pt
+Text encoder bytes: 599214572; MD5 matches official server ETag: d61231bd164d23e7e500076e0e8f0d3e
+Text encoder SHA256: 670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a (recorded; original baseline manifest does not contain this additional asset)
+Supplied YOLOE checkpoint, packages, source, and dataset were not changed.
+Downloading https://ultralytics.com/assets/Arial.ttf to '/workspace/YOLOE-RCAP/baseline_logs/ultralytics/Arial.ttf'...
+  0%|          | 0.00/755k [00:00<?, ?B/s]100%|██████████| 755k/755k [00:00<00:00, 33.4MB/s]
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/baseline_driver.py", line 125, in <module>
+    sys.exit(main())
+  File "/workspace/YOLOE-RCAP/baseline_logs/baseline_driver.py", line 74, in main
+    preflight()
+  File "/workspace/YOLOE-RCAP/baseline_logs/baseline_driver.py", line 51, in preflight
+    assert Path(str(p).replace('/images/', '/labels/')).with_suffix('.txt').is_file(), f'Missing label: {p}'
+AssertionError: Missing label: /workspace/datasets/lvis/images/val2017/000000001425.jpg
+Images without label files: 57; official loader treats missing labels as backgrounds.
+Of these, minival JSON images with positive annotations: 0
+All images are retained; official Fixed AP uses the unchanged annotation JSON.
+Official validator: YOLOESegValidator
+Preflight resolved validation configuration:
+{
+  "task": "segment",
+  "mode": "val",
+  "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "epochs": 100,
+  "time": null,
+  "patience": 100,
+  "batch": 1,
+  "imgsz": 640,
+  "save": true,
+  "save_period": -1,
+  "cache": false,
+  "device": 0,
+  "workers": 8,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "official_fixed_ap",
+  "exist_ok": false,
+  "pretrained": true,
+  "optimizer": "auto",
+  "verbose": true,
+  "seed": 0,
+  "deterministic": true,
+  "single_cls": false,
+  "rect": false,
+  "cos_lr": false,
+  "close_mosaic": 10,
+  "resume": false,
+  "amp": true,
+  "fraction": 1.0,
+  "profile": false,
+  "freeze": null,
+  "multi_scale": false,
+  "overlap_mask": false,
+  "mask_ratio": 4,
+  "dropout": 0.0,
+  "val": true,
+  "split": "minival",
+  "save_json": true,
+  "save_hybrid": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "dnn": false,
+  "plots": true,
+  "source": null,
+  "vid_stride": 1,
+  "stream_buffer": false,
+  "visualize": false,
+  "augment": false,
+  "agnostic_nms": false,
+  "classes": null,
+  "retina_masks": false,
+  "embed": null,
+  "show": false,
+  "save_frames": false,
+  "save_txt": false,
+  "save_conf": false,
+  "save_crop": false,
+  "show_labels": true,
+  "show_conf": true,
+  "show_boxes": true,
+  "line_width": null,
+  "format": "torchscript",
+  "keras": false,
+  "optimize": false,
+  "int8": false,
+  "dynamic": false,
+  "simplify": true,
+  "opset": null,
+  "workspace": null,
+  "nms": false,
+  "lr0": 0.01,
+  "lrf": 0.01,
+  "momentum": 0.937,
+  "weight_decay": 0.0005,
+  "warmup_epochs": 3.0,
+  "warmup_momentum": 0.8,
+  "warmup_bias_lr": 0.1,
+  "box": 7.5,
+  "cls": 0.5,
+  "dfl": 1.5,
+  "pose": 12.0,
+  "kobj": 1.0,
+  "nbs": 64,
+  "hsv_h": 0.015,
+  "hsv_s": 0.7,
+  "hsv_v": 0.4,
+  "degrees": 0.0,
+  "translate": 0.1,
+  "scale": 0.5,
+  "shear": 0.0,
+  "perspective": 0.0,
+  "flipud": 0.0,
+  "fliplr": 0.5,
+  "bgr": 0.0,
+  "mosaic": 1.0,
+  "mixup": 0.0,
+  "copy_paste": 0.0,
+  "copy_paste_mode": "flip",
+  "auto_augment": "randaugment",
+  "erasing": 0.4,
+  "crop_fraction": 1.0,
+  "cfg": null,
+  "tracker": "botsort.yaml",
+  "val_interval": 20,
+  "text_model": "mobileclip:blt",
+  "load_vp": false,
+  "train_pe_path": null
+}
+Official class prompts: first slash-separated alias from each of 1203 YAML names.
+Official NMS: multi_label=True; max_nms=30000; max_wh=7680; max_time_img=0.05.
+Official Fixed AP defaults: bbox, top 10000 detections/category, max_dets=-1, IoUs 0.50:0.05:0.95.
+Built-in standard LVIS box/mask AP is preserved; its AP is separate from the subsequent Fixed AP.
+Reporting consistency threshold: abs(Fixed AP - 27.9) <= 0.5 AP points.
+BASELINE_PREFLIGHT_PASS: no dataset inference performed.
+
+Preflight warning resolution: an initial wrapper check required every image to have a label file. Inspection confirmed that all 57 missing-label images have zero positive annotations in the minival JSON. The wrapper now preserves the official background-image handling. No dataset or official code was changed; no image inference occurred during preflight.
+Runner shell (explicit environment activation):
+#!/usr/bin/env bash
+set -Eeo pipefail
+BASELINE_LOGS=/workspace/YOLOE-RCAP/baseline_logs
+mkdir -p "$BASELINE_LOGS"
+exec 9> "$BASELINE_LOGS/runner.lock"
+flock -n 9 || { echo 'Baseline runner already active; no second run started.'; exit 1; }
+if [[ -e "$BASELINE_LOGS/job_launched.lock" || -e "$BASELINE_LOGS/inference_started.lock" ]]; then
+    echo 'Baseline was already launched; refusing a second inference.'
+    exit 1
+fi
+(set -o noclobber; : > "$BASELINE_LOGS/job_launched.lock")
+exec >> "$BASELINE_LOGS/baseline_result.txt" 2>&1
+finish() {
+    local code=$?
+    trap - EXIT
+    /workspace/yoloe-env/bin/python -B -u "$BASELINE_LOGS/finalize_baseline.py" "$code"
+    exit "$code"
+}
+trap finish EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONUNBUFFERED=1
+export YOLO_AUTOINSTALL=false
+export YOLO_CONFIG_DIR="$BASELINE_LOGS/ultralytics"
+export MPLCONFIGDIR="$BASELINE_LOGS/matplotlib"
+export TMPDIR="$BASELINE_LOGS/tmp"
+export XDG_CACHE_HOME="$BASELINE_LOGS/xdg_cache"
+export TORCH_HOME="$BASELINE_LOGS/torch_cache"
+export CUDA_CACHE_PATH="$BASELINE_LOGS/cuda_cache"
+export TQDM_MININTERVAL=5
+export PYTHONPATH=/workspace/YOLOE-RCAP
+mkdir -p "$YOLO_CONFIG_DIR" "$MPLCONFIGDIR" "$TMPDIR" "$XDG_CACHE_HOME" "$TORCH_HOME" "$CUDA_CACHE_PATH"
+source /workspace/miniconda3/etc/profile.d/conda.sh
+conda activate /workspace/yoloe-env
+cd /workspace/YOLOE-RCAP
+set -u
+printf '\nRunner: bash /workspace/YOLOE-RCAP/baseline_logs/run_baseline.sh\n'
+python -u "$BASELINE_LOGS/baseline_driver.py"
+
+Tmux session: yoloe-baseline
+
+Runner: bash /workspace/YOLOE-RCAP/baseline_logs/run_baseline.sh
+
+Long job start time: 2026-09-05T05:37:33.400562+00:00
+Git status before long job:
+?? baseline_logs/baseline_common.py
+?? baseline_logs/baseline_driver.py
+?? baseline_logs/baseline_result.txt
+?? baseline_logs/baseline_state.json
+?? baseline_logs/finalize_baseline.py
+?? baseline_logs/infer_baseline.py
+?? baseline_logs/job_launched.lock
+?? baseline_logs/matplotlib/fontlist-v390.json
+?? baseline_logs/run_baseline.sh
+?? baseline_logs/runner.lock
+?? baseline_logs/ultralytics/Arial.ttf
+?? baseline_logs/ultralytics/settings.json
+
+Images without label files: 57; official loader treats missing labels as backgrounds.
+Of these, minival JSON images with positive annotations: 0
+All images are retained; official Fixed AP uses the unchanged annotation JSON.
+Official validator: YOLOESegValidator
+Preflight resolved validation configuration:
+{
+  "task": "segment",
+  "mode": "val",
+  "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "epochs": 100,
+  "time": null,
+  "patience": 100,
+  "batch": 1,
+  "imgsz": 640,
+  "save": true,
+  "save_period": -1,
+  "cache": false,
+  "device": 0,
+  "workers": 8,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "official_fixed_ap",
+  "exist_ok": false,
+  "pretrained": true,
+  "optimizer": "auto",
+  "verbose": true,
+  "seed": 0,
+  "deterministic": true,
+  "single_cls": false,
+  "rect": false,
+  "cos_lr": false,
+  "close_mosaic": 10,
+  "resume": false,
+  "amp": true,
+  "fraction": 1.0,
+  "profile": false,
+  "freeze": null,
+  "multi_scale": false,
+  "overlap_mask": false,
+  "mask_ratio": 4,
+  "dropout": 0.0,
+  "val": true,
+  "split": "minival",
+  "save_json": true,
+  "save_hybrid": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "dnn": false,
+  "plots": true,
+  "source": null,
+  "vid_stride": 1,
+  "stream_buffer": false,
+  "visualize": false,
+  "augment": false,
+  "agnostic_nms": false,
+  "classes": null,
+  "retina_masks": false,
+  "embed": null,
+  "show": false,
+  "save_frames": false,
+  "save_txt": false,
+  "save_conf": false,
+  "save_crop": false,
+  "show_labels": true,
+  "show_conf": true,
+  "show_boxes": true,
+  "line_width": null,
+  "format": "torchscript",
+  "keras": false,
+  "optimize": false,
+  "int8": false,
+  "dynamic": false,
+  "simplify": true,
+  "opset": null,
+  "workspace": null,
+  "nms": false,
+  "lr0": 0.01,
+  "lrf": 0.01,
+  "momentum": 0.937,
+  "weight_decay": 0.0005,
+  "warmup_epochs": 3.0,
+  "warmup_momentum": 0.8,
+  "warmup_bias_lr": 0.1,
+  "box": 7.5,
+  "cls": 0.5,
+  "dfl": 1.5,
+  "pose": 12.0,
+  "kobj": 1.0,
+  "nbs": 64,
+  "hsv_h": 0.015,
+  "hsv_s": 0.7,
+  "hsv_v": 0.4,
+  "degrees": 0.0,
+  "translate": 0.1,
+  "scale": 0.5,
+  "shear": 0.0,
+  "perspective": 0.0,
+  "flipud": 0.0,
+  "fliplr": 0.5,
+  "bgr": 0.0,
+  "mosaic": 1.0,
+  "mixup": 0.0,
+  "copy_paste": 0.0,
+  "copy_paste_mode": "flip",
+  "auto_augment": "randaugment",
+  "erasing": 0.4,
+  "crop_fraction": 1.0,
+  "cfg": null,
+  "tracker": "botsort.yaml",
+  "val_interval": 20,
+  "text_model": "mobileclip:blt",
+  "load_vp": false,
+  "train_pe_path": null
+}
+Official class prompts: first slash-separated alias from each of 1203 YAML names.
+Official NMS: multi_label=True; max_nms=30000; max_wh=7680; max_time_img=0.05.
+Official Fixed AP defaults: bbox, top 10000 detections/category, max_dets=-1, IoUs 0.50:0.05:0.95.
+Built-in standard LVIS box/mask AP is preserved; its AP is separate from the subsequent Fixed AP.
+Reporting consistency threshold: abs(Fixed AP - 27.9) <= 0.5 AP points.
+BASELINE_PREFLIGHT_PASS: no dataset inference performed.
+Exact inference command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/infer_baseline.py
+Exact inference code (and reporting/storage hooks):
+"""One invocation of the unchanged official model.val, plus storage and reporting hooks."""
+import datetime
+import json
+from pathlib import Path
+import time
+from baseline_common import *
+
+protect_inputs()
+import torch
+from ultralytics import YOLOE
+from ultralytics.data import dataset as dataset_module
+from ultralytics.data import utils as data_utils
+
+# Change only the destination of an optional derived label cache. The official
+# cache function, label verification, dataset, transforms and validator are used.
+_original_cache_save = dataset_module.save_dataset_cache_file
+
+def save_cache_under_logs(prefix, path, data, version):
+    target = LOGS / 'label_cache' / Path(path).name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    print(f'Label-cache storage redirect: {path} -> {target}', flush=True)
+    return _original_cache_save(prefix, target, data, version)
+
+dataset_module.save_dataset_cache_file = save_cache_under_logs
+
+model = YOLOE(str(CHECKPOINT))
+assert model.task == 'segment'
+assert model.model.args['text_model'] == 'mobileclip:blt'
+assert not hasattr(model.model, 'pe'), 'Checkpoint unexpectedly has fixed prompt embeddings'
+expected_paths = sorted(str((DATASET / p).resolve()) for p in (DATASET / 'minival.txt').read_text().splitlines())
+started = time.monotonic()
+
+def on_start(validator):
+    paths = sorted(str(Path(p).resolve()) for p in validator.dataloader.dataset.im_files)
+    assert paths == expected_paths and len(paths) == 4809, 'Dataloader omitted/changed images'
+    assert len(validator.data['names']) == 1203
+    assert validator.args.task == 'segment' and validator.args.load_vp is False
+    assert validator.device.type == 'cuda' and validator.args.half is False
+    for key in ('imgsz', 'batch', 'split', 'rect', 'conf', 'iou', 'max_det', 'save_json', 'half', 'load_vp'):
+        assert getattr(validator.args, key) == CONFIG[key], f'Configuration changed: {key}'
+    assert (validator.save_dir / 'predictions.json').resolve() == PREDICTIONS
+    actual = vars(validator.args).copy()
+    print('Complete resolved validation configuration:\n' + json.dumps(actual, indent=2, default=str), flush=True)
+    print('Dataloader verified: 4809 unique minival images; 1203 classes; task=segment; prompt=text', flush=True)
+    write_state(resolved_config=actual, dataloader_images=len(paths), predictions=str(PREDICTIONS), phase='inference')
+
+def on_batch_end(validator):
+    assert validator.seen == validator.batch_i + 1, 'Unexpected image count for batch=1'
+    if validator.seen % 100 == 0 or validator.seen == 4809:
+        now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        print(f'\nBASELINE_PROGRESS {validator.seen}/4809 images at {now}', flush=True)
+        write_state(images_evaluated=validator.seen)
+
+def on_end(validator):
+    assert validator.seen == 4809
+    write_state(images_evaluated=int(validator.seen), inference_loop_complete=True,
+                phase='official built-in LVIS evaluation', inference_loop_seconds=time.monotonic()-started)
+    print('\nSingle inference loop completed: 4809/4809 images. Official JSON saving and built-in evaluation follow.', flush=True)
+
+model.add_callback('on_val_start', on_start)
+model.add_callback('on_val_batch_end', on_batch_end)
+model.add_callback('on_val_end', on_end)
+print('Starting the one authorized full inference via model.val.', flush=True)
+model.val(**CONFIG)
+assert PREDICTIONS.is_file() and PREDICTIONS.stat().st_size > 0, 'Official predictions.json missing'
+write_state(inference_complete=True, inference_seconds=time.monotonic()-started,
+            predictions_bytes=PREDICTIONS.stat().st_size, phase='inference complete')
+print(f'Inference and built-in evaluation finished. Predictions: {PREDICTIONS}', flush=True)
+
+Exact model.val kwargs:
+{
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "imgsz": 640,
+  "batch": 1,
+  "split": "minival",
+  "rect": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "save_json": true,
+  "half": false,
+  "load_vp": false,
+  "device": 0,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "official_fixed_ap",
+  "exist_ok": false
+}
+Fixed AP evaluation command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/official_fixed_ap/predictions.json
+Starting the one authorized full inference via model.val.
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+Validate using the text prompt.
+Build text model mobileclip:blt
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+YOLOe-v8s-seg summary (fused): 239 layers, 14,095,097 parameters, 81,312 gradients, 42.5 GFLOPs
+[34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017...:   0%|          | 0/4809 [00:00<?, ?it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:02<00:00, 1756.39it/s]
+Label-cache storage redirect: /workspace/datasets/lvis/labels/val2017.cache -> /workspace/YOLOE-RCAP/baseline_logs/label_cache/val2017.cache
+[34m[1mval: [0mNew cache created: /workspace/YOLOE-RCAP/baseline_logs/label_cache/val2017.cache
+Complete resolved validation configuration:
+{
+  "task": "segment",
+  "mode": "val",
+  "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "epochs": 100,
+  "time": null,
+  "patience": 100,
+  "batch": 1,
+  "imgsz": 640,
+  "save": true,
+  "save_period": -1,
+  "cache": false,
+  "device": 0,
+  "workers": 8,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "official_fixed_ap",
+  "exist_ok": false,
+  "pretrained": true,
+  "optimizer": "auto",
+  "verbose": true,
+  "seed": 0,
+  "deterministic": true,
+  "single_cls": false,
+  "rect": false,
+  "cos_lr": false,
+  "close_mosaic": 10,
+  "resume": false,
+  "amp": true,
+  "fraction": 1.0,
+  "profile": false,
+  "freeze": null,
+  "multi_scale": false,
+  "overlap_mask": false,
+  "mask_ratio": 4,
+  "dropout": 0.0,
+  "val": true,
+  "split": "minival",
+  "save_json": true,
+  "save_hybrid": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "dnn": false,
+  "plots": true,
+  "source": null,
+  "vid_stride": 1,
+  "stream_buffer": false,
+  "visualize": false,
+  "augment": false,
+  "agnostic_nms": false,
+  "classes": null,
+  "retina_masks": false,
+  "embed": null,
+  "show": false,
+  "save_frames": false,
+  "save_txt": false,
+  "save_conf": false,
+  "save_crop": false,
+  "show_labels": true,
+  "show_conf": true,
+  "show_boxes": true,
+  "line_width": null,
+  "format": "torchscript",
+  "keras": false,
+  "optimize": false,
+  "int8": false,
+  "dynamic": false,
+  "simplify": true,
+  "opset": null,
+  "workspace": null,
+  "nms": false,
+  "lr0": 0.01,
+  "lrf": 0.01,
+  "momentum": 0.937,
+  "weight_decay": 0.0005,
+  "warmup_epochs": 3.0,
+  "warmup_momentum": 0.8,
+  "warmup_bias_lr": 0.1,
+  "box": 7.5,
+  "cls": 0.5,
+  "dfl": 1.5,
+  "pose": 12.0,
+  "kobj": 1.0,
+  "nbs": 64,
+  "hsv_h": 0.015,
+  "hsv_s": 0.7,
+  "hsv_v": 0.4,
+  "degrees": 0.0,
+  "translate": 0.1,
+  "scale": 0.5,
+  "shear": 0.0,
+  "perspective": 0.0,
+  "flipud": 0.0,
+  "fliplr": 0.5,
+  "bgr": 0.0,
+  "mosaic": 1.0,
+  "mixup": 0.0,
+  "copy_paste": 0.0,
+  "copy_paste_mode": "flip",
+  "auto_augment": "randaugment",
+  "erasing": 0.4,
+  "crop_fraction": 1.0,
+  "cfg": null,
+  "tracker": "botsort.yaml",
+  "val_interval": 20,
+  "text_model": "mobileclip:blt",
+  "load_vp": false,
+  "train_pe_path": null
+}
+Dataloader verified: 4809 unique minival images; 1203 classes; task=segment; prompt=text
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95)     Mask(P          R      mAP50  mAP50-95):   0%|          | 0/4809 [00:00<?, ?it/s]                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95)     Mask(P          R      mAP50  mAP50-95):   0%|          | 0/4809 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/infer_baseline.py", line 64, in <module>
+    model.val(**CONFIG)
+  File "/workspace/YOLOE-RCAP/ultralytics/engine/model.py", line 657, in val
+    validator(model=self.model)
+  File "/workspace/yoloe-env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/YOLOE-RCAP/ultralytics/models/yolo/yoloe/val.py", line 114, in __call__
+    tp_stats = super().__call__(trainer, deepcopy(model))
+  File "/workspace/yoloe-env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/YOLOE-RCAP/ultralytics/engine/validator.py", line 191, in __call__
+    self.update_metrics(preds, batch)
+  File "/workspace/YOLOE-RCAP/ultralytics/models/yolo/segment/val.py", line 153, in update_metrics
+    ops.scale_image(
+  File "/workspace/YOLOE-RCAP/ultralytics/utils/ops.py", line 384, in scale_image
+    masks = cv2.resize(masks, (im0_shape[1], im0_shape[0]))
+cv2.error: OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'
+
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/baseline_driver.py", line 132, in <module>
+    sys.exit(main())
+  File "/workspace/YOLOE-RCAP/baseline_logs/baseline_driver.py", line 102, in main
+    raise RuntimeError(f'Inference exited {result.returncode}; no retry will be attempted')
+RuntimeError: Inference exited 1; no retry will be attempted
+
+End time: 2026-09-05T05:37:47.771992+00:00
+Runner exit code: 1
+Git status after:
+?? baseline_logs/
+
+git diff --exit-code result: 0
+git diff --cached --exit-code result: 0
+git diff --exit-code 40cd606cabdbe2b566d6f14a6b162c89206e9a1b -- result: 0
+YOLOE checkpoint SHA256 after: ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536; unchanged: True
+minival list SHA256 after: 1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df; unchanged: True
+minival annotation JSON SHA256 after: 02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce; unchanged: True
+Important warnings/errors:
+Inference exited 1; no retry will be attempted
+Traceback (most recent call last):
+AssertionError: Missing label: /workspace/datasets/lvis/images/val2017/000000001425.jpg
+RuntimeError: Inference exited 1; no retry will be attempted
+3 distinct warning/error lines in the complete output above.
+Automatic package installation was disabled; no package-management commands were run.
+Label-cache writes were redirected only to baseline_logs using the unchanged official cache implementation.
+Number of full inference invocations: 1
+
+=== YOLOE OFFICIAL BASELINE REPORT ===
+Git commit: 40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+Python: 3.10.21
+PyTorch: 2.5.1+cu121
+Torch CUDA: 12.1
+GPU: NVIDIA GeForce RTX 3090
+Checkpoint: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt
+Dataset: /workspace/datasets/lvis
+Images evaluated: 0
+Inference configuration: {"agnostic_nms": false, "augment": false, "batch": 1, "cache": false, "classes": null, "classes_count": 1203, "conf": 0.001, "data": "ultralytics/cfg/datasets/lvis.yaml", "dets_per_cat": 10000, "device": 0, "dnn": false, "fixed_ap_max_dets": -1, "fixed_ap_type": "bbox", "half": false, "imgsz": 640, "iou": 0.7, "load_vp": false, "mask_ratio": 4, "max_det": 1000, "mode": "val", "name": "official_fixed_ap", "overlap_mask": false, "plots": true, "project": "/workspace/YOLOE-RCAP/baseline_logs", "prompt": "text; first alias per YAML class", "rect": false, "save_conf": false, "save_hybrid": false, "save_json": true, "save_txt": false, "single_cls": false, "split": "minival", "task": "segment", "text_model": "mobileclip:blt", "workers": 8}
+Predictions JSON: NOT GENERATED (planned: /workspace/YOLOE-RCAP/baseline_logs/official_fixed_ap/predictions.json)
+Fixed AP: NOT COMPUTED
+Expected Fixed AP: 27.9
+Difference from expected: N/A
+Total runtime: 0:00:14 (14.37 seconds)
+Tracked source modified: NO
+Overall status: FAIL
+
+Final diagnosis: BLOCKED under the frozen-source/environment constraints. The earlier automatic FAIL report recorded the process exit; this final report records the diagnosed blocker. The tmux session remains available, but the evaluation process has exited. No retry has been started.
+
+End time: 2026-09-05T05:37:47.771992+00:00
+Runner exit code: 1
+Git status after:
+?? baseline_logs/
+
+git diff --exit-code result: 0
+git diff --cached --exit-code result: 0
+git diff --exit-code 40cd606cabdbe2b566d6f14a6b162c89206e9a1b -- result: 0
+YOLOE checkpoint SHA256 after: ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536; unchanged: True
+minival list SHA256 after: 1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df; unchanged: True
+minival annotation JSON SHA256 after: 02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce; unchanged: True
+Important warnings/errors:
+Official segmentation validator failed while serializing the first image's masks: cv2.error OpenCV(5.0.0), (-215:Assertion failed) m->dims <= 2 in function 'size', at ultralytics/utils/ops.py:384 cv2.resize. No image completed validation; no predictions.json was generated; Fixed AP was not run. No retry, package changes, tracked-source changes, or alternative validation path will be attempted under the strict rules.
+Traceback (most recent call last):
+AssertionError: Missing label: /workspace/datasets/lvis/images/val2017/000000001425.jpg
+cv2.error: OpenCV(5.0.0) /io/opencv/modules/core/src/matrix_wrap.cpp:511: error: (-215:Assertion failed) m->dims <= 2 in function 'size'
+RuntimeError: Inference exited 1; no retry will be attempted
+4 distinct warning/error lines in the complete output above.
+Automatic package installation was disabled; no package-management commands were run.
+Label-cache writes were redirected only to baseline_logs using the unchanged official cache implementation.
+Inference launch attempts: 1
+Completed full 4809-image inferences: 0
+Images attempted: 1
+
+=== YOLOE OFFICIAL BASELINE REPORT ===
+Git commit: 40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+Python: 3.10.21
+PyTorch: 2.5.1+cu121
+Torch CUDA: 12.1
+GPU: NVIDIA GeForce RTX 3090
+Checkpoint: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt
+Dataset: /workspace/datasets/lvis
+Images evaluated: 0
+Inference configuration: {"agnostic_nms": false, "augment": false, "batch": 1, "cache": false, "classes": null, "classes_count": 1203, "conf": 0.001, "data": "ultralytics/cfg/datasets/lvis.yaml", "dets_per_cat": 10000, "device": 0, "dnn": false, "fixed_ap_max_dets": -1, "fixed_ap_type": "bbox", "half": false, "imgsz": 640, "iou": 0.7, "load_vp": false, "mask_ratio": 4, "max_det": 1000, "mode": "val", "name": "official_fixed_ap", "overlap_mask": false, "plots": true, "project": "/workspace/YOLOE-RCAP/baseline_logs", "prompt": "text; first alias per YAML class", "rect": false, "save_conf": false, "save_hybrid": false, "save_json": true, "save_txt": false, "single_cls": false, "split": "minival", "task": "segment", "text_model": "mobileclip:blt", "workers": 8}
+Predictions JSON: NOT GENERATED (planned: /workspace/YOLOE-RCAP/baseline_logs/official_fixed_ap/predictions.json)
+Fixed AP: NOT COMPUTED
+Expected Fixed AP: 27.9
+Difference from expected: N/A
+Total runtime: 0:00:14 (14.37 seconds)
+Tracked source modified: NO
+Overall status: BLOCKED
+
+=== APPROVED BBOX FIXED AP WORKAROUND RUN ===
+Start time: 2026-09-05T06:31:38.107617+00:00
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+Git status before:
+?? baseline_logs/
+
+Exact configuration:
+{
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "imgsz": 640,
+  "batch": 1,
+  "split": "minival",
+  "rect": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "save_json": true,
+  "load_vp": false,
+  "device": 0,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "bbox_fixed_ap",
+  "exist_ok": false,
+  "plots": false
+}
+Fixed AP reporting tolerance: 0.5 AP points from 27.9
+No retries: separate exclusive guards allow one smoke invocation and one full inference invocation.
+Bbox workaround preflight PASS:
+{
+  "python": "3.10.21",
+  "pytorch": "2.5.1+cu121",
+  "torch_cuda": "12.1",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+  "input_sha256": {
+    "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt": "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536",
+    "/workspace/YOLOE-RCAP/mobileclip_blt.pt": "670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a",
+    "/workspace/datasets/lvis/minival.txt": "1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df",
+    "/workspace/datasets/lvis/annotations/lvis_v1_minival.json": "02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce"
+  },
+  "preflight_passed": true
+}
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_common.py:
+"""Independent state for the newly approved bbox workaround; prior reports remain intact."""
+import json
+from pathlib import Path
+from baseline_common import ROOT, LOGS, DATASET, CHECKPOINT, ANNOTATIONS, EXPECTED_COMMIT, EXPECTED_AP, AP_TOLERANCE, digest, git, protect_inputs, verify_repository
+
+STATE = LOGS / 'bbox_run_state.json'
+SMOKE_RESULT = LOGS / 'bbox_smoke_result.json'
+PREDICTIONS = LOGS / 'bbox_fixed_ap/predictions.json'
+CONFIG = dict(data='ultralytics/cfg/datasets/lvis.yaml', imgsz=640, batch=1,
+              split='minival', rect=False, conf=0.001, iou=0.7, max_det=1000,
+              half=False, save_json=True, load_vp=False, device=0,
+              project=str(LOGS), name='bbox_fixed_ap', exist_ok=False, plots=False)
+WORKAROUND = 'bbox-only serialization bypass for mask cv2.resize issue'
+DISCLOSURE = ('This is an official-equivalent bbox Fixed AP workaround, not an unmodified '
+              'end-to-end execution of the original segmentation JSON serialization path. '
+              'The full segmentation model, text prompts, preprocessing, segmentation NMS, '
+              'native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. '
+              'Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. '
+              'Official box metrics and built-in standard bbox evaluation are retained for the full run; '
+              'Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.')
+
+def read_state():
+    return json.loads(STATE.read_text()) if STATE.exists() else {}
+
+def write_state(**updates):
+    state = read_state()
+    state.update(updates)
+    tmp = STATE.with_suffix('.tmp')
+    tmp.write_text(json.dumps(state, indent=2, default=str) + '\n')
+    tmp.replace(STATE)
+    return state
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py:
+"""Approved bbox-only serializer using the official detection methods verbatim."""
+import argparse
+import datetime
+import hashlib
+import json
+import math
+import sys
+import time
+from pathlib import Path
+from bbox_common import *
+
+protect_inputs()
+import torch
+from ultralytics import YOLOE
+from ultralytics.models.yolo.yoloe.val import YOLOESegValidator
+from ultralytics.models.yolo.segment.val import SegmentationValidator
+from ultralytics.models.yolo.detect.val import DetectionValidator
+from ultralytics.utils.metrics import DetMetrics
+from ultralytics.utils import ops
+from ultralytics.data import dataset as dataset_module
+
+class BBoxFixedAPValidator(YOLOESegValidator):
+    """Keep segmentation inference/NMS; dispatch box work to official detection code."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        assert self.args.task == 'segment'
+        self.metrics = DetMetrics(save_dir=self.save_dir, on_plot=self.on_plot)
+        self.visited_image_ids = []
+
+    # Aliases reference the official implementations, without copying their logic.
+    init_metrics = DetectionValidator.init_metrics
+    _prepare_batch = DetectionValidator._prepare_batch
+    _prepare_pred = DetectionValidator._prepare_pred
+    _process_batch = DetectionValidator._process_batch
+    pred_to_json = DetectionValidator.pred_to_json
+    get_stats = DetectionValidator.get_stats
+    finalize_metrics = DetectionValidator.finalize_metrics
+    print_results = DetectionValidator.print_results
+    get_desc = DetectionValidator.get_desc
+    eval_json = DetectionValidator.eval_json
+
+    def update_metrics(self, preds, batch):
+        # SegmentationValidator.postprocess is inherited unchanged. Its first
+        # result contains the original post-NMS rows, including mask coefficients.
+        DetectionValidator.update_metrics(self, preds[0], batch)
+        self.visited_image_ids.extend(int(Path(p).stem) for p in batch['im_file'])
+
+class SmokeValidator(BBoxFixedAPValidator):
+    """Observation-only additions for the one authorized smoke image."""
+    def _prepare_pred(self, pred, pbatch):
+        native = DetectionValidator._prepare_pred(self, pred, pbatch)
+        assert torch.isfinite(native[:, :6]).all(), 'Non-finite box/score/class'
+        assert torch.equal(pred[:, 4:6], native[:, 4:6]), 'Score/class changed by scaling'
+        self.smoke_native_hash = hashlib.sha256(native[:, :6].detach().contiguous().cpu().numpy().tobytes()).hexdigest()
+        self.smoke_detections = len(native)
+        return native
+
+    def eval_json(self, stats):
+        # The smoke test must not evaluate a one-image file against full LVIS.
+        print('Smoke: standalone LVIS evaluation intentionally not invoked.', flush=True)
+        return stats
+
+assert BBoxFixedAPValidator.postprocess is SegmentationValidator.postprocess
+assert BBoxFixedAPValidator.preprocess is SegmentationValidator.preprocess
+assert BBoxFixedAPValidator._prepare_pred is DetectionValidator._prepare_pred
+assert BBoxFixedAPValidator.pred_to_json is DetectionValidator.pred_to_json
+
+# Keep all derived cache writes within baseline_logs; preserve official cache code.
+_cache_load = dataset_module.load_dataset_cache_file
+_cache_save = dataset_module.save_dataset_cache_file
+
+def load_cache(path):
+    existing = LOGS / 'label_cache' / Path(path).name
+    return _cache_load(existing if existing.is_file() else path)
+
+def save_cache(prefix, path, data, version):
+    target = LOGS / 'bbox_label_cache' / Path(path).name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    return _cache_save(prefix, target, data, version)
+
+dataset_module.load_dataset_cache_file = load_cache
+dataset_module.save_dataset_cache_file = save_cache
+
+class OneBatch:
+    def __init__(self, original):
+        self.original = original
+        self.dataset = original.dataset
+    def __len__(self):
+        return 1
+    def __iter__(self):
+        yield next(iter(self.original))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--smoke', action='store_true')
+    mode = parser.parse_args()
+    verify_repository()
+    expected_count = 1 if mode.smoke else 4809
+    cfg = dict(CONFIG, name='bbox_smoke' if mode.smoke else CONFIG['name'])
+    output = LOGS / cfg['name'] / 'predictions.json'
+    assert not output.parent.exists(), f'Refusing existing output directory: {output.parent}'
+    ordered_paths = sorted(str((DATASET / line).resolve()) for line in (DATASET / 'minival.txt').read_text().splitlines())
+    assert len(ordered_paths) == len(set(ordered_paths)) == 4809
+    expected_ids = [int(Path(p).stem) for p in ordered_paths[:expected_count]]
+    observations = dict(dataset_batches_started=0, mask_path_calls=0)
+    active = {}
+    started = time.monotonic()
+
+    def on_start(validator):
+        actual = [str(Path(p).resolve()) for p in validator.dataloader.dataset.im_files]
+        assert actual == ordered_paths, 'Dataset contents or ordering changed'
+        assert len(validator.data['names']) == 1203
+        assert validator.args.task == 'segment' and validator.device.type == 'cuda'
+        for key in ('imgsz','batch','split','rect','conf','iou','max_det','half','save_json','load_vp'):
+            assert getattr(validator.args, key) == CONFIG[key], f'Unexpected configuration: {key}'
+        assert (validator.save_dir / 'predictions.json').resolve() == output
+        if mode.smoke:
+            validator.dataloader = OneBatch(validator.dataloader)
+        active['validator'] = validator
+        print('Complete effective inference configuration:\n' + json.dumps(vars(validator.args), indent=2, default=str), flush=True)
+        print(f'Image sequence verified. This invocation is limited to {expected_count} dataset image(s).', flush=True)
+        if not mode.smoke:
+            write_state(resolved_config=vars(validator.args), dataloader_images=4809, phase='full inference')
+
+    def on_batch_start(validator):
+        observations['dataset_batches_started'] += 1
+        assert observations['dataset_batches_started'] <= expected_count
+
+    def on_batch_end(validator):
+        assert validator.seen == len(validator.visited_image_ids) == observations['dataset_batches_started']
+        if not mode.smoke and (validator.seen % 100 == 0 or validator.seen == 4809):
+            print(f'\nBBOX_BASELINE_PROGRESS {validator.seen}/4809 at {datetime.datetime.now(datetime.timezone.utc).isoformat()}', flush=True)
+            write_state(images_evaluated=int(validator.seen), prediction_records=len(validator.jdict))
+
+    def on_end(validator):
+        assert validator.seen == expected_count
+        assert validator.visited_image_ids == expected_ids, 'Image sequence/count mismatch'
+        print(f'Inference loop complete: {validator.seen}/{expected_count} images, {len(validator.jdict)} bbox records.', flush=True)
+        if not mode.smoke:
+            write_state(images_evaluated=int(validator.seen), inference_loop_complete=True,
+                        image_sequence_verified=True, prediction_records=len(validator.jdict),
+                        phase='saving JSON and official standard bbox evaluation')
+
+    # Fail the smoke test if any predicted-mask decoding or serializer is called.
+    forbidden = {ops.process_mask.__code__, ops.process_mask_native.__code__, ops.scale_image.__code__,
+                 SegmentationValidator._prepare_pred.__code__, SegmentationValidator.pred_to_json.__code__}
+    def mask_guard(frame, event, arg):
+        if event == 'call' and frame.f_code in forbidden:
+            observations['mask_path_calls'] += 1
+            raise AssertionError(f'Mask path unexpectedly invoked: {frame.f_code.co_name}')
+
+    model = YOLOE(str(CHECKPOINT))
+    assert model.task == 'segment' and model.model.args['text_model'] == 'mobileclip:blt'
+    assert not hasattr(model.model, 'pe')
+    for event, callback in (('on_val_start', on_start), ('on_val_batch_start', on_batch_start),
+                            ('on_val_batch_end', on_batch_end), ('on_val_end', on_end)):
+        model.add_callback(event, callback)
+    print(DISCLOSURE, flush=True)
+    print('Exact call: YOLOE(' + repr(str(CHECKPOINT)) + ').val(validator=' + ('SmokeValidator' if mode.smoke else 'BBoxFixedAPValidator') + ', **' + repr(cfg) + ')', flush=True)
+    try:
+        if mode.smoke:
+            sys.setprofile(mask_guard)
+        model.val(validator=SmokeValidator if mode.smoke else BBoxFixedAPValidator, **cfg)
+    finally:
+        sys.setprofile(None)
+    validator = active['validator']
+    assert output.is_file() and output.stat().st_size > 0
+    assert validator.seen == expected_count and validator.visited_image_ids == expected_ids
+    verify_repository()
+    if mode.smoke:
+        records = json.loads(output.read_text())
+        assert records and len(records) == validator.smoke_detections
+        for row in records:
+            assert set(row) == {'image_id', 'category_id', 'bbox', 'score'}
+            assert row['image_id'] == expected_ids[0]
+            assert type(row['category_id']) is int and 1 <= row['category_id'] <= 1203
+            assert len(row['bbox']) == 4
+            assert all(math.isfinite(x) for x in [*row['bbox'], row['score'], row['category_id']])
+        diagnosis = json.loads((LOGS / 'mask_diagnosis_smoke.json').read_text())
+        exact_match = validator.smoke_native_hash == diagnosis['bbox_tensor_sha256']
+        assert exact_match, 'Smoke native boxes differ from the captured original segmentation path'
+        assert observations['mask_path_calls'] == 0
+        result = dict(status='PASS', images_evaluated=1, predictions=str(output), detections=len(records),
+                      mask_path_calls=0, values_finite=True, required_json_fields=True,
+                      native_bbox_sha256=validator.smoke_native_hash,
+                      exact_match_to_original_diagnostic_boxes=exact_match,
+                      git_diff_exit_code=git('diff','--exit-code').returncode,
+                      git_cached_diff_exit_code=git('diff','--cached','--exit-code').returncode,
+                      runtime_seconds=time.monotonic()-started)
+        SMOKE_RESULT.write_text(json.dumps(result, indent=2) + '\n')
+        print('BBOX_SMOKE_PASS:\n' + json.dumps(result, indent=2), flush=True)
+    else:
+        write_state(inference_complete=True, inference_seconds=time.monotonic()-started,
+                    predictions=str(output), predictions_bytes=output.stat().st_size, phase='inference complete')
+        print('Full bbox inference and standard bbox evaluation complete:', output, flush=True)
+
+if __name__ == '__main__':
+    main()
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_job.py:
+"""One smoke image, one full inference, and the unchanged official bbox Fixed AP evaluator."""
+import datetime
+import importlib.metadata
+import json
+import math
+import platform
+import re
+import shlex
+import subprocess
+import sys
+import time
+import traceback
+from bbox_common import *
+
+
+def preflight():
+    import torch
+    import pycocotools.mask
+    import lvis
+    import ultralytics
+    import yaml
+    from ultralytics.utils import AUTOINSTALL, DATASETS_DIR
+    verify_repository()
+    assert sys.prefix == '/workspace/yoloe-env'
+    assert platform.python_version() == '3.10.21'
+    assert torch.__version__ == '2.5.1+cu121' and torch.version.cuda == '12.1'
+    assert torch.cuda.is_available() and torch.cuda.get_device_name(0) == 'NVIDIA GeForce RTX 3090'
+    assert ultralytics.__version__ == '8.3.39'
+    assert Path(ultralytics.__file__).resolve() == ROOT / 'ultralytics/__init__.py'
+    assert importlib.metadata.version('pycocotools') == '2.0.11' and not AUTOINSTALL
+    hashes = {}
+    for path, expected in (
+        (CHECKPOINT, 'ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536'),
+        (ROOT / 'mobileclip_blt.pt', '670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a'),
+        (DATASET / 'minival.txt', '1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df'),
+        (ANNOTATIONS, '02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce'),
+    ):
+        hashes[str(path)] = digest(path)
+        assert hashes[str(path)] == expected, f'Input hash changed: {path}'
+    data = yaml.safe_load((ROOT / CONFIG['data']).read_text())
+    assert (DATASETS_DIR / data['path']).resolve() == DATASET
+    paths = [(DATASET / line).resolve() for line in (DATASET / data['minival']).read_text().splitlines()]
+    gt = json.loads(ANNOTATIONS.read_text())
+    assert len(paths) == len(set(paths)) == len(gt['images']) == 4809
+    assert {int(p.stem) for p in paths} == {i['id'] for i in gt['images']}
+    assert len(gt['annotations']) == 50672 and len(gt['categories']) == len(data['names']) == 1203
+    for path in paths:
+        assert path.is_file()
+        with path.open('rb') as f:
+            f.seek(-2, 2)
+            assert f.read() == b'\xff\xd9', f'JPEG would require repair: {path}'
+    metadata = dict(python=platform.python_version(), pytorch=torch.__version__, torch_cuda=torch.version.cuda,
+                    gpu=torch.cuda.get_device_name(0), git_commit=EXPECTED_COMMIT,
+                    input_sha256=hashes, preflight_passed=True)
+    write_state(**metadata)
+    print('Bbox workaround preflight PASS:\n' + json.dumps(metadata, indent=2), flush=True)
+
+
+def main():
+    # This new authorization is separate from the previous failed segmentation run.
+    assert not STATE.exists(), 'Bbox workaround job state already exists; refusing automatic retry'
+    write_state(start_time=datetime.datetime.now(datetime.timezone.utc).isoformat(), start_epoch=time.time(),
+                phase='preflight', overall_status='BLOCKED', images_evaluated=0, workaround=WORKAROUND)
+    print('\n=== APPROVED BBOX FIXED AP WORKAROUND RUN ===', flush=True)
+    print('Start time:', read_state()['start_time'])
+    print(DISCLOSURE)
+    print('Git status before:\n' + (git('status','--short').stdout or 'CLEAN'))
+    print('Exact configuration:\n' + json.dumps(CONFIG, indent=2))
+    print('Fixed AP reporting tolerance:', AP_TOLERANCE, 'AP points from', EXPECTED_AP)
+    print('No retries: separate exclusive guards allow one smoke invocation and one full inference invocation.')
+    preflight()
+    for name in ('bbox_common.py', 'bbox_inference.py', 'bbox_job.py', 'run_bbox_baseline.sh'):
+        print(f'\nExact runner source {LOGS / name}:\n' + (LOGS / name).read_text())
+    sources = {name: digest(LOGS / name) for name in ('bbox_common.py','bbox_inference.py','bbox_job.py')}
+    smoke_cmd = [sys.executable, '-u', str(LOGS / 'bbox_inference.py'), '--smoke']
+    full_cmd = [sys.executable, '-u', str(LOGS / 'bbox_inference.py')]
+    fixed_cmd = [sys.executable, '-u', 'tools/eval_fixed_ap.py', str(ANNOTATIONS), str(PREDICTIONS), '--type', 'bbox']
+    print('Smoke command:', shlex.join(smoke_cmd))
+    print('Full inference command:', shlex.join(full_cmd))
+    print('Fixed AP command:', shlex.join(fixed_cmd), flush=True)
+    write_state(smoke_command=shlex.join(smoke_cmd), inference_command=shlex.join(full_cmd),
+                fixed_ap_command=shlex.join(fixed_cmd), runner_source_sha256=sources, phase='one-image smoke test')
+    with (LOGS / 'bbox_smoke_started.lock').open('x') as f:
+        f.write(read_state()['start_time'] + '\n')
+    result = subprocess.run(smoke_cmd, cwd=ROOT)
+    write_state(smoke_exit_code=result.returncode)
+    assert result.returncode == 0, f'Smoke failed with exit {result.returncode}; full inference will not start'
+    smoke = json.loads(SMOKE_RESULT.read_text())
+    assert smoke['status'] == 'PASS' and smoke['images_evaluated'] == 1
+    assert smoke['mask_path_calls'] == 0 and smoke['values_finite'] and smoke['required_json_fields']
+    assert smoke['exact_match_to_original_diagnostic_boxes']
+    assert smoke['git_diff_exit_code'] == smoke['git_cached_diff_exit_code'] == 0
+    verify_repository()
+    assert all(digest(LOGS / name) == sha for name, sha in sources.items()), 'Runner changed after smoke test'
+    write_state(smoke_result=smoke, smoke_passed=True, phase='launching one full inference')
+    print('\nSmoke PASS confirmed. Launching the one authorized full inference immediately.', flush=True)
+    with (LOGS / 'bbox_inference_started.lock').open('x') as f:
+        f.write(datetime.datetime.now(datetime.timezone.utc).isoformat() + '\n')
+    result = subprocess.run(full_cmd, cwd=ROOT)
+    write_state(inference_exit_code=result.returncode)
+    if result.returncode != 0:
+        raise RuntimeError(f'Full inference exited {result.returncode}; no retry will be attempted')
+    state = read_state()
+    assert state.get('inference_complete') and state.get('images_evaluated') == 4809
+    assert state.get('image_sequence_verified') and PREDICTIONS.is_file()
+    verify_repository()
+    write_state(phase='official bbox Fixed AP evaluation')
+    print('\n=== OFFICIAL FIXED AP OUTPUT (bbox) ===', flush=True)
+    print('Command:', shlex.join(fixed_cmd), flush=True)
+    process = subprocess.Popen(fixed_cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                               text=True, bufsize=1)
+    ap, keys = None, None
+    for line in process.stdout:
+        print(line, end='', flush=True)
+        clean = re.sub(r'\x1b\[[0-9;]*m', '', line).strip()
+        if 'copypaste:' in clean:
+            payload = clean.split('copypaste:', 1)[1].strip().split(',')
+            if payload[0] == 'AP':
+                keys = payload
+            elif keys:
+                ap = dict(zip(keys, map(float, payload)))['AP']
+    code = process.wait()
+    write_state(fixed_ap_exit_code=code, fixed_ap=ap)
+    assert code == 0, f'Official Fixed AP evaluator exited {code}'
+    assert ap is not None and math.isfinite(ap), 'Unable to parse official Fixed AP output'
+    difference = ap - EXPECTED_AP
+    status = 'PASS' if abs(difference) <= AP_TOLERANCE else 'FAIL'
+    write_state(difference=difference, overall_status=status, phase='completed')
+    return 0 if status == 'PASS' else 1
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except Exception as exc:
+        traceback.print_exc()
+        write_state(error=str(exc), overall_status='FAIL' if (LOGS / 'bbox_inference_started.lock').exists() else 'BLOCKED')
+        sys.exit(1)
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/run_bbox_baseline.sh:
+#!/usr/bin/env bash
+set -Eeo pipefail
+BASELINE_LOGS=/workspace/YOLOE-RCAP/baseline_logs
+exec 9> "$BASELINE_LOGS/bbox_runner.lock"
+flock -n 9 || { echo 'Bbox baseline runner is already active.'; exit 1; }
+if [[ -e "$BASELINE_LOGS/bbox_job_started.lock" || -e "$BASELINE_LOGS/bbox_inference_started.lock" ]]; then
+    echo 'Approved bbox job was already launched; no automatic retry is permitted.'
+    exit 1
+fi
+(set -o noclobber; : > "$BASELINE_LOGS/bbox_job_started.lock")
+exec >> "$BASELINE_LOGS/baseline_result.txt" 2>&1
+finish() {
+    local code=$?
+    trap - EXIT
+    /workspace/yoloe-env/bin/python -B -u "$BASELINE_LOGS/finalize_bbox_baseline.py" "$code"
+    exit "$code"
+}
+trap finish EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+export PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 YOLO_AUTOINSTALL=false
+export YOLO_CONFIG_DIR="$BASELINE_LOGS/ultralytics"
+export MPLCONFIGDIR="$BASELINE_LOGS/matplotlib"
+export TMPDIR="$BASELINE_LOGS/tmp"
+export XDG_CACHE_HOME="$BASELINE_LOGS/xdg_cache"
+export TORCH_HOME="$BASELINE_LOGS/torch_cache"
+export CUDA_CACHE_PATH="$BASELINE_LOGS/cuda_cache"
+export PYTHONPATH=/workspace/YOLOE-RCAP
+export TQDM_MININTERVAL=5
+source /workspace/miniconda3/etc/profile.d/conda.sh
+conda activate /workspace/yoloe-env
+cd /workspace/YOLOE-RCAP
+set -u
+python -u "$BASELINE_LOGS/bbox_job.py"
+
+Smoke command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py --smoke
+Full inference command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py
+Fixed AP command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json --type bbox
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py", line 64, in <module>
+    assert BBoxFixedAPValidator.preprocess is SegmentationValidator.preprocess
+AssertionError
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/bbox_job.py", line 133, in <module>
+    sys.exit(main())
+  File "/workspace/YOLOE-RCAP/baseline_logs/bbox_job.py", line 87, in main
+    assert result.returncode == 0, f'Smoke failed with exit {result.returncode}; full inference will not start'
+AssertionError: Smoke failed with exit 1; full inference will not start
+
+End time: 2026-09-05T06:31:43.388810+00:00
+Runner exit code: 1
+Git status after:
+?? baseline_logs/
+
+git diff --exit-code result: 0
+git diff --cached --exit-code result: 0
+git diff --exit-code 40cd606cabdbe2b566d6f14a6b162c89206e9a1b -- result: 0
+Input SHA256 after: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt: ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536; unchanged=True
+Input SHA256 after: /workspace/YOLOE-RCAP/mobileclip_blt.pt: 670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a; unchanged=True
+Input SHA256 after: /workspace/datasets/lvis/minival.txt: 1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df; unchanged=True
+Input SHA256 after: /workspace/datasets/lvis/annotations/lvis_v1_minival.json: 02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce; unchanged=True
+Important warnings/errors: Smoke failed with exit 1; full inference will not start
+Earlier segmentation-failure and diagnosis records remain above this new approved-run section.
+Package auto-installation was disabled. No packages, dataset files, checkpoint, CUDA or PyTorch were modified.
+Bbox workaround smoke image count: 0
+Bbox workaround full inference launch attempts: 0
+Complete 4809-image inference runs: 0
+Smoke result: {}
+Inference command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py
+Fixed AP evaluation command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json --type bbox
+Prediction records: not available
+Image order verified: False
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+
+=== YOLOE OFFICIAL BASELINE REPORT ===
+Git commit: 40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+Python: 3.10.21
+PyTorch: 2.5.1+cu121
+Torch CUDA: 12.1
+GPU: NVIDIA GeForce RTX 3090
+Checkpoint: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt
+Dataset: /workspace/datasets/lvis
+Images evaluated: 0
+Inference configuration: {"batch": 1, "classes_count": 1203, "conf": 0.001, "data": "ultralytics/cfg/datasets/lvis.yaml", "dets_per_cat": 10000, "device": 0, "fixed_ap_max_dets": -1, "fixed_ap_type": "bbox", "half": false, "imgsz": 640, "iou": 0.7, "load_vp": false, "max_det": 1000, "name": "bbox_fixed_ap", "nms": "official SegmentationValidator.postprocess; multi_label=True; nc=1203", "plots": false, "project": "/workspace/YOLOE-RCAP/baseline_logs", "prompt": "text; first slash-separated alias", "rect": false, "save_json": true, "serialization": "official DetectionValidator.pred_to_json", "split": "minival"}
+Predictions JSON: NOT GENERATED (planned: /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json)
+Fixed AP: NOT COMPUTED
+Expected Fixed AP: 27.9
+Difference from expected: N/A
+Total runtime: 0:00:05 (5.28 seconds)
+Tracked source modified: NO
+Workaround used: bbox-only serialization bypass for mask cv2.resize issue
+Overall status: BLOCKED
+
+STARTUP CHECK CORRECTION: The untracked script incorrectly asserted that YOLOE preprocessing was identical to the base SegmentationValidator preprocessing. YOLOE has its own inherited mixin, which was already preserved. The assertion now checks YOLOESegValidator.preprocess. The assertion failed at module import, before main(), model loading, or any dataset image inference. Zero smoke images and zero full inferences occurred. Initial startup state/guards were archived under baseline_logs/bbox_startup_check; the full-inference guard never existed. No source, model, package, or dataset changes were made.
+Bbox validator import and method identity checks: PASS; no model/image inference.
+
+=== APPROVED BBOX FIXED AP WORKAROUND RUN ===
+Start time: 2026-09-05T06:32:59.928803+00:00
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+Git status before:
+?? baseline_logs/
+
+Exact configuration:
+{
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "imgsz": 640,
+  "batch": 1,
+  "split": "minival",
+  "rect": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "save_json": true,
+  "load_vp": false,
+  "device": 0,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "bbox_fixed_ap",
+  "exist_ok": false,
+  "plots": false
+}
+Fixed AP reporting tolerance: 0.5 AP points from 27.9
+No retries: separate exclusive guards allow one smoke invocation and one full inference invocation.
+Bbox workaround preflight PASS:
+{
+  "python": "3.10.21",
+  "pytorch": "2.5.1+cu121",
+  "torch_cuda": "12.1",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "git_commit": "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+  "input_sha256": {
+    "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt": "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536",
+    "/workspace/YOLOE-RCAP/mobileclip_blt.pt": "670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a",
+    "/workspace/datasets/lvis/minival.txt": "1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df",
+    "/workspace/datasets/lvis/annotations/lvis_v1_minival.json": "02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce"
+  },
+  "preflight_passed": true
+}
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_common.py:
+"""Independent state for the newly approved bbox workaround; prior reports remain intact."""
+import json
+from pathlib import Path
+from baseline_common import ROOT, LOGS, DATASET, CHECKPOINT, ANNOTATIONS, EXPECTED_COMMIT, EXPECTED_AP, AP_TOLERANCE, digest, git, protect_inputs, verify_repository
+
+STATE = LOGS / 'bbox_run_state.json'
+SMOKE_RESULT = LOGS / 'bbox_smoke_result.json'
+PREDICTIONS = LOGS / 'bbox_fixed_ap/predictions.json'
+CONFIG = dict(data='ultralytics/cfg/datasets/lvis.yaml', imgsz=640, batch=1,
+              split='minival', rect=False, conf=0.001, iou=0.7, max_det=1000,
+              half=False, save_json=True, load_vp=False, device=0,
+              project=str(LOGS), name='bbox_fixed_ap', exist_ok=False, plots=False)
+WORKAROUND = 'bbox-only serialization bypass for mask cv2.resize issue'
+DISCLOSURE = ('This is an official-equivalent bbox Fixed AP workaround, not an unmodified '
+              'end-to-end execution of the original segmentation JSON serialization path. '
+              'The full segmentation model, text prompts, preprocessing, segmentation NMS, '
+              'native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. '
+              'Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. '
+              'Official box metrics and built-in standard bbox evaluation are retained for the full run; '
+              'Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.')
+
+def read_state():
+    return json.loads(STATE.read_text()) if STATE.exists() else {}
+
+def write_state(**updates):
+    state = read_state()
+    state.update(updates)
+    tmp = STATE.with_suffix('.tmp')
+    tmp.write_text(json.dumps(state, indent=2, default=str) + '\n')
+    tmp.replace(STATE)
+    return state
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py:
+"""Approved bbox-only serializer using the official detection methods verbatim."""
+import argparse
+import datetime
+import hashlib
+import json
+import math
+import sys
+import time
+from pathlib import Path
+from bbox_common import *
+
+protect_inputs()
+import torch
+from ultralytics import YOLOE
+from ultralytics.models.yolo.yoloe.val import YOLOESegValidator
+from ultralytics.models.yolo.segment.val import SegmentationValidator
+from ultralytics.models.yolo.detect.val import DetectionValidator
+from ultralytics.utils.metrics import DetMetrics
+from ultralytics.utils import ops
+from ultralytics.data import dataset as dataset_module
+
+class BBoxFixedAPValidator(YOLOESegValidator):
+    """Keep segmentation inference/NMS; dispatch box work to official detection code."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        assert self.args.task == 'segment'
+        self.metrics = DetMetrics(save_dir=self.save_dir, on_plot=self.on_plot)
+        self.visited_image_ids = []
+
+    # Aliases reference the official implementations, without copying their logic.
+    init_metrics = DetectionValidator.init_metrics
+    _prepare_batch = DetectionValidator._prepare_batch
+    _prepare_pred = DetectionValidator._prepare_pred
+    _process_batch = DetectionValidator._process_batch
+    pred_to_json = DetectionValidator.pred_to_json
+    get_stats = DetectionValidator.get_stats
+    finalize_metrics = DetectionValidator.finalize_metrics
+    print_results = DetectionValidator.print_results
+    get_desc = DetectionValidator.get_desc
+    eval_json = DetectionValidator.eval_json
+
+    def update_metrics(self, preds, batch):
+        # SegmentationValidator.postprocess is inherited unchanged. Its first
+        # result contains the original post-NMS rows, including mask coefficients.
+        DetectionValidator.update_metrics(self, preds[0], batch)
+        self.visited_image_ids.extend(int(Path(p).stem) for p in batch['im_file'])
+
+class SmokeValidator(BBoxFixedAPValidator):
+    """Observation-only additions for the one authorized smoke image."""
+    def _prepare_pred(self, pred, pbatch):
+        native = DetectionValidator._prepare_pred(self, pred, pbatch)
+        assert torch.isfinite(native[:, :6]).all(), 'Non-finite box/score/class'
+        assert torch.equal(pred[:, 4:6], native[:, 4:6]), 'Score/class changed by scaling'
+        self.smoke_native_hash = hashlib.sha256(native[:, :6].detach().contiguous().cpu().numpy().tobytes()).hexdigest()
+        self.smoke_detections = len(native)
+        return native
+
+    def eval_json(self, stats):
+        # The smoke test must not evaluate a one-image file against full LVIS.
+        print('Smoke: standalone LVIS evaluation intentionally not invoked.', flush=True)
+        return stats
+
+assert BBoxFixedAPValidator.postprocess is SegmentationValidator.postprocess
+assert BBoxFixedAPValidator.preprocess is YOLOESegValidator.preprocess
+assert BBoxFixedAPValidator._prepare_pred is DetectionValidator._prepare_pred
+assert BBoxFixedAPValidator.pred_to_json is DetectionValidator.pred_to_json
+
+# Keep all derived cache writes within baseline_logs; preserve official cache code.
+_cache_load = dataset_module.load_dataset_cache_file
+_cache_save = dataset_module.save_dataset_cache_file
+
+def load_cache(path):
+    existing = LOGS / 'label_cache' / Path(path).name
+    return _cache_load(existing if existing.is_file() else path)
+
+def save_cache(prefix, path, data, version):
+    target = LOGS / 'bbox_label_cache' / Path(path).name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    return _cache_save(prefix, target, data, version)
+
+dataset_module.load_dataset_cache_file = load_cache
+dataset_module.save_dataset_cache_file = save_cache
+
+class OneBatch:
+    def __init__(self, original):
+        self.original = original
+        self.dataset = original.dataset
+    def __len__(self):
+        return 1
+    def __iter__(self):
+        yield next(iter(self.original))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--smoke', action='store_true')
+    mode = parser.parse_args()
+    verify_repository()
+    expected_count = 1 if mode.smoke else 4809
+    cfg = dict(CONFIG, name='bbox_smoke' if mode.smoke else CONFIG['name'])
+    output = LOGS / cfg['name'] / 'predictions.json'
+    assert not output.parent.exists(), f'Refusing existing output directory: {output.parent}'
+    ordered_paths = sorted(str((DATASET / line).resolve()) for line in (DATASET / 'minival.txt').read_text().splitlines())
+    assert len(ordered_paths) == len(set(ordered_paths)) == 4809
+    expected_ids = [int(Path(p).stem) for p in ordered_paths[:expected_count]]
+    observations = dict(dataset_batches_started=0, mask_path_calls=0)
+    active = {}
+    started = time.monotonic()
+
+    def on_start(validator):
+        actual = [str(Path(p).resolve()) for p in validator.dataloader.dataset.im_files]
+        assert actual == ordered_paths, 'Dataset contents or ordering changed'
+        assert len(validator.data['names']) == 1203
+        assert validator.args.task == 'segment' and validator.device.type == 'cuda'
+        for key in ('imgsz','batch','split','rect','conf','iou','max_det','half','save_json','load_vp'):
+            assert getattr(validator.args, key) == CONFIG[key], f'Unexpected configuration: {key}'
+        assert (validator.save_dir / 'predictions.json').resolve() == output
+        if mode.smoke:
+            validator.dataloader = OneBatch(validator.dataloader)
+        active['validator'] = validator
+        print('Complete effective inference configuration:\n' + json.dumps(vars(validator.args), indent=2, default=str), flush=True)
+        print(f'Image sequence verified. This invocation is limited to {expected_count} dataset image(s).', flush=True)
+        if not mode.smoke:
+            write_state(resolved_config=vars(validator.args), dataloader_images=4809, phase='full inference')
+
+    def on_batch_start(validator):
+        observations['dataset_batches_started'] += 1
+        assert observations['dataset_batches_started'] <= expected_count
+
+    def on_batch_end(validator):
+        assert validator.seen == len(validator.visited_image_ids) == observations['dataset_batches_started']
+        if not mode.smoke and (validator.seen % 100 == 0 or validator.seen == 4809):
+            print(f'\nBBOX_BASELINE_PROGRESS {validator.seen}/4809 at {datetime.datetime.now(datetime.timezone.utc).isoformat()}', flush=True)
+            write_state(images_evaluated=int(validator.seen), prediction_records=len(validator.jdict))
+
+    def on_end(validator):
+        assert validator.seen == expected_count
+        assert validator.visited_image_ids == expected_ids, 'Image sequence/count mismatch'
+        print(f'Inference loop complete: {validator.seen}/{expected_count} images, {len(validator.jdict)} bbox records.', flush=True)
+        if not mode.smoke:
+            write_state(images_evaluated=int(validator.seen), inference_loop_complete=True,
+                        image_sequence_verified=True, prediction_records=len(validator.jdict),
+                        phase='saving JSON and official standard bbox evaluation')
+
+    # Fail the smoke test if any predicted-mask decoding or serializer is called.
+    forbidden = {ops.process_mask.__code__, ops.process_mask_native.__code__, ops.scale_image.__code__,
+                 SegmentationValidator._prepare_pred.__code__, SegmentationValidator.pred_to_json.__code__}
+    def mask_guard(frame, event, arg):
+        if event == 'call' and frame.f_code in forbidden:
+            observations['mask_path_calls'] += 1
+            raise AssertionError(f'Mask path unexpectedly invoked: {frame.f_code.co_name}')
+
+    model = YOLOE(str(CHECKPOINT))
+    assert model.task == 'segment' and model.model.args['text_model'] == 'mobileclip:blt'
+    assert not hasattr(model.model, 'pe')
+    for event, callback in (('on_val_start', on_start), ('on_val_batch_start', on_batch_start),
+                            ('on_val_batch_end', on_batch_end), ('on_val_end', on_end)):
+        model.add_callback(event, callback)
+    print(DISCLOSURE, flush=True)
+    print('Exact call: YOLOE(' + repr(str(CHECKPOINT)) + ').val(validator=' + ('SmokeValidator' if mode.smoke else 'BBoxFixedAPValidator') + ', **' + repr(cfg) + ')', flush=True)
+    try:
+        if mode.smoke:
+            sys.setprofile(mask_guard)
+        model.val(validator=SmokeValidator if mode.smoke else BBoxFixedAPValidator, **cfg)
+    finally:
+        sys.setprofile(None)
+    validator = active['validator']
+    assert output.is_file() and output.stat().st_size > 0
+    assert validator.seen == expected_count and validator.visited_image_ids == expected_ids
+    verify_repository()
+    if mode.smoke:
+        records = json.loads(output.read_text())
+        assert records and len(records) == validator.smoke_detections
+        for row in records:
+            assert set(row) == {'image_id', 'category_id', 'bbox', 'score'}
+            assert row['image_id'] == expected_ids[0]
+            assert type(row['category_id']) is int and 1 <= row['category_id'] <= 1203
+            assert len(row['bbox']) == 4
+            assert all(math.isfinite(x) for x in [*row['bbox'], row['score'], row['category_id']])
+        diagnosis = json.loads((LOGS / 'mask_diagnosis_smoke.json').read_text())
+        exact_match = validator.smoke_native_hash == diagnosis['bbox_tensor_sha256']
+        assert exact_match, 'Smoke native boxes differ from the captured original segmentation path'
+        assert observations['mask_path_calls'] == 0
+        result = dict(status='PASS', images_evaluated=1, predictions=str(output), detections=len(records),
+                      mask_path_calls=0, values_finite=True, required_json_fields=True,
+                      native_bbox_sha256=validator.smoke_native_hash,
+                      exact_match_to_original_diagnostic_boxes=exact_match,
+                      git_diff_exit_code=git('diff','--exit-code').returncode,
+                      git_cached_diff_exit_code=git('diff','--cached','--exit-code').returncode,
+                      runtime_seconds=time.monotonic()-started)
+        SMOKE_RESULT.write_text(json.dumps(result, indent=2) + '\n')
+        print('BBOX_SMOKE_PASS:\n' + json.dumps(result, indent=2), flush=True)
+    else:
+        write_state(inference_complete=True, inference_seconds=time.monotonic()-started,
+                    predictions=str(output), predictions_bytes=output.stat().st_size, phase='inference complete')
+        print('Full bbox inference and standard bbox evaluation complete:', output, flush=True)
+
+if __name__ == '__main__':
+    main()
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/bbox_job.py:
+"""One smoke image, one full inference, and the unchanged official bbox Fixed AP evaluator."""
+import datetime
+import importlib.metadata
+import json
+import math
+import platform
+import re
+import shlex
+import subprocess
+import sys
+import time
+import traceback
+from bbox_common import *
+
+
+def preflight():
+    import torch
+    import pycocotools.mask
+    import lvis
+    import ultralytics
+    import yaml
+    from ultralytics.utils import AUTOINSTALL, DATASETS_DIR
+    verify_repository()
+    assert sys.prefix == '/workspace/yoloe-env'
+    assert platform.python_version() == '3.10.21'
+    assert torch.__version__ == '2.5.1+cu121' and torch.version.cuda == '12.1'
+    assert torch.cuda.is_available() and torch.cuda.get_device_name(0) == 'NVIDIA GeForce RTX 3090'
+    assert ultralytics.__version__ == '8.3.39'
+    assert Path(ultralytics.__file__).resolve() == ROOT / 'ultralytics/__init__.py'
+    assert importlib.metadata.version('pycocotools') == '2.0.11' and not AUTOINSTALL
+    hashes = {}
+    for path, expected in (
+        (CHECKPOINT, 'ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536'),
+        (ROOT / 'mobileclip_blt.pt', '670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a'),
+        (DATASET / 'minival.txt', '1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df'),
+        (ANNOTATIONS, '02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce'),
+    ):
+        hashes[str(path)] = digest(path)
+        assert hashes[str(path)] == expected, f'Input hash changed: {path}'
+    data = yaml.safe_load((ROOT / CONFIG['data']).read_text())
+    assert (DATASETS_DIR / data['path']).resolve() == DATASET
+    paths = [(DATASET / line).resolve() for line in (DATASET / data['minival']).read_text().splitlines()]
+    gt = json.loads(ANNOTATIONS.read_text())
+    assert len(paths) == len(set(paths)) == len(gt['images']) == 4809
+    assert {int(p.stem) for p in paths} == {i['id'] for i in gt['images']}
+    assert len(gt['annotations']) == 50672 and len(gt['categories']) == len(data['names']) == 1203
+    for path in paths:
+        assert path.is_file()
+        with path.open('rb') as f:
+            f.seek(-2, 2)
+            assert f.read() == b'\xff\xd9', f'JPEG would require repair: {path}'
+    metadata = dict(python=platform.python_version(), pytorch=torch.__version__, torch_cuda=torch.version.cuda,
+                    gpu=torch.cuda.get_device_name(0), git_commit=EXPECTED_COMMIT,
+                    input_sha256=hashes, preflight_passed=True)
+    write_state(**metadata)
+    print('Bbox workaround preflight PASS:\n' + json.dumps(metadata, indent=2), flush=True)
+
+
+def main():
+    # This new authorization is separate from the previous failed segmentation run.
+    assert not STATE.exists(), 'Bbox workaround job state already exists; refusing automatic retry'
+    write_state(start_time=datetime.datetime.now(datetime.timezone.utc).isoformat(), start_epoch=time.time(),
+                phase='preflight', overall_status='BLOCKED', images_evaluated=0, workaround=WORKAROUND)
+    print('\n=== APPROVED BBOX FIXED AP WORKAROUND RUN ===', flush=True)
+    print('Start time:', read_state()['start_time'])
+    print(DISCLOSURE)
+    print('Git status before:\n' + (git('status','--short').stdout or 'CLEAN'))
+    print('Exact configuration:\n' + json.dumps(CONFIG, indent=2))
+    print('Fixed AP reporting tolerance:', AP_TOLERANCE, 'AP points from', EXPECTED_AP)
+    print('No retries: separate exclusive guards allow one smoke invocation and one full inference invocation.')
+    preflight()
+    for name in ('bbox_common.py', 'bbox_inference.py', 'bbox_job.py', 'run_bbox_baseline.sh'):
+        print(f'\nExact runner source {LOGS / name}:\n' + (LOGS / name).read_text())
+    sources = {name: digest(LOGS / name) for name in ('bbox_common.py','bbox_inference.py','bbox_job.py')}
+    smoke_cmd = [sys.executable, '-u', str(LOGS / 'bbox_inference.py'), '--smoke']
+    full_cmd = [sys.executable, '-u', str(LOGS / 'bbox_inference.py')]
+    fixed_cmd = [sys.executable, '-u', 'tools/eval_fixed_ap.py', str(ANNOTATIONS), str(PREDICTIONS), '--type', 'bbox']
+    print('Smoke command:', shlex.join(smoke_cmd))
+    print('Full inference command:', shlex.join(full_cmd))
+    print('Fixed AP command:', shlex.join(fixed_cmd), flush=True)
+    write_state(smoke_command=shlex.join(smoke_cmd), inference_command=shlex.join(full_cmd),
+                fixed_ap_command=shlex.join(fixed_cmd), runner_source_sha256=sources, phase='one-image smoke test')
+    with (LOGS / 'bbox_smoke_started.lock').open('x') as f:
+        f.write(read_state()['start_time'] + '\n')
+    result = subprocess.run(smoke_cmd, cwd=ROOT)
+    write_state(smoke_exit_code=result.returncode)
+    assert result.returncode == 0, f'Smoke failed with exit {result.returncode}; full inference will not start'
+    smoke = json.loads(SMOKE_RESULT.read_text())
+    assert smoke['status'] == 'PASS' and smoke['images_evaluated'] == 1
+    assert smoke['mask_path_calls'] == 0 and smoke['values_finite'] and smoke['required_json_fields']
+    assert smoke['exact_match_to_original_diagnostic_boxes']
+    assert smoke['git_diff_exit_code'] == smoke['git_cached_diff_exit_code'] == 0
+    verify_repository()
+    assert all(digest(LOGS / name) == sha for name, sha in sources.items()), 'Runner changed after smoke test'
+    write_state(smoke_result=smoke, smoke_passed=True, phase='launching one full inference')
+    print('\nSmoke PASS confirmed. Launching the one authorized full inference immediately.', flush=True)
+    with (LOGS / 'bbox_inference_started.lock').open('x') as f:
+        f.write(datetime.datetime.now(datetime.timezone.utc).isoformat() + '\n')
+    result = subprocess.run(full_cmd, cwd=ROOT)
+    write_state(inference_exit_code=result.returncode)
+    if result.returncode != 0:
+        raise RuntimeError(f'Full inference exited {result.returncode}; no retry will be attempted')
+    state = read_state()
+    assert state.get('inference_complete') and state.get('images_evaluated') == 4809
+    assert state.get('image_sequence_verified') and PREDICTIONS.is_file()
+    verify_repository()
+    write_state(phase='official bbox Fixed AP evaluation')
+    print('\n=== OFFICIAL FIXED AP OUTPUT (bbox) ===', flush=True)
+    print('Command:', shlex.join(fixed_cmd), flush=True)
+    process = subprocess.Popen(fixed_cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                               text=True, bufsize=1)
+    ap, keys = None, None
+    for line in process.stdout:
+        print(line, end='', flush=True)
+        clean = re.sub(r'\x1b\[[0-9;]*m', '', line).strip()
+        if 'copypaste:' in clean:
+            payload = clean.split('copypaste:', 1)[1].strip().split(',')
+            if payload[0] == 'AP':
+                keys = payload
+            elif keys:
+                ap = dict(zip(keys, map(float, payload)))['AP']
+    code = process.wait()
+    write_state(fixed_ap_exit_code=code, fixed_ap=ap)
+    assert code == 0, f'Official Fixed AP evaluator exited {code}'
+    assert ap is not None and math.isfinite(ap), 'Unable to parse official Fixed AP output'
+    difference = ap - EXPECTED_AP
+    status = 'PASS' if abs(difference) <= AP_TOLERANCE else 'FAIL'
+    write_state(difference=difference, overall_status=status, phase='completed')
+    return 0 if status == 'PASS' else 1
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except Exception as exc:
+        traceback.print_exc()
+        write_state(error=str(exc), overall_status='FAIL' if (LOGS / 'bbox_inference_started.lock').exists() else 'BLOCKED')
+        sys.exit(1)
+
+
+Exact runner source /workspace/YOLOE-RCAP/baseline_logs/run_bbox_baseline.sh:
+#!/usr/bin/env bash
+set -Eeo pipefail
+BASELINE_LOGS=/workspace/YOLOE-RCAP/baseline_logs
+exec 9> "$BASELINE_LOGS/bbox_runner.lock"
+flock -n 9 || { echo 'Bbox baseline runner is already active.'; exit 1; }
+if [[ -e "$BASELINE_LOGS/bbox_job_started.lock" || -e "$BASELINE_LOGS/bbox_inference_started.lock" ]]; then
+    echo 'Approved bbox job was already launched; no automatic retry is permitted.'
+    exit 1
+fi
+(set -o noclobber; : > "$BASELINE_LOGS/bbox_job_started.lock")
+exec >> "$BASELINE_LOGS/baseline_result.txt" 2>&1
+finish() {
+    local code=$?
+    trap - EXIT
+    /workspace/yoloe-env/bin/python -B -u "$BASELINE_LOGS/finalize_bbox_baseline.py" "$code"
+    exit "$code"
+}
+trap finish EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+export PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 YOLO_AUTOINSTALL=false
+export YOLO_CONFIG_DIR="$BASELINE_LOGS/ultralytics"
+export MPLCONFIGDIR="$BASELINE_LOGS/matplotlib"
+export TMPDIR="$BASELINE_LOGS/tmp"
+export XDG_CACHE_HOME="$BASELINE_LOGS/xdg_cache"
+export TORCH_HOME="$BASELINE_LOGS/torch_cache"
+export CUDA_CACHE_PATH="$BASELINE_LOGS/cuda_cache"
+export PYTHONPATH=/workspace/YOLOE-RCAP
+export TQDM_MININTERVAL=5
+source /workspace/miniconda3/etc/profile.d/conda.sh
+conda activate /workspace/yoloe-env
+cd /workspace/YOLOE-RCAP
+set -u
+python -u "$BASELINE_LOGS/bbox_job.py"
+
+Smoke command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py --smoke
+Full inference command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py
+Fixed AP command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json --type bbox
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+Exact call: YOLOE('/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt').val(validator=SmokeValidator, **{'data': 'ultralytics/cfg/datasets/lvis.yaml', 'imgsz': 640, 'batch': 1, 'split': 'minival', 'rect': False, 'conf': 0.001, 'iou': 0.7, 'max_det': 1000, 'half': False, 'save_json': True, 'load_vp': False, 'device': 0, 'project': '/workspace/YOLOE-RCAP/baseline_logs', 'name': 'bbox_smoke', 'exist_ok': False, 'plots': False})
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+Validate using the text prompt.
+Build text model mobileclip:blt
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+YOLOe-v8s-seg summary (fused): 239 layers, 14,095,097 parameters, 81,312 gradients, 42.5 GFLOPs
+[34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017.cache... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:00<?, ?it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017.cache... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:00<?, ?it/s]
+Complete effective inference configuration:
+{
+  "task": "segment",
+  "mode": "val",
+  "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "epochs": 100,
+  "time": null,
+  "patience": 100,
+  "batch": 1,
+  "imgsz": 640,
+  "save": true,
+  "save_period": -1,
+  "cache": false,
+  "device": 0,
+  "workers": 8,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "bbox_smoke",
+  "exist_ok": false,
+  "pretrained": true,
+  "optimizer": "auto",
+  "verbose": true,
+  "seed": 0,
+  "deterministic": true,
+  "single_cls": false,
+  "rect": false,
+  "cos_lr": false,
+  "close_mosaic": 10,
+  "resume": false,
+  "amp": true,
+  "fraction": 1.0,
+  "profile": false,
+  "freeze": null,
+  "multi_scale": false,
+  "overlap_mask": false,
+  "mask_ratio": 4,
+  "dropout": 0.0,
+  "val": true,
+  "split": "minival",
+  "save_json": true,
+  "save_hybrid": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "dnn": false,
+  "plots": false,
+  "source": null,
+  "vid_stride": 1,
+  "stream_buffer": false,
+  "visualize": false,
+  "augment": false,
+  "agnostic_nms": false,
+  "classes": null,
+  "retina_masks": false,
+  "embed": null,
+  "show": false,
+  "save_frames": false,
+  "save_txt": false,
+  "save_conf": false,
+  "save_crop": false,
+  "show_labels": true,
+  "show_conf": true,
+  "show_boxes": true,
+  "line_width": null,
+  "format": "torchscript",
+  "keras": false,
+  "optimize": false,
+  "int8": false,
+  "dynamic": false,
+  "simplify": true,
+  "opset": null,
+  "workspace": null,
+  "nms": false,
+  "lr0": 0.01,
+  "lrf": 0.01,
+  "momentum": 0.937,
+  "weight_decay": 0.0005,
+  "warmup_epochs": 3.0,
+  "warmup_momentum": 0.8,
+  "warmup_bias_lr": 0.1,
+  "box": 7.5,
+  "cls": 0.5,
+  "dfl": 1.5,
+  "pose": 12.0,
+  "kobj": 1.0,
+  "nbs": 64,
+  "hsv_h": 0.015,
+  "hsv_s": 0.7,
+  "hsv_v": 0.4,
+  "degrees": 0.0,
+  "translate": 0.1,
+  "scale": 0.5,
+  "shear": 0.0,
+  "perspective": 0.0,
+  "flipud": 0.0,
+  "fliplr": 0.5,
+  "bgr": 0.0,
+  "mosaic": 1.0,
+  "mixup": 0.0,
+  "copy_paste": 0.0,
+  "copy_paste_mode": "flip",
+  "auto_augment": "randaugment",
+  "erasing": 0.4,
+  "crop_fraction": 1.0,
+  "cfg": null,
+  "tracker": "botsort.yaml",
+  "val_interval": 20,
+  "text_model": "mobileclip:blt",
+  "load_vp": false,
+  "train_pe_path": null
+}
+Image sequence verified. This invocation is limited to 1 dataset image(s).
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   0%|          | 0/1 [00:00<?, ?it/s]                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|██████████| 1/1 [00:00<00:00,  5.73it/s]
+Inference loop complete: 1/1 images, 1000 bbox records.
+Speed: 0.0ms preprocess, 0.0ms inference, 0.0ms loss, 0.0ms postprocess per image
+Saving /workspace/YOLOE-RCAP/baseline_logs/bbox_smoke/predictions.json...
+Smoke: standalone LVIS evaluation intentionally not invoked.
+Results saved to [1m/workspace/YOLOE-RCAP/baseline_logs/bbox_smoke[0m
+BBOX_SMOKE_PASS:
+{
+  "status": "PASS",
+  "images_evaluated": 1,
+  "predictions": "/workspace/YOLOE-RCAP/baseline_logs/bbox_smoke/predictions.json",
+  "detections": 1000,
+  "mask_path_calls": 0,
+  "values_finite": true,
+  "required_json_fields": true,
+  "native_bbox_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff",
+  "exact_match_to_original_diagnostic_boxes": true,
+  "git_diff_exit_code": 0,
+  "git_cached_diff_exit_code": 0,
+  "runtime_seconds": 8.196425915928558
+}
+
+Smoke PASS confirmed. Launching the one authorized full inference immediately.
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+Exact call: YOLOE('/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt').val(validator=BBoxFixedAPValidator, **{'data': 'ultralytics/cfg/datasets/lvis.yaml', 'imgsz': 640, 'batch': 1, 'split': 'minival', 'rect': False, 'conf': 0.001, 'iou': 0.7, 'max_det': 1000, 'half': False, 'save_json': True, 'load_vp': False, 'device': 0, 'project': '/workspace/YOLOE-RCAP/baseline_logs', 'name': 'bbox_fixed_ap', 'exist_ok': False, 'plots': False})
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+Validate using the text prompt.
+Build text model mobileclip:blt
+Ultralytics 8.3.39 🚀 Python-3.10.21 torch-2.5.1+cu121 CUDA:0 (NVIDIA GeForce RTX 3090, 24126MiB)
+YOLOe-v8s-seg summary (fused): 239 layers, 14,095,097 parameters, 81,312 gradients, 42.5 GFLOPs
+[34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017.cache... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:00<?, ?it/s][34m[1mval: [0mScanning /workspace/datasets/lvis/labels/val2017.cache... 4752 images, 57 backgrounds, 0 corrupt: 100%|██████████| 4809/4809 [00:00<?, ?it/s]
+Complete effective inference configuration:
+{
+  "task": "segment",
+  "mode": "val",
+  "model": "/workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt",
+  "data": "ultralytics/cfg/datasets/lvis.yaml",
+  "epochs": 100,
+  "time": null,
+  "patience": 100,
+  "batch": 1,
+  "imgsz": 640,
+  "save": true,
+  "save_period": -1,
+  "cache": false,
+  "device": 0,
+  "workers": 8,
+  "project": "/workspace/YOLOE-RCAP/baseline_logs",
+  "name": "bbox_fixed_ap",
+  "exist_ok": false,
+  "pretrained": true,
+  "optimizer": "auto",
+  "verbose": true,
+  "seed": 0,
+  "deterministic": true,
+  "single_cls": false,
+  "rect": false,
+  "cos_lr": false,
+  "close_mosaic": 10,
+  "resume": false,
+  "amp": true,
+  "fraction": 1.0,
+  "profile": false,
+  "freeze": null,
+  "multi_scale": false,
+  "overlap_mask": false,
+  "mask_ratio": 4,
+  "dropout": 0.0,
+  "val": true,
+  "split": "minival",
+  "save_json": true,
+  "save_hybrid": false,
+  "conf": 0.001,
+  "iou": 0.7,
+  "max_det": 1000,
+  "half": false,
+  "dnn": false,
+  "plots": false,
+  "source": null,
+  "vid_stride": 1,
+  "stream_buffer": false,
+  "visualize": false,
+  "augment": false,
+  "agnostic_nms": false,
+  "classes": null,
+  "retina_masks": false,
+  "embed": null,
+  "show": false,
+  "save_frames": false,
+  "save_txt": false,
+  "save_conf": false,
+  "save_crop": false,
+  "show_labels": true,
+  "show_conf": true,
+  "show_boxes": true,
+  "line_width": null,
+  "format": "torchscript",
+  "keras": false,
+  "optimize": false,
+  "int8": false,
+  "dynamic": false,
+  "simplify": true,
+  "opset": null,
+  "workspace": null,
+  "nms": false,
+  "lr0": 0.01,
+  "lrf": 0.01,
+  "momentum": 0.937,
+  "weight_decay": 0.0005,
+  "warmup_epochs": 3.0,
+  "warmup_momentum": 0.8,
+  "warmup_bias_lr": 0.1,
+  "box": 7.5,
+  "cls": 0.5,
+  "dfl": 1.5,
+  "pose": 12.0,
+  "kobj": 1.0,
+  "nbs": 64,
+  "hsv_h": 0.015,
+  "hsv_s": 0.7,
+  "hsv_v": 0.4,
+  "degrees": 0.0,
+  "translate": 0.1,
+  "scale": 0.5,
+  "shear": 0.0,
+  "perspective": 0.0,
+  "flipud": 0.0,
+  "fliplr": 0.5,
+  "bgr": 0.0,
+  "mosaic": 1.0,
+  "mixup": 0.0,
+  "copy_paste": 0.0,
+  "copy_paste_mode": "flip",
+  "auto_augment": "randaugment",
+  "erasing": 0.4,
+  "crop_fraction": 1.0,
+  "cfg": null,
+  "tracker": "botsort.yaml",
+  "val_interval": 20,
+  "text_model": "mobileclip:blt",
+  "load_vp": false,
+  "train_pe_path": null
+}
+Image sequence verified. This invocation is limited to 4809 dataset image(s).
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   0%|          | 0/4809 [00:00<?, ?it/s]
+BBOX_BASELINE_PROGRESS 100/4809 at 2026-09-05T06:33:24.306790+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   2%|▏         | 102/4809 [00:05<03:51, 20.36it/s]
+BBOX_BASELINE_PROGRESS 200/4809 at 2026-09-05T06:33:29.672916+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   4%|▍         | 204/4809 [00:10<03:53, 19.70it/s]
+BBOX_BASELINE_PROGRESS 300/4809 at 2026-09-05T06:33:34.600142+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   6%|▋         | 305/4809 [00:15<03:47, 19.81it/s]
+BBOX_BASELINE_PROGRESS 400/4809 at 2026-09-05T06:33:39.417716+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):   8%|▊         | 408/4809 [00:20<03:38, 20.11it/s]
+BBOX_BASELINE_PROGRESS 500/4809 at 2026-09-05T06:33:44.116223+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  11%|█         | 516/4809 [00:25<03:27, 20.64it/s]
+BBOX_BASELINE_PROGRESS 600/4809 at 2026-09-05T06:33:49.290630+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  13%|█▎        | 620/4809 [00:30<03:29, 20.02it/s]
+BBOX_BASELINE_PROGRESS 700/4809 at 2026-09-05T06:33:54.247812+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  15%|█▌        | 726/4809 [00:35<03:20, 20.36it/s]
+BBOX_BASELINE_PROGRESS 800/4809 at 2026-09-05T06:33:58.340164+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  17%|█▋        | 839/4809 [00:40<03:08, 21.03it/s]
+BBOX_BASELINE_PROGRESS 900/4809 at 2026-09-05T06:34:03.201767+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  20%|█▉        | 945/4809 [00:46<03:04, 20.92it/s]
+BBOX_BASELINE_PROGRESS 1000/4809 at 2026-09-05T06:34:08.092561+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  22%|██▏       | 1050/4809 [00:51<03:01, 20.68it/s]
+BBOX_BASELINE_PROGRESS 1100/4809 at 2026-09-05T06:34:12.687008+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  24%|██▍       | 1158/4809 [00:56<02:54, 20.95it/s]
+BBOX_BASELINE_PROGRESS 1200/4809 at 2026-09-05T06:34:17.926012+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  26%|██▋       | 1266/4809 [01:01<02:47, 21.09it/s]
+BBOX_BASELINE_PROGRESS 1300/4809 at 2026-09-05T06:34:22.780640+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  29%|██▊       | 1372/4809 [01:06<02:46, 20.69it/s]
+BBOX_BASELINE_PROGRESS 1400/4809 at 2026-09-05T06:34:27.289249+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  31%|███       | 1476/4809 [01:11<02:42, 20.45it/s]
+BBOX_BASELINE_PROGRESS 1500/4809 at 2026-09-05T06:34:32.648565+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  33%|███▎      | 1579/4809 [01:17<02:43, 19.75it/s]
+BBOX_BASELINE_PROGRESS 1600/4809 at 2026-09-05T06:34:37.966711+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  35%|███▌      | 1695/4809 [01:22<02:30, 20.71it/s]
+BBOX_BASELINE_PROGRESS 1700/4809 at 2026-09-05T06:34:42.242794+00:00
+
+BBOX_BASELINE_PROGRESS 1800/4809 at 2026-09-05T06:34:46.670361+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  38%|███▊      | 1810/4809 [01:27<02:20, 21.32it/s]
+BBOX_BASELINE_PROGRESS 1900/4809 at 2026-09-05T06:34:51.194614+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  40%|███▉      | 1917/4809 [01:32<02:17, 21.07it/s]
+BBOX_BASELINE_PROGRESS 2000/4809 at 2026-09-05T06:34:56.418224+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  42%|████▏     | 2023/4809 [01:38<02:13, 20.81it/s]
+BBOX_BASELINE_PROGRESS 2100/4809 at 2026-09-05T06:35:01.306020+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  44%|████▍     | 2128/4809 [01:43<02:10, 20.62it/s]
+BBOX_BASELINE_PROGRESS 2200/4809 at 2026-09-05T06:35:06.355655+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  46%|████▋     | 2232/4809 [01:48<02:05, 20.50it/s]
+BBOX_BASELINE_PROGRESS 2300/4809 at 2026-09-05T06:35:11.209670+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  49%|████▊     | 2335/4809 [01:53<02:03, 19.97it/s]
+BBOX_BASELINE_PROGRESS 2400/4809 at 2026-09-05T06:35:16.836226+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  51%|█████     | 2436/4809 [01:59<01:59, 19.80it/s]
+BBOX_BASELINE_PROGRESS 2500/4809 at 2026-09-05T06:35:21.574014+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  53%|█████▎    | 2543/4809 [02:04<01:52, 20.23it/s]
+BBOX_BASELINE_PROGRESS 2600/4809 at 2026-09-05T06:35:26.046236+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  55%|█████▌    | 2656/4809 [02:09<01:43, 20.89it/s]
+BBOX_BASELINE_PROGRESS 2700/4809 at 2026-09-05T06:35:31.654147+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  57%|█████▋    | 2761/4809 [02:15<01:43, 19.82it/s]
+BBOX_BASELINE_PROGRESS 2800/4809 at 2026-09-05T06:35:36.403617+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  60%|█████▉    | 2873/4809 [02:20<01:34, 20.52it/s]
+BBOX_BASELINE_PROGRESS 2900/4809 at 2026-09-05T06:35:41.013835+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  62%|██████▏   | 2984/4809 [02:25<01:26, 20.99it/s]
+BBOX_BASELINE_PROGRESS 3000/4809 at 2026-09-05T06:35:45.393090+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  64%|██████▍   | 3090/4809 [02:30<01:22, 20.87it/s]
+BBOX_BASELINE_PROGRESS 3100/4809 at 2026-09-05T06:35:50.389105+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  66%|██████▋   | 3195/4809 [02:35<01:17, 20.73it/s]
+BBOX_BASELINE_PROGRESS 3200/4809 at 2026-09-05T06:35:55.138417+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  69%|██████▊   | 3299/4809 [02:41<01:15, 20.05it/s]
+BBOX_BASELINE_PROGRESS 3300/4809 at 2026-09-05T06:36:00.498523+00:00
+
+BBOX_BASELINE_PROGRESS 3400/4809 at 2026-09-05T06:36:05.048282+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  71%|███████   | 3413/4809 [02:46<01:07, 20.80it/s]
+BBOX_BASELINE_PROGRESS 3500/4809 at 2026-09-05T06:36:09.690695+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  73%|███████▎  | 3519/4809 [02:51<01:01, 20.88it/s]
+BBOX_BASELINE_PROGRESS 3600/4809 at 2026-09-05T06:36:14.375097+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  75%|███████▌  | 3624/4809 [02:56<00:56, 20.85it/s]
+BBOX_BASELINE_PROGRESS 3700/4809 at 2026-09-05T06:36:18.981226+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  78%|███████▊  | 3735/4809 [03:01<00:50, 21.22it/s]
+BBOX_BASELINE_PROGRESS 3800/4809 at 2026-09-05T06:36:23.738032+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  80%|███████▉  | 3844/4809 [03:06<00:45, 21.31it/s]
+BBOX_BASELINE_PROGRESS 3900/4809 at 2026-09-05T06:36:29.569169+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  82%|████████▏ | 3951/4809 [03:12<00:43, 19.77it/s]
+BBOX_BASELINE_PROGRESS 4000/4809 at 2026-09-05T06:36:33.842031+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  85%|████████▍ | 4066/4809 [03:17<00:36, 20.62it/s]
+BBOX_BASELINE_PROGRESS 4100/4809 at 2026-09-05T06:36:38.737769+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  87%|████████▋ | 4172/4809 [03:22<00:30, 20.71it/s]
+BBOX_BASELINE_PROGRESS 4200/4809 at 2026-09-05T06:36:43.301599+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  89%|████████▉ | 4279/4809 [03:27<00:25, 20.85it/s]
+BBOX_BASELINE_PROGRESS 4300/4809 at 2026-09-05T06:36:47.880995+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  91%|█████████▏| 4389/4809 [03:32<00:19, 21.14it/s]
+BBOX_BASELINE_PROGRESS 4400/4809 at 2026-09-05T06:36:52.812125+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  93%|█████████▎| 4496/4809 [03:38<00:15, 20.22it/s]
+BBOX_BASELINE_PROGRESS 4500/4809 at 2026-09-05T06:36:58.253315+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  96%|█████████▌| 4598/4809 [03:44<00:10, 19.32it/s]
+BBOX_BASELINE_PROGRESS 4600/4809 at 2026-09-05T06:37:04.091547+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95):  98%|█████████▊| 4697/4809 [03:49<00:05, 19.38it/s]
+BBOX_BASELINE_PROGRESS 4700/4809 at 2026-09-05T06:37:09.074187+00:00
+
+BBOX_BASELINE_PROGRESS 4800/4809 at 2026-09-05T06:37:13.926688+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|█████████▉| 4802/4809 [03:54<00:00, 19.78it/s]
+BBOX_BASELINE_PROGRESS 4809/4809 at 2026-09-05T06:37:14.346574+00:00
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|██████████| 4809/4809 [03:54<00:00, 20.47it/s]
+Inference loop complete: 4809/4809 images, 4776453 bbox records.
+Speed: 0.2ms preprocess, 5.4ms inference, 0.0ms loss, 36.8ms postprocess per image
+Saving /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json...
+
+Evaluating lvis mAP using /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json and /workspace/datasets/lvis/annotations/lvis_v1_minival.json...
+[09/05 06:38:08] lvis.results WARNING: Assuming user provided the results in correct format.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=300 catIds=all] = 0.256
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=300 catIds=all] = 0.351
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=300 catIds=all] = 0.278
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     s | maxDets=300 catIds=all] = 0.151
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     m | maxDets=300 catIds=all] = 0.325
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     l | maxDets=300 catIds=all] = 0.458
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=300 catIds=  r] = 0.189
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=300 catIds=  c] = 0.258
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=300 catIds=  f] = 0.267
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 catIds=all] = 0.350
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     s | maxDets=300 catIds=all] = 0.192
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     m | maxDets=300 catIds=all] = 0.421
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     l | maxDets=300 catIds=all] = 0.575
+Results saved to [1m/workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap[0m
+Full bbox inference and standard bbox evaluation complete: /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json
+
+=== OFFICIAL FIXED AP OUTPUT (bbox) ===
+Command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json --type bbox
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/tools/eval_fixed_ap.py", line 6, in <module>
+    from lvis import LVIS, LVISResults, LVISEval
+ImportError: cannot import name 'LVIS' from 'lvis' (unknown location)
+Traceback (most recent call last):
+  File "/workspace/YOLOE-RCAP/baseline_logs/bbox_job.py", line 133, in <module>
+    sys.exit(main())
+  File "/workspace/YOLOE-RCAP/baseline_logs/bbox_job.py", line 124, in main
+    assert code == 0, f'Official Fixed AP evaluator exited {code}'
+AssertionError: Official Fixed AP evaluator exited 1
+
+End time: 2026-09-05T06:38:55.396869+00:00
+Runner exit code: 1
+Git status after:
+?? baseline_logs/
+
+git diff --exit-code result: 0
+git diff --cached --exit-code result: 0
+git diff --exit-code 40cd606cabdbe2b566d6f14a6b162c89206e9a1b -- result: 0
+Input SHA256 after: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt: ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536; unchanged=True
+Input SHA256 after: /workspace/YOLOE-RCAP/mobileclip_blt.pt: 670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a; unchanged=True
+Input SHA256 after: /workspace/datasets/lvis/minival.txt: 1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df; unchanged=True
+Input SHA256 after: /workspace/datasets/lvis/annotations/lvis_v1_minival.json: 02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce; unchanged=True
+Important warnings/errors: Official Fixed AP evaluator exited 1
+Earlier segmentation-failure and diagnosis records remain above this new approved-run section.
+Package auto-installation was disabled. No packages, dataset files, checkpoint, CUDA or PyTorch were modified.
+Bbox workaround smoke image count: 1
+Bbox workaround full inference launch attempts: 1
+Complete 4809-image inference runs: 1
+Smoke result: {"detections": 1000, "exact_match_to_original_diagnostic_boxes": true, "git_cached_diff_exit_code": 0, "git_diff_exit_code": 0, "images_evaluated": 1, "mask_path_calls": 0, "native_bbox_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff", "predictions": "/workspace/YOLOE-RCAP/baseline_logs/bbox_smoke/predictions.json", "required_json_fields": true, "runtime_seconds": 8.196425915928558, "status": "PASS", "values_finite": true}
+Inference command: /workspace/yoloe-env/bin/python -u /workspace/YOLOE-RCAP/baseline_logs/bbox_inference.py
+Fixed AP evaluation command: /workspace/yoloe-env/bin/python -u tools/eval_fixed_ap.py /workspace/datasets/lvis/annotations/lvis_v1_minival.json /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json --type bbox
+Prediction records: 4776453
+Image order verified: True
+This is an official-equivalent bbox Fixed AP workaround, not an unmodified end-to-end execution of the original segmentation JSON serialization path. The full segmentation model, text prompts, preprocessing, segmentation NMS, native box rescaling, category mapping, ordering, and bbox/score rounding are preserved. Predicted mask decoding, mask JSON, and dependent mask metrics/plots are bypassed. Official box metrics and built-in standard bbox evaluation are retained for the full run; Fixed AP is separately computed by the unchanged tools/eval_fixed_ap.py --type bbox.
+
+=== YOLOE OFFICIAL BASELINE REPORT ===
+Git commit: 40cd606cabdbe2b566d6f14a6b162c89206e9a1b
+Python: 3.10.21
+PyTorch: 2.5.1+cu121
+Torch CUDA: 12.1
+GPU: NVIDIA GeForce RTX 3090
+Checkpoint: /workspace/YOLOE-RCAP/pretrain/yoloe-v8s-seg.pt
+Dataset: /workspace/datasets/lvis
+Images evaluated: 4809
+Inference configuration: {"agnostic_nms": false, "augment": false, "batch": 1, "cache": false, "classes": null, "classes_count": 1203, "conf": 0.001, "data": "ultralytics/cfg/datasets/lvis.yaml", "dets_per_cat": 10000, "device": 0, "dnn": false, "fixed_ap_max_dets": -1, "fixed_ap_type": "bbox", "half": false, "imgsz": 640, "iou": 0.7, "load_vp": false, "mask_ratio": 4, "max_det": 1000, "mode": "val", "name": "bbox_fixed_ap", "nms": "official SegmentationValidator.postprocess; multi_label=True; nc=1203", "overlap_mask": false, "plots": false, "project": "/workspace/YOLOE-RCAP/baseline_logs", "prompt": "text; first slash-separated alias", "rect": false, "save_hybrid": false, "save_json": true, "save_txt": false, "serialization": "official DetectionValidator.pred_to_json", "single_cls": false, "split": "minival", "task": "segment", "text_model": "mobileclip:blt", "workers": 8}
+Predictions JSON: /workspace/YOLOE-RCAP/baseline_logs/bbox_fixed_ap/predictions.json
+Fixed AP: NOT COMPUTED
+Expected Fixed AP: 27.9
+Difference from expected: N/A
+Total runtime: 0:05:55 (355.47 seconds)
+Tracked source modified: NO
+Workaround used: bbox-only serialization bypass for mask cv2.resize issue
+Overall status: FAIL

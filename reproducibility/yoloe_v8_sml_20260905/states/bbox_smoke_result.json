@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "images_evaluated": 1,
+  "predictions": "/workspace/YOLOE-RCAP/baseline_logs/bbox_smoke/predictions.json",
+  "detections": 1000,
+  "mask_path_calls": 0,
+  "values_finite": true,
+  "required_json_fields": true,
+  "native_bbox_sha256": "c725452f8762d2fb943f82957dc49f0ad8d141fbfe23013fc4afb6a1e35712ff",
+  "exact_match_to_original_diagnostic_boxes": true,
+  "git_diff_exit_code": 0,
+  "git_cached_diff_exit_code": 0,
+  "runtime_seconds": 8.196425915928558
+}
