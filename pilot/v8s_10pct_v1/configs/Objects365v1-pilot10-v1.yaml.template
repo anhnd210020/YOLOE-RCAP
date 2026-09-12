@@ -1,0 +1,7 @@
+# Rendered by prepare_objects365.py after real categories and pilot images exist.
+# Keep the rendered YAML inside the pilot tree and pass its absolute path to train_pilot.py.
+path: /ABSOLUTE/PILOT_DATA_ROOT/objects365
+train: images/train
+val: null
+test: null
+names: {}  # Generated from category id - 1; placeholder is intentionally unusable.

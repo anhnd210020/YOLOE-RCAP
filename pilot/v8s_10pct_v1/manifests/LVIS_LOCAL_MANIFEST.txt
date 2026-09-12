@@ -1,0 +1,8 @@
+LVIS local dataset manifest
+Generated: 2026-09-12T15:21:54.0450785+07:00
+
+D:\Research\Yolo-E\datasets\lvis\annotations\lvis_v1_minival.json | 33.82 MB | SHA256=02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce
+D:\Research\Yolo-E\datasets\lvis\annotations\lvis_v1_val.json | 191.91 MB | SHA256=2bf946b92c3037f53c172d80017f5b74ea035f00a21b20e0766b3b638b2363f9
+D:\Research\Yolo-E\datasets\lvis\annotations | files=2 | GB=0.22
+D:\Research\Yolo-E\datasets\lvis\images | files=5004 | GB=1.518
+D:\Research\Yolo-E\datasets\lvis\labels | files=119014 | GB=1.135

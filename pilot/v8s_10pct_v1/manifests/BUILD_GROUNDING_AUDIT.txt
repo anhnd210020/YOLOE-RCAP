@@ -1,0 +1,61 @@
+﻿  102:         fraction=cfg.fraction if mode == "train" else 1.0,
+  103:         load_vp=cfg.load_vp and load_vp
+  104:     )
+  105: 
+  106: 
+  107: def build_grounding(cfg, img_path, json_file, batch, mode="train", rect=False, stride=32):
+  108:     """Build YOLO Dataset."""
+  109:     return GroundingDataset(
+  110:         img_path=img_path,
+  111:         json_file=json_file,
+  112:         imgsz=cfg.imgsz,
+  113:         batch_size=batch,
+  114:         augment=mode == "train",  # augmentation
+  115:         hyp=cfg,  # TODO: probably add a get_hyps_from_cfg function
+  116:         rect=cfg.rect or rect,  # rectangular batches
+  117:         cache=cfg.cache or None,
+  118:         single_cls=cfg.single_cls or False,
+  119:         stride=int(stride),
+  120:         pad=0.0 if mode == "train" else 0.5,
+  121:         prefix=colorstr(f"{mode}: "),
+  122:         task=cfg.task,
+  123:         classes=cfg.classes,
+  124:         fraction=cfg.fraction if mode == "train" else 1.0,
+  125:         load_vp=cfg.load_vp
+  126:     )
+  127: 
+  128: 
+  129: def build_dataloader(dataset, batch, workers, shuffle=True, rank=-1):
+  130:     """Return an InfiniteDataLoader or DataLoader for training or validation set."""
+  131:     batch = min(batch, len(dataset))
+  132:     nd = torch.cuda.device_count()  # number of CUDA devices
+  133:     nw = min(os.cpu_count() // max(nd, 1), workers)  # number of workers
+  134:     sampler = None if rank == -1 else distributed.DistributedSampler(dataset, shuffle=shuffle)
+  135:     generator = torch.Generator()
+  136:     generator.manual_seed(6148914691236517205 + RANK)
+  137:     return InfiniteDataLoader(
+  138:         dataset=dataset,
+  139:         batch_size=batch,
+  140:         shuffle=shuffle and sampler is None,
+  141:         num_workers=nw,
+  142:         sampler=sampler,
+  143:         pin_memory=PIN_MEMORY,
+  144:         collate_fn=getattr(dataset, "collate_fn", None),
+  145:         worker_init_fn=seed_worker,
+  146:         generator=generator,
+  147:     )
+  148: 
+  149: 
+  150: def check_source(source):
+  151:     """Check source type and return corresponding flag values."""
+  152:     webcam, screenshot, from_img, in_memory, tensor = False, False, False, False, False
+  153:     if isinstance(source, (str, int, Path)):  # int for local usb camera
+  154:         source = str(source)
+  155:         is_file = Path(source).suffix[1:] in (IMG_FORMATS | VID_FORMATS)
+  156:         is_url = source.lower().startswith(("https://", "http://", "rtsp://", "rtmp://", "tcp://"))
+  157:         webcam = source.isnumeric() or source.endswith(".streams") or (is_url and not is_file)
+  158:         screenshot = source.lower() == "screen"
+  159:         if is_url and is_file:
+  160:             source = check_file(source)  # download
+  161:     elif isinstance(source, LOADERS):
+  162:         in_memory = True

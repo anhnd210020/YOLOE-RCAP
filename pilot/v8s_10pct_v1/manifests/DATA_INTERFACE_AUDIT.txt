@@ -1,0 +1,983 @@
+YOLOE PILOT DATA INTERFACE AUDIT
+Generated: 2026-09-12T15:25:02.5901486+07:00
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\train_seg.py :: data\s*=|model_path|model\.train|YOLOESegTrainerFromScratch|batch=|epochs=|optimizer=|lr0=|device=
+============================================================
+
+  train_seg.py:1:from ultralytics import YOLOE
+> train_seg.py:2:from ultralytics.models.yolo.yoloe.train_yoloe_seg import YOLOESegTrainerFromScratch
+  train_seg.py:3:import os
+  train_seg.py:4:from ultralytics.nn.tasks import guess_model_scale
+  train_seg.py:5:from ultralytics.utils import yaml_load, LOGGER
+  train_seg.py:6:
+  train_seg.py:7:os.environ["PYTHONHASHSEED"] = "0"
+  train_seg.py:8:os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+  train_seg.py:9:
+> train_seg.py:10:data = dict(
+  train_seg.py:11:    train=dict(
+> train_seg.py:12:        yolo_data=["Objects365v1.yaml"],
+> train_seg.py:13:        grounding_data=[
+  train_seg.py:14:            dict(
+  train_seg.py:15:                img_path="../datasets/flickr/full_images/",
+  train_seg.py:16:                json_file="../datasets/flickr/annotations/final_flickr_separateGT_train_segm.json",
+  train_seg.py:17:            ),
+  train_seg.py:18:            dict(
+  train_seg.py:19:                img_path="../datasets/mixed_grounding/gqa/images",
+  train_seg.py:20:                json_file="../datasets/mixed_grounding/annotations/final_mixed_train_no_coco_segm.json",
+  train_seg.py:21:            ),
+  train_seg.py:22:        ],
+  train_seg.py:23:    ),
+> train_seg.py:24:    val=dict(yolo_data=["lvis.yaml"]),
+  train_seg.py:25:)
+  train_seg.py:26:
+> train_seg.py:27:model_path = "yoloe-v8l-seg.yaml"
+  train_seg.py:28:
+> train_seg.py:29:scale = guess_model_scale(model_path)
+  train_seg.py:30:cfg_dir = "ultralytics/cfg"
+  train_seg.py:31:default_cfg_path = f"{cfg_dir}/default.yaml"
+  train_seg.py:32:extend_cfg_path = f"{cfg_dir}/{scale}_train.yaml"
+  train_seg.py:33:defaults = yaml_load(default_cfg_path)
+  train_seg.py:34:extends = yaml_load(extend_cfg_path)
+  train_seg.py:35:assert(all(k in defaults for k in extends))
+  train_seg.py:36:LOGGER.info(f"Extends: {extends}")
+  train_seg.py:37:
+> train_seg.py:38:model = YOLOE(model_path)
+  train_seg.py:39:
+> train_seg.py:40:model.train(data=data, batch=128, epochs=30, **extends, close_mosaic=2, \
+> train_seg.py:41:    optimizer='AdamW', lr0=2e-3, warmup_bias_lr=0.0, \
+  train_seg.py:42:        weight_decay=0.025, momentum=0.9, workers=4, \
+> train_seg.py:43:        trainer=YOLOESegTrainerFromScratch, device='0,1,2,3,4,5,6,7')
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\ultralytics\data\dataset.py :: class GroundingDataset|class YOLODataset|class YOLOMultiModalDataset|def verify_labels|def get_labels|load_dataset_cache_file|save_dataset_cache_file
+============================================================
+
+  ultralytics\data\dataset.py:21:    Format,
+  ultralytics\data\dataset.py:22:    Instances,
+  ultralytics\data\dataset.py:23:    LetterBox,
+  ultralytics\data\dataset.py:24:    RandomLoadText,
+  ultralytics\data\dataset.py:25:    classify_augmentations,
+  ultralytics\data\dataset.py:26:    classify_transforms,
+  ultralytics\data\dataset.py:27:    v8_transforms,
+  ultralytics\data\dataset.py:28:    LoadVisualPrompt
+  ultralytics\data\dataset.py:29:)
+  ultralytics\data\dataset.py:30:from .base import BaseDataset
+  ultralytics\data\dataset.py:31:from .utils import (
+  ultralytics\data\dataset.py:32:    HELP_URL,
+  ultralytics\data\dataset.py:33:    LOGGER,
+  ultralytics\data\dataset.py:34:    get_hash,
+  ultralytics\data\dataset.py:35:    img2label_paths,
+> ultralytics\data\dataset.py:36:    load_dataset_cache_file,
+> ultralytics\data\dataset.py:37:    save_dataset_cache_file,
+  ultralytics\data\dataset.py:38:    verify_image,
+  ultralytics\data\dataset.py:39:    verify_image_label,
+  ultralytics\data\dataset.py:40:)
+  ultralytics\data\dataset.py:41:
+  ultralytics\data\dataset.py:42:# Ultralytics dataset *.cache version, >= 1.0.0 for YOLOv8
+  ultralytics\data\dataset.py:43:DATASET_CACHE_VERSION = "1.0.3"
+  ultralytics\data\dataset.py:44:
+  ultralytics\data\dataset.py:45:
+> ultralytics\data\dataset.py:46:class YOLODataset(BaseDataset):
+  ultralytics\data\dataset.py:47:    """
+  ultralytics\data\dataset.py:48:    Dataset class for loading object detection and/or segmentation labels in YOLO format.
+  ultralytics\data\dataset.py:49:
+  ultralytics\data\dataset.py:50:    Args:
+  ultralytics\data\dataset.py:51:        data (dict, optional): A dataset YAML dictionary. Defaults to None.
+  ultralytics\data\dataset.py:52:        task (str): An explicit arg to point current task, Defaults to 'detect'.
+  ultralytics\data\dataset.py:53:
+  ultralytics\data\dataset.py:54:    Returns:
+  ultralytics\data\dataset.py:55:        (torch.utils.data.Dataset): A PyTorch dataset object that can be used for training an object detection model.
+  ultralytics\data\dataset.py:56:    """
+  ultralytics\data\dataset.py:57:
+  ultralytics\data\dataset.py:58:    def __init__(self, *args, data=None, task="detect", load_vp=False, **kwargs):
+  ultralytics\data\dataset.py:59:        """Initializes the YOLODataset with optional configurations for segments and keypoints."""
+  ultralytics\data\dataset.py:60:        self.use_segments = task == "segment"
+  ultralytics\data\dataset.py:61:        self.use_keypoints = task == "pose"
+  ultralytics\data\dataset.py:117:                            "bbox_format": "xywh",
+  ultralytics\data\dataset.py:118:                        }
+  ultralytics\data\dataset.py:119:                    )
+  ultralytics\data\dataset.py:120:                if msg:
+  ultralytics\data\dataset.py:121:                    msgs.append(msg)
+  ultralytics\data\dataset.py:122:                pbar.desc = f"{desc} {nf} images, {nm + ne} backgrounds, {nc} corrupt"
+  ultralytics\data\dataset.py:123:            pbar.close()
+  ultralytics\data\dataset.py:124:
+  ultralytics\data\dataset.py:125:        if msgs:
+  ultralytics\data\dataset.py:126:            LOGGER.info("\n".join(msgs))
+  ultralytics\data\dataset.py:127:        if nf == 0:
+  ultralytics\data\dataset.py:128:            LOGGER.warning(f"{self.prefix}WARNING ?? No labels found in {path}. {HELP_URL}")
+  ultralytics\data\dataset.py:129:        x["hash"] = get_hash(self.label_files + self.im_files)
+  ultralytics\data\dataset.py:130:        x["results"] = nf, nm, ne, nc, len(self.im_files)
+  ultralytics\data\dataset.py:131:        x["msgs"] = msgs  # warnings
+> ultralytics\data\dataset.py:132:        save_dataset_cache_file(self.prefix, path, x, DATASET_CACHE_VERSION)
+  ultralytics\data\dataset.py:133:        return x
+  ultralytics\data\dataset.py:134:
+> ultralytics\data\dataset.py:135:    def get_labels(self):
+  ultralytics\data\dataset.py:136:        """Returns dictionary of labels for YOLO training."""
+  ultralytics\data\dataset.py:137:        self.label_files = img2label_paths(self.im_files)
+  ultralytics\data\dataset.py:138:        cache_path = Path(self.label_files[0]).parent.with_suffix(".cache")
+  ultralytics\data\dataset.py:139:        try:
+> ultralytics\data\dataset.py:140:            cache, exists = load_dataset_cache_file(cache_path), True  # attempt to load a *.cache file
+  ultralytics\data\dataset.py:141:            assert cache["version"] == DATASET_CACHE_VERSION  # matches current version
+  ultralytics\data\dataset.py:142:            assert cache["hash"] == get_hash(self.label_files + self.im_files)  # identical hash
+  ultralytics\data\dataset.py:143:        except (FileNotFoundError, AssertionError, AttributeError):
+  ultralytics\data\dataset.py:144:            cache, exists = self.cache_labels(cache_path), False  # run cache ops
+  ultralytics\data\dataset.py:145:
+  ultralytics\data\dataset.py:146:        # Display cache
+  ultralytics\data\dataset.py:147:        nf, nm, ne, nc, n = cache.pop("results")  # found, missing, empty, corrupt, total
+  ultralytics\data\dataset.py:148:        if exists and LOCAL_RANK in {-1, 0}:
+  ultralytics\data\dataset.py:149:            d = f"Scanning {cache_path}... {nf} images, {nm + ne} backgrounds, {nc} corrupt"
+  ultralytics\data\dataset.py:150:            TQDM(None, desc=self.prefix + d, total=n, initial=n)  # display results
+  ultralytics\data\dataset.py:151:            if cache["msgs"]:
+  ultralytics\data\dataset.py:152:                # LOGGER.info("\n".join(cache["msgs"]))  # display warnings
+  ultralytics\data\dataset.py:153:                LOGGER.info(f'#WARNING Messages: {len(cache["msgs"])}')
+  ultralytics\data\dataset.py:154:
+  ultralytics\data\dataset.py:155:        # Read cache
+  ultralytics\data\dataset.py:248:                value = torch.stack(value, 0)
+  ultralytics\data\dataset.py:249:            if k == "texts":
+  ultralytics\data\dataset.py:250:                value = torch.stack(value, 0)
+  ultralytics\data\dataset.py:251:            if k == "visuals":
+  ultralytics\data\dataset.py:252:                value = torch.nn.utils.rnn.pad_sequence(value, batch_first=True)
+  ultralytics\data\dataset.py:253:            if k in {"masks", "keypoints", "bboxes", "cls", "segments", "obb"}:
+  ultralytics\data\dataset.py:254:                value = torch.cat(value, 0)
+  ultralytics\data\dataset.py:255:            new_batch[k] = value
+  ultralytics\data\dataset.py:256:        new_batch["batch_idx"] = list(new_batch["batch_idx"])
+  ultralytics\data\dataset.py:257:        for i in range(len(new_batch["batch_idx"])):
+  ultralytics\data\dataset.py:258:            new_batch["batch_idx"][i] += i  # add target image index for build_targets()
+  ultralytics\data\dataset.py:259:        new_batch["batch_idx"] = torch.cat(new_batch["batch_idx"], 0)
+  ultralytics\data\dataset.py:260:        return new_batch
+  ultralytics\data\dataset.py:261:
+  ultralytics\data\dataset.py:262:
+> ultralytics\data\dataset.py:263:class YOLOMultiModalDataset(YOLODataset):
+  ultralytics\data\dataset.py:264:    """
+  ultralytics\data\dataset.py:265:    Dataset class for loading object detection and/or segmentation labels in YOLO format.
+  ultralytics\data\dataset.py:266:
+  ultralytics\data\dataset.py:267:    Args:
+  ultralytics\data\dataset.py:268:        data (dict, optional): A dataset YAML dictionary. Defaults to None.
+  ultralytics\data\dataset.py:269:        task (str): An explicit arg to point current task, Defaults to 'detect'.
+  ultralytics\data\dataset.py:270:
+  ultralytics\data\dataset.py:271:    Returns:
+  ultralytics\data\dataset.py:272:        (torch.utils.data.Dataset): A PyTorch dataset object that can be used for training an object detection model.
+  ultralytics\data\dataset.py:273:    """
+  ultralytics\data\dataset.py:274:
+  ultralytics\data\dataset.py:275:    def __init__(self, *args, data=None, task="detect", **kwargs):
+  ultralytics\data\dataset.py:276:        """Initializes a dataset object for object detection tasks with optional specifications."""
+  ultralytics\data\dataset.py:277:        super().__init__(*args, data=data, task=task, **kwargs)
+  ultralytics\data\dataset.py:278:
+  ultralytics\data\dataset.py:284:            labels["texts"] = [v.split("/") for _, v in self.data["names"].items()]
+  ultralytics\data\dataset.py:285:        
+  ultralytics\data\dataset.py:286:        return labels
+  ultralytics\data\dataset.py:287:
+  ultralytics\data\dataset.py:288:    def build_transforms(self, hyp=None):
+  ultralytics\data\dataset.py:289:        """Enhances data transformations with optional text augmentation for multi-modal training."""
+  ultralytics\data\dataset.py:290:        transforms = super().build_transforms(hyp)
+  ultralytics\data\dataset.py:291:        if self.augment and not self.single_cls:
+  ultralytics\data\dataset.py:292:            # NOTE: hard-coded the args for now.
+  ultralytics\data\dataset.py:293:            index = -2 if self.load_vp else -1
+  ultralytics\data\dataset.py:294:            transforms.insert(index, RandomLoadText(text_model=hyp.text_model, max_samples=min(self.data["nc"], 80), padding=True))
+  ultralytics\data\dataset.py:295:        return transforms
+  ultralytics\data\dataset.py:296:
+  ultralytics\data\dataset.py:297:from ultralytics.utils.ops import xyxy2xywhn
+  ultralytics\data\dataset.py:298:
+> ultralytics\data\dataset.py:299:class GroundingDataset(YOLODataset):
+  ultralytics\data\dataset.py:300:    """Handles object detection tasks by loading annotations from a specified JSON file, supporting YOLO format."""
+  ultralytics\data\dataset.py:301:
+  ultralytics\data\dataset.py:302:    def __init__(self, *args, task="detect", json_file, **kwargs):
+  ultralytics\data\dataset.py:303:        """Initializes a GroundingDataset for object detection, loading annotations from a specified JSON file."""
+  ultralytics\data\dataset.py:304:        assert task == "detect" or task == "segment", "`GroundingDataset` only support `detect` task for now!"
+  ultralytics\data\dataset.py:305:        self.json_file = json_file
+  ultralytics\data\dataset.py:306:        super().__init__(*args, task=task, data={}, **kwargs)
+  ultralytics\data\dataset.py:307:
+  ultralytics\data\dataset.py:308:    def get_img_files(self, img_path):
+  ultralytics\data\dataset.py:309:        """The image files would be read in `get_labels` function, return empty list here."""
+  ultralytics\data\dataset.py:310:        return []
+  ultralytics\data\dataset.py:311:
+> ultralytics\data\dataset.py:312:    def verify_labels(self, labels):
+  ultralytics\data\dataset.py:313:        instance_count = 0
+  ultralytics\data\dataset.py:314:        for label in labels:
+  ultralytics\data\dataset.py:315:            instance_count += label["bboxes"].shape[0]
+  ultralytics\data\dataset.py:316:        
+  ultralytics\data\dataset.py:317:        if "final_mixed_train_no_coco_segm" in self.json_file:
+  ultralytics\data\dataset.py:318:            assert(instance_count == 3662344)
+  ultralytics\data\dataset.py:319:        elif "final_mixed_train_no_coco" in self.json_file:
+  ultralytics\data\dataset.py:320:            assert(instance_count == 3681235)
+  ultralytics\data\dataset.py:321:        elif "final_flickr_separateGT_train_segm" in self.json_file:
+  ultralytics\data\dataset.py:322:            assert(instance_count == 638214)
+  ultralytics\data\dataset.py:323:        elif "final_flickr_separateGT_train" in self.json_file:
+  ultralytics\data\dataset.py:324:            assert(instance_count == 640704)
+  ultralytics\data\dataset.py:325:        else:
+  ultralytics\data\dataset.py:326:            assert(False)
+  ultralytics\data\dataset.py:327:    
+> ultralytics\data\dataset.py:328:    def get_labels(self):
+  ultralytics\data\dataset.py:329:        """Loads annotations from a JSON file, filters, and normalizes bounding boxes for each image."""
+  ultralytics\data\dataset.py:330:        cache_path = Path(self.json_file).with_suffix('.cache')
+  ultralytics\data\dataset.py:331:        labels = np.load(str(cache_path), allow_pickle=True)
+  ultralytics\data\dataset.py:332:        self.verify_labels(labels)
+  ultralytics\data\dataset.py:333:        self.im_files = [str(label["im_file"]) for label in labels]
+  ultralytics\data\dataset.py:334:        if LOCAL_RANK in {-1, 0}:
+  ultralytics\data\dataset.py:335:            LOGGER.info(f"Load {self.json_file} from cache file {cache_path}") 
+  ultralytics\data\dataset.py:336:        return labels
+  ultralytics\data\dataset.py:337:    
+  ultralytics\data\dataset.py:338:    def build_transforms(self, hyp=None):
+  ultralytics\data\dataset.py:339:        """Configures augmentations for training with optional text loading; `hyp` adjusts augmentation intensity."""
+  ultralytics\data\dataset.py:340:        transforms = super().build_transforms(hyp)
+  ultralytics\data\dataset.py:341:        if self.augment and not self.single_cls:
+  ultralytics\data\dataset.py:342:            # NOTE: hard-coded the args for now.
+  ultralytics\data\dataset.py:343:            index = -2 if self.load_vp else -1
+  ultralytics\data\dataset.py:464:        # Convert NumPy array to PIL image
+  ultralytics\data\dataset.py:465:        im = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
+  ultralytics\data\dataset.py:466:        sample = self.torch_transforms(im)
+  ultralytics\data\dataset.py:467:        return {"img": sample, "cls": j}
+  ultralytics\data\dataset.py:468:
+  ultralytics\data\dataset.py:469:    def __len__(self) -> int:
+  ultralytics\data\dataset.py:470:        """Return the total number of samples in the dataset."""
+  ultralytics\data\dataset.py:471:        return len(self.samples)
+  ultralytics\data\dataset.py:472:
+  ultralytics\data\dataset.py:473:    def verify_images(self):
+  ultralytics\data\dataset.py:474:        """Verify all images in dataset."""
+  ultralytics\data\dataset.py:475:        desc = f"{self.prefix}Scanning {self.root}..."
+  ultralytics\data\dataset.py:476:        path = Path(self.root).with_suffix(".cache")  # *.cache file path
+  ultralytics\data\dataset.py:477:
+  ultralytics\data\dataset.py:478:        try:
+> ultralytics\data\dataset.py:479:            cache = load_dataset_cache_file(path)  # attempt to load a *.cache file
+  ultralytics\data\dataset.py:480:            assert cache["version"] == DATASET_CACHE_VERSION  # matches current version
+  ultralytics\data\dataset.py:481:            assert cache["hash"] == get_hash([x[0] for x in self.samples])  # identical hash
+  ultralytics\data\dataset.py:482:            nf, nc, n, samples = cache.pop("results")  # found, missing, empty, corrupt, total
+  ultralytics\data\dataset.py:483:            if LOCAL_RANK in {-1, 0}:
+  ultralytics\data\dataset.py:484:                d = f"{desc} {nf} images, {nc} corrupt"
+  ultralytics\data\dataset.py:485:                TQDM(None, desc=d, total=n, initial=n)
+  ultralytics\data\dataset.py:486:                if cache["msgs"]:
+  ultralytics\data\dataset.py:487:                    LOGGER.info("\n".join(cache["msgs"]))  # display warnings
+  ultralytics\data\dataset.py:488:            return samples
+  ultralytics\data\dataset.py:489:
+  ultralytics\data\dataset.py:490:        except (FileNotFoundError, AssertionError, AttributeError):
+  ultralytics\data\dataset.py:491:            # Run scan if *.cache retrieval failed
+  ultralytics\data\dataset.py:492:            nf, nc, msgs, samples, x = 0, 0, [], [], {}
+  ultralytics\data\dataset.py:493:            with ThreadPool(NUM_THREADS) as pool:
+  ultralytics\data\dataset.py:494:                results = pool.imap(func=verify_image, iterable=zip(self.samples, repeat(self.prefix)))
+  ultralytics\data\dataset.py:495:                pbar = TQDM(results, desc=desc, total=len(self.samples))
+  ultralytics\data\dataset.py:496:                for sample, nf_f, nc_f, msg in pbar:
+  ultralytics\data\dataset.py:497:                    if nf_f:
+  ultralytics\data\dataset.py:498:                        samples.append(sample)
+  ultralytics\data\dataset.py:499:                    if msg:
+  ultralytics\data\dataset.py:500:                        msgs.append(msg)
+  ultralytics\data\dataset.py:501:                    nf += nf_f
+  ultralytics\data\dataset.py:502:                    nc += nc_f
+  ultralytics\data\dataset.py:503:                    pbar.desc = f"{desc} {nf} images, {nc} corrupt"
+  ultralytics\data\dataset.py:504:                pbar.close()
+  ultralytics\data\dataset.py:505:            if msgs:
+  ultralytics\data\dataset.py:506:                LOGGER.info("\n".join(msgs))
+  ultralytics\data\dataset.py:507:            x["hash"] = get_hash([x[0] for x in self.samples])
+  ultralytics\data\dataset.py:508:            x["results"] = nf, nc, len(samples), samples
+  ultralytics\data\dataset.py:509:            x["msgs"] = msgs  # warnings
+> ultralytics\data\dataset.py:510:            save_dataset_cache_file(self.prefix, path, x, DATASET_CACHE_VERSION)
+  ultralytics\data\dataset.py:511:            return samples
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\ultralytics\data\dataset.py :: GQA|Flickr|flickr|grounding|instances|assert|cache
+============================================================
+
+  ultralytics\data\dataset.py:10:import numpy as np
+  ultralytics\data\dataset.py:11:import torch
+  ultralytics\data\dataset.py:12:from PIL import Image
+  ultralytics\data\dataset.py:13:from torch.utils.data import ConcatDataset
+  ultralytics\data\dataset.py:14:
+  ultralytics\data\dataset.py:15:from ultralytics.utils import LOCAL_RANK, NUM_THREADS, TQDM, colorstr
+  ultralytics\data\dataset.py:16:from ultralytics.utils.ops import resample_segments
+  ultralytics\data\dataset.py:17:from ultralytics.utils.torch_utils import TORCHVISION_0_18
+  ultralytics\data\dataset.py:18:
+  ultralytics\data\dataset.py:19:from .augment import (
+  ultralytics\data\dataset.py:20:    Compose,
+  ultralytics\data\dataset.py:21:    Format,
+> ultralytics\data\dataset.py:22:    Instances,
+  ultralytics\data\dataset.py:23:    LetterBox,
+  ultralytics\data\dataset.py:24:    RandomLoadText,
+  ultralytics\data\dataset.py:25:    classify_augmentations,
+  ultralytics\data\dataset.py:26:    classify_transforms,
+  ultralytics\data\dataset.py:27:    v8_transforms,
+  ultralytics\data\dataset.py:28:    LoadVisualPrompt
+  ultralytics\data\dataset.py:29:)
+  ultralytics\data\dataset.py:30:from .base import BaseDataset
+  ultralytics\data\dataset.py:31:from .utils import (
+  ultralytics\data\dataset.py:32:    HELP_URL,
+  ultralytics\data\dataset.py:33:    LOGGER,
+  ultralytics\data\dataset.py:34:    get_hash,
+  ultralytics\data\dataset.py:35:    img2label_paths,
+> ultralytics\data\dataset.py:36:    load_dataset_cache_file,
+> ultralytics\data\dataset.py:37:    save_dataset_cache_file,
+  ultralytics\data\dataset.py:38:    verify_image,
+  ultralytics\data\dataset.py:39:    verify_image_label,
+  ultralytics\data\dataset.py:40:)
+  ultralytics\data\dataset.py:41:
+> ultralytics\data\dataset.py:42:# Ultralytics dataset *.cache version, >= 1.0.0 for YOLOv8
+> ultralytics\data\dataset.py:43:DATASET_CACHE_VERSION = "1.0.3"
+  ultralytics\data\dataset.py:44:
+  ultralytics\data\dataset.py:45:
+  ultralytics\data\dataset.py:46:class YOLODataset(BaseDataset):
+  ultralytics\data\dataset.py:47:    """
+  ultralytics\data\dataset.py:48:    Dataset class for loading object detection and/or segmentation labels in YOLO format.
+  ultralytics\data\dataset.py:49:
+  ultralytics\data\dataset.py:50:    Args:
+  ultralytics\data\dataset.py:51:        data (dict, optional): A dataset YAML dictionary. Defaults to None.
+  ultralytics\data\dataset.py:52:        task (str): An explicit arg to point current task, Defaults to 'detect'.
+  ultralytics\data\dataset.py:53:
+  ultralytics\data\dataset.py:54:    Returns:
+  ultralytics\data\dataset.py:55:        (torch.utils.data.Dataset): A PyTorch dataset object that can be used for training an object detection model.
+  ultralytics\data\dataset.py:56:    """
+  ultralytics\data\dataset.py:57:
+  ultralytics\data\dataset.py:58:    def __init__(self, *args, data=None, task="detect", load_vp=False, **kwargs):
+  ultralytics\data\dataset.py:59:        """Initializes the YOLODataset with optional configurations for segments and keypoints."""
+  ultralytics\data\dataset.py:60:        self.use_segments = task == "segment"
+  ultralytics\data\dataset.py:61:        self.use_keypoints = task == "pose"
+  ultralytics\data\dataset.py:62:        self.use_obb = task == "obb"
+  ultralytics\data\dataset.py:63:        self.data = data
+  ultralytics\data\dataset.py:64:        self.load_vp = load_vp
+> ultralytics\data\dataset.py:65:        assert not (self.use_segments and self.use_keypoints), "Can not use both segments and keypoints."
+  ultralytics\data\dataset.py:66:        super().__init__(*args, **kwargs)
+  ultralytics\data\dataset.py:67:
+> ultralytics\data\dataset.py:68:    def cache_labels(self, path=Path("./labels.cache")):
+  ultralytics\data\dataset.py:69:        """
+> ultralytics\data\dataset.py:70:        Cache dataset labels, check images and read shapes.
+  ultralytics\data\dataset.py:71:
+  ultralytics\data\dataset.py:72:        Args:
+> ultralytics\data\dataset.py:73:            path (Path): Path where to save the cache file. Default is Path('./labels.cache').
+  ultralytics\data\dataset.py:74:
+  ultralytics\data\dataset.py:75:        Returns:
+  ultralytics\data\dataset.py:76:            (dict): labels.
+  ultralytics\data\dataset.py:77:        """
+  ultralytics\data\dataset.py:78:        x = {"labels": []}
+  ultralytics\data\dataset.py:79:        nm, nf, ne, nc, msgs = 0, 0, 0, 0, []  # number missing, found, empty, corrupt, messages
+  ultralytics\data\dataset.py:80:        desc = f"{self.prefix}Scanning {path.parent / path.stem}..."
+  ultralytics\data\dataset.py:81:        total = len(self.im_files)
+  ultralytics\data\dataset.py:82:        nkpt, ndim = self.data.get("kpt_shape", (0, 0))
+  ultralytics\data\dataset.py:83:        if self.use_keypoints and (nkpt <= 0 or ndim not in {2, 3}):
+  ultralytics\data\dataset.py:84:            raise ValueError(
+  ultralytics\data\dataset.py:85:                "'kpt_shape' in data.yaml missing or incorrect. Should be a list with [number of "
+  ultralytics\data\dataset.py:120:                if msg:
+  ultralytics\data\dataset.py:121:                    msgs.append(msg)
+  ultralytics\data\dataset.py:122:                pbar.desc = f"{desc} {nf} images, {nm + ne} backgrounds, {nc} corrupt"
+  ultralytics\data\dataset.py:123:            pbar.close()
+  ultralytics\data\dataset.py:124:
+  ultralytics\data\dataset.py:125:        if msgs:
+  ultralytics\data\dataset.py:126:            LOGGER.info("\n".join(msgs))
+  ultralytics\data\dataset.py:127:        if nf == 0:
+  ultralytics\data\dataset.py:128:            LOGGER.warning(f"{self.prefix}WARNING ?? No labels found in {path}. {HELP_URL}")
+  ultralytics\data\dataset.py:129:        x["hash"] = get_hash(self.label_files + self.im_files)
+  ultralytics\data\dataset.py:130:        x["results"] = nf, nm, ne, nc, len(self.im_files)
+  ultralytics\data\dataset.py:131:        x["msgs"] = msgs  # warnings
+> ultralytics\data\dataset.py:132:        save_dataset_cache_file(self.prefix, path, x, DATASET_CACHE_VERSION)
+  ultralytics\data\dataset.py:133:        return x
+  ultralytics\data\dataset.py:134:
+  ultralytics\data\dataset.py:135:    def get_labels(self):
+  ultralytics\data\dataset.py:136:        """Returns dictionary of labels for YOLO training."""
+  ultralytics\data\dataset.py:137:        self.label_files = img2label_paths(self.im_files)
+> ultralytics\data\dataset.py:138:        cache_path = Path(self.label_files[0]).parent.with_suffix(".cache")
+  ultralytics\data\dataset.py:139:        try:
+> ultralytics\data\dataset.py:140:            cache, exists = load_dataset_cache_file(cache_path), True  # attempt to load a *.cache file
+> ultralytics\data\dataset.py:141:            assert cache["version"] == DATASET_CACHE_VERSION  # matches current version
+> ultralytics\data\dataset.py:142:            assert cache["hash"] == get_hash(self.label_files + self.im_files)  # identical hash
+> ultralytics\data\dataset.py:143:        except (FileNotFoundError, AssertionError, AttributeError):
+> ultralytics\data\dataset.py:144:            cache, exists = self.cache_labels(cache_path), False  # run cache ops
+  ultralytics\data\dataset.py:145:
+> ultralytics\data\dataset.py:146:        # Display cache
+> ultralytics\data\dataset.py:147:        nf, nm, ne, nc, n = cache.pop("results")  # found, missing, empty, corrupt, total
+  ultralytics\data\dataset.py:148:        if exists and LOCAL_RANK in {-1, 0}:
+> ultralytics\data\dataset.py:149:            d = f"Scanning {cache_path}... {nf} images, {nm + ne} backgrounds, {nc} corrupt"
+  ultralytics\data\dataset.py:150:            TQDM(None, desc=self.prefix + d, total=n, initial=n)  # display results
+> ultralytics\data\dataset.py:151:            if cache["msgs"]:
+> ultralytics\data\dataset.py:152:                # LOGGER.info("\n".join(cache["msgs"]))  # display warnings
+> ultralytics\data\dataset.py:153:                LOGGER.info(f'#WARNING Messages: {len(cache["msgs"])}')
+  ultralytics\data\dataset.py:154:
+> ultralytics\data\dataset.py:155:        # Read cache
+> ultralytics\data\dataset.py:156:        [cache.pop(k) for k in ("hash", "version", "msgs")]  # remove items
+> ultralytics\data\dataset.py:157:        labels = cache["labels"]
+  ultralytics\data\dataset.py:158:        if not labels:
+> ultralytics\data\dataset.py:159:            LOGGER.warning(f"WARNING ?? No images found in {cache_path}, training may not work correctly. {HELP_URL}")
+  ultralytics\data\dataset.py:160:        self.im_files = [lb["im_file"] for lb in labels]  # update im_files
+  ultralytics\data\dataset.py:161:
+  ultralytics\data\dataset.py:162:        # Check if the dataset is all boxes or all segments
+  ultralytics\data\dataset.py:163:        lengths = ((len(lb["cls"]), len(lb["bboxes"]), len(lb["segments"])) for lb in labels)
+  ultralytics\data\dataset.py:164:        len_cls, len_boxes, len_segments = (sum(x) for x in zip(*lengths))
+  ultralytics\data\dataset.py:165:        if len_segments and len_boxes != len_segments:
+  ultralytics\data\dataset.py:166:            LOGGER.warning(
+  ultralytics\data\dataset.py:167:                f"WARNING ?? Box and segment counts should be equal, but got len(segments) = {len_segments}, "
+  ultralytics\data\dataset.py:168:                f"len(boxes) = {len_boxes}. To resolve this only boxes will be used and all segments will be removed. "
+  ultralytics\data\dataset.py:169:                "To avoid this please supply either a detect or segment dataset, not a detect-segment mixed dataset."
+  ultralytics\data\dataset.py:170:            )
+  ultralytics\data\dataset.py:171:            for lb in labels:
+  ultralytics\data\dataset.py:172:                lb["segments"] = []
+  ultralytics\data\dataset.py:173:        if len_cls == 0:
+> ultralytics\data\dataset.py:174:            LOGGER.warning(f"WARNING ?? No labels found in {cache_path}, training may not work correctly. {HELP_URL}")
+  ultralytics\data\dataset.py:175:        return labels
+  ultralytics\data\dataset.py:176:
+  ultralytics\data\dataset.py:177:    def build_transforms(self, hyp=None):
+  ultralytics\data\dataset.py:178:        """Builds and appends transforms to the list."""
+  ultralytics\data\dataset.py:179:        if self.augment:
+  ultralytics\data\dataset.py:180:            hyp.mosaic = hyp.mosaic if self.augment and not self.rect else 0.0
+  ultralytics\data\dataset.py:181:            hyp.mixup = hyp.mixup if self.augment and not self.rect else 0.0
+  ultralytics\data\dataset.py:182:            transforms = v8_transforms(self, self.imgsz, hyp)
+  ultralytics\data\dataset.py:183:        else:
+  ultralytics\data\dataset.py:184:            transforms = Compose([LetterBox(new_shape=(self.imgsz, self.imgsz), scaleup=False)])
+  ultralytics\data\dataset.py:185:        transforms.append(
+  ultralytics\data\dataset.py:186:            Format(
+  ultralytics\data\dataset.py:188:                normalize=True,
+  ultralytics\data\dataset.py:189:                return_mask=self.use_segments,
+  ultralytics\data\dataset.py:190:                return_keypoint=self.use_keypoints,
+  ultralytics\data\dataset.py:191:                return_obb=self.use_obb,
+  ultralytics\data\dataset.py:192:                batch_idx=True,
+  ultralytics\data\dataset.py:193:                mask_ratio=hyp.mask_ratio,
+  ultralytics\data\dataset.py:194:                mask_overlap=hyp.overlap_mask,
+  ultralytics\data\dataset.py:195:                bgr=hyp.bgr if self.augment else 0.0,  # only affect training.
+  ultralytics\data\dataset.py:196:            )
+  ultralytics\data\dataset.py:197:        )
+  ultralytics\data\dataset.py:198:        if self.load_vp:
+  ultralytics\data\dataset.py:199:            if not self.augment:
+> ultralytics\data\dataset.py:200:                assert(self.batch_size == 1)
+  ultralytics\data\dataset.py:201:                nc = len(self.data["names"])
+  ultralytics\data\dataset.py:202:            else:
+  ultralytics\data\dataset.py:203:                nc = 80
+  ultralytics\data\dataset.py:204:            transforms.append(LoadVisualPrompt(nc=nc, augment=self.augment))
+  ultralytics\data\dataset.py:205:        return transforms
+  ultralytics\data\dataset.py:206:
+  ultralytics\data\dataset.py:207:    def close_mosaic(self, hyp):
+  ultralytics\data\dataset.py:208:        """Sets mosaic, copy_paste and mixup options to 0.0 and builds transformations."""
+  ultralytics\data\dataset.py:209:        hyp.mosaic = 0.0  # set mosaic ratio=0.0
+  ultralytics\data\dataset.py:210:        hyp.copy_paste = 0.0  # keep the same behavior as previous v8 close-mosaic
+  ultralytics\data\dataset.py:211:        hyp.mixup = 0.0  # keep the same behavior as previous v8 close-mosaic
+  ultralytics\data\dataset.py:212:        self.transforms = self.build_transforms(hyp)
+  ultralytics\data\dataset.py:224:        keypoints = label.pop("keypoints", None)
+  ultralytics\data\dataset.py:225:        bbox_format = label.pop("bbox_format")
+  ultralytics\data\dataset.py:226:        normalized = label.pop("normalized")
+  ultralytics\data\dataset.py:227:
+  ultralytics\data\dataset.py:228:        # NOTE: do NOT resample oriented boxes
+  ultralytics\data\dataset.py:229:        segment_resamples = 100 if self.use_obb else 1000
+  ultralytics\data\dataset.py:230:        if len(segments) > 0:
+  ultralytics\data\dataset.py:231:            # list[np.array(1000, 2)] * num_samples
+  ultralytics\data\dataset.py:232:            # (N, 1000, 2)
+  ultralytics\data\dataset.py:233:            segments = np.stack(resample_segments(segments, n=segment_resamples), axis=0)
+  ultralytics\data\dataset.py:234:        else:
+  ultralytics\data\dataset.py:235:            segments = np.zeros((0, segment_resamples, 2), dtype=np.float32)
+> ultralytics\data\dataset.py:236:        label["instances"] = Instances(bboxes, segments, keypoints, bbox_format=bbox_format, normalized=normalized)
+  ultralytics\data\dataset.py:237:        return label
+  ultralytics\data\dataset.py:238:
+  ultralytics\data\dataset.py:239:    @staticmethod
+  ultralytics\data\dataset.py:240:    def collate_fn(batch):
+  ultralytics\data\dataset.py:241:        """Collates data samples into batches."""
+  ultralytics\data\dataset.py:242:        new_batch = {}
+  ultralytics\data\dataset.py:243:        keys = batch[0].keys()
+  ultralytics\data\dataset.py:244:        values = list(zip(*[list(b.values()) for b in batch]))
+  ultralytics\data\dataset.py:245:        for i, k in enumerate(keys):
+  ultralytics\data\dataset.py:246:            value = values[i]
+  ultralytics\data\dataset.py:247:            if k == "img":
+  ultralytics\data\dataset.py:248:                value = torch.stack(value, 0)
+  ultralytics\data\dataset.py:287:
+  ultralytics\data\dataset.py:288:    def build_transforms(self, hyp=None):
+  ultralytics\data\dataset.py:289:        """Enhances data transformations with optional text augmentation for multi-modal training."""
+  ultralytics\data\dataset.py:290:        transforms = super().build_transforms(hyp)
+  ultralytics\data\dataset.py:291:        if self.augment and not self.single_cls:
+  ultralytics\data\dataset.py:292:            # NOTE: hard-coded the args for now.
+  ultralytics\data\dataset.py:293:            index = -2 if self.load_vp else -1
+  ultralytics\data\dataset.py:294:            transforms.insert(index, RandomLoadText(text_model=hyp.text_model, max_samples=min(self.data["nc"], 80), padding=True))
+  ultralytics\data\dataset.py:295:        return transforms
+  ultralytics\data\dataset.py:296:
+  ultralytics\data\dataset.py:297:from ultralytics.utils.ops import xyxy2xywhn
+  ultralytics\data\dataset.py:298:
+> ultralytics\data\dataset.py:299:class GroundingDataset(YOLODataset):
+  ultralytics\data\dataset.py:300:    """Handles object detection tasks by loading annotations from a specified JSON file, supporting YOLO format."""
+  ultralytics\data\dataset.py:301:
+  ultralytics\data\dataset.py:302:    def __init__(self, *args, task="detect", json_file, **kwargs):
+> ultralytics\data\dataset.py:303:        """Initializes a GroundingDataset for object detection, loading annotations from a specified JSON file."""
+> ultralytics\data\dataset.py:304:        assert task == "detect" or task == "segment", "`GroundingDataset` only support `detect` task for now!"
+  ultralytics\data\dataset.py:305:        self.json_file = json_file
+  ultralytics\data\dataset.py:306:        super().__init__(*args, task=task, data={}, **kwargs)
+  ultralytics\data\dataset.py:307:
+  ultralytics\data\dataset.py:308:    def get_img_files(self, img_path):
+  ultralytics\data\dataset.py:309:        """The image files would be read in `get_labels` function, return empty list here."""
+  ultralytics\data\dataset.py:310:        return []
+  ultralytics\data\dataset.py:311:
+  ultralytics\data\dataset.py:312:    def verify_labels(self, labels):
+  ultralytics\data\dataset.py:313:        instance_count = 0
+  ultralytics\data\dataset.py:314:        for label in labels:
+  ultralytics\data\dataset.py:315:            instance_count += label["bboxes"].shape[0]
+  ultralytics\data\dataset.py:316:        
+  ultralytics\data\dataset.py:317:        if "final_mixed_train_no_coco_segm" in self.json_file:
+> ultralytics\data\dataset.py:318:            assert(instance_count == 3662344)
+  ultralytics\data\dataset.py:319:        elif "final_mixed_train_no_coco" in self.json_file:
+> ultralytics\data\dataset.py:320:            assert(instance_count == 3681235)
+> ultralytics\data\dataset.py:321:        elif "final_flickr_separateGT_train_segm" in self.json_file:
+> ultralytics\data\dataset.py:322:            assert(instance_count == 638214)
+> ultralytics\data\dataset.py:323:        elif "final_flickr_separateGT_train" in self.json_file:
+> ultralytics\data\dataset.py:324:            assert(instance_count == 640704)
+  ultralytics\data\dataset.py:325:        else:
+> ultralytics\data\dataset.py:326:            assert(False)
+  ultralytics\data\dataset.py:327:    
+  ultralytics\data\dataset.py:328:    def get_labels(self):
+  ultralytics\data\dataset.py:329:        """Loads annotations from a JSON file, filters, and normalizes bounding boxes for each image."""
+> ultralytics\data\dataset.py:330:        cache_path = Path(self.json_file).with_suffix('.cache')
+> ultralytics\data\dataset.py:331:        labels = np.load(str(cache_path), allow_pickle=True)
+  ultralytics\data\dataset.py:332:        self.verify_labels(labels)
+  ultralytics\data\dataset.py:333:        self.im_files = [str(label["im_file"]) for label in labels]
+  ultralytics\data\dataset.py:334:        if LOCAL_RANK in {-1, 0}:
+> ultralytics\data\dataset.py:335:            LOGGER.info(f"Load {self.json_file} from cache file {cache_path}") 
+  ultralytics\data\dataset.py:336:        return labels
+  ultralytics\data\dataset.py:337:    
+  ultralytics\data\dataset.py:338:    def build_transforms(self, hyp=None):
+  ultralytics\data\dataset.py:339:        """Configures augmentations for training with optional text loading; `hyp` adjusts augmentation intensity."""
+  ultralytics\data\dataset.py:340:        transforms = super().build_transforms(hyp)
+  ultralytics\data\dataset.py:341:        if self.augment and not self.single_cls:
+  ultralytics\data\dataset.py:342:            # NOTE: hard-coded the args for now.
+  ultralytics\data\dataset.py:343:            index = -2 if self.load_vp else -1
+  ultralytics\data\dataset.py:344:            transforms.insert(index, RandomLoadText(text_model=hyp.text_model, max_samples=80, padding=True))
+  ultralytics\data\dataset.py:345:        return transforms
+  ultralytics\data\dataset.py:346:
+  ultralytics\data\dataset.py:347:
+  ultralytics\data\dataset.py:378:
+  ultralytics\data\dataset.py:379:class ClassificationDataset:
+  ultralytics\data\dataset.py:380:    """
+  ultralytics\data\dataset.py:381:    Extends torchvision ImageFolder to support YOLO classification tasks, offering functionalities like image
+  ultralytics\data\dataset.py:382:    augmentation, caching, and verification. It's designed to efficiently handle large datasets for training deep
+  ultralytics\data\dataset.py:383:    learning models, with optional image transformations and caching mechanisms to speed up training.
+  ultralytics\data\dataset.py:384:
+  ultralytics\data\dataset.py:385:    This class allows for augmentations using both torchvision and Albumentations libraries, and supports caching images
+  ultralytics\data\dataset.py:386:    in RAM or on disk to reduce IO overhead during training. Additionally, it implements a robust verification process
+  ultralytics\data\dataset.py:387:    to ensure data integrity and consistency.
+  ultralytics\data\dataset.py:388:
+  ultralytics\data\dataset.py:389:    Attributes:
+> ultralytics\data\dataset.py:390:        cache_ram (bool): Indicates if caching in RAM is enabled.
+> ultralytics\data\dataset.py:391:        cache_disk (bool): Indicates if caching on disk is enabled.
+> ultralytics\data\dataset.py:392:        samples (list): A list of tuples, each containing the path to an image, its class index, path to its .npy cache
+  ultralytics\data\dataset.py:393:                        file (if caching on disk), and optionally the loaded image array (if caching in RAM).
+  ultralytics\data\dataset.py:394:        torch_transforms (callable): PyTorch transforms to be applied to the images.
+  ultralytics\data\dataset.py:395:    """
+  ultralytics\data\dataset.py:396:
+  ultralytics\data\dataset.py:397:    def __init__(self, root, args, augment=False, prefix=""):
+  ultralytics\data\dataset.py:398:        """
+> ultralytics\data\dataset.py:399:        Initialize YOLO object with root, image size, augmentations, and cache settings.
+  ultralytics\data\dataset.py:400:
+  ultralytics\data\dataset.py:401:        Args:
+  ultralytics\data\dataset.py:402:            root (str): Path to the dataset directory where images are stored in a class-specific folder structure.
+  ultralytics\data\dataset.py:403:            args (Namespace): Configuration containing dataset-related settings such as image size, augmentation
+> ultralytics\data\dataset.py:404:                parameters, and cache settings. It includes attributes like `imgsz` (image size), `fraction` (fraction
+> ultralytics\data\dataset.py:405:                of data to use), `scale`, `fliplr`, `flipud`, `cache` (disk or RAM caching for faster training),
+  ultralytics\data\dataset.py:406:                `auto_augment`, `hsv_h`, `hsv_s`, `hsv_v`, and `crop_fraction`.
+  ultralytics\data\dataset.py:407:            augment (bool, optional): Whether to apply augmentations to the dataset. Default is False.
+> ultralytics\data\dataset.py:408:            prefix (str, optional): Prefix for logging and cache filenames, aiding in dataset identification and
+  ultralytics\data\dataset.py:409:                debugging. Default is an empty string.
+  ultralytics\data\dataset.py:410:        """
+  ultralytics\data\dataset.py:411:        import torchvision  # scope for faster 'import ultralytics'
+  ultralytics\data\dataset.py:412:
+  ultralytics\data\dataset.py:413:        # Base class assigned as attribute rather than used as base class to allow for scoping slow torchvision import
+  ultralytics\data\dataset.py:414:        if TORCHVISION_0_18:  # 'allow_empty' argument first introduced in torchvision 0.18
+  ultralytics\data\dataset.py:415:            self.base = torchvision.datasets.ImageFolder(root=root, allow_empty=True)
+  ultralytics\data\dataset.py:416:        else:
+  ultralytics\data\dataset.py:417:            self.base = torchvision.datasets.ImageFolder(root=root)
+  ultralytics\data\dataset.py:418:        self.samples = self.base.samples
+  ultralytics\data\dataset.py:419:        self.root = self.base.root
+  ultralytics\data\dataset.py:420:
+  ultralytics\data\dataset.py:421:        # Initialize attributes
+  ultralytics\data\dataset.py:422:        if augment and args.fraction < 1.0:  # reduce training fraction
+  ultralytics\data\dataset.py:423:            self.samples = self.samples[: round(len(self.samples) * args.fraction)]
+  ultralytics\data\dataset.py:424:        self.prefix = colorstr(f"{prefix}: ") if prefix else ""
+> ultralytics\data\dataset.py:425:        self.cache_ram = args.cache is True or str(args.cache).lower() == "ram"  # cache images into RAM
+> ultralytics\data\dataset.py:426:        if self.cache_ram:
+  ultralytics\data\dataset.py:427:            LOGGER.warning(
+> ultralytics\data\dataset.py:428:                "WARNING ?? Classification `cache_ram` training has known memory leak in "
+> ultralytics\data\dataset.py:429:                "https://github.com/ultralytics/ultralytics/issues/9824, setting `cache_ram=False`."
+  ultralytics\data\dataset.py:430:            )
+> ultralytics\data\dataset.py:431:            self.cache_ram = False
+> ultralytics\data\dataset.py:432:        self.cache_disk = str(args.cache).lower() == "disk"  # cache images on hard drive as uncompressed *.npy files
+  ultralytics\data\dataset.py:433:        self.samples = self.verify_images()  # filter out bad images
+  ultralytics\data\dataset.py:434:        self.samples = [list(x) + [Path(x[0]).with_suffix(".npy"), None] for x in self.samples]  # file, index, npy, im
+  ultralytics\data\dataset.py:435:        scale = (1.0 - args.scale, 1.0)  # (0.08, 1.0)
+  ultralytics\data\dataset.py:436:        self.torch_transforms = (
+  ultralytics\data\dataset.py:437:            classify_augmentations(
+  ultralytics\data\dataset.py:438:                size=args.imgsz,
+  ultralytics\data\dataset.py:439:                scale=scale,
+  ultralytics\data\dataset.py:440:                hflip=args.fliplr,
+  ultralytics\data\dataset.py:441:                vflip=args.flipud,
+  ultralytics\data\dataset.py:442:                erasing=args.erasing,
+  ultralytics\data\dataset.py:443:                auto_augment=args.auto_augment,
+  ultralytics\data\dataset.py:444:                hsv_h=args.hsv_h,
+  ultralytics\data\dataset.py:445:                hsv_s=args.hsv_s,
+  ultralytics\data\dataset.py:446:                hsv_v=args.hsv_v,
+  ultralytics\data\dataset.py:447:            )
+  ultralytics\data\dataset.py:448:            if augment
+  ultralytics\data\dataset.py:449:            else classify_transforms(size=args.imgsz, crop_fraction=args.crop_fraction)
+  ultralytics\data\dataset.py:450:        )
+  ultralytics\data\dataset.py:451:
+  ultralytics\data\dataset.py:452:    def __getitem__(self, i):
+  ultralytics\data\dataset.py:453:        """Returns subset of data and targets corresponding to given indices."""
+  ultralytics\data\dataset.py:454:        f, j, fn, im = self.samples[i]  # filename, index, filename.with_suffix('.npy'), image
+> ultralytics\data\dataset.py:455:        if self.cache_ram:
+  ultralytics\data\dataset.py:456:            if im is None:  # Warning: two separate if statements required here, do not combine this with previous line
+  ultralytics\data\dataset.py:457:                im = self.samples[i][3] = cv2.imread(f)
+> ultralytics\data\dataset.py:458:        elif self.cache_disk:
+  ultralytics\data\dataset.py:459:            if not fn.exists():  # load npy
+  ultralytics\data\dataset.py:460:                np.save(fn.as_posix(), cv2.imread(f), allow_pickle=False)
+  ultralytics\data\dataset.py:461:            im = np.load(fn)
+  ultralytics\data\dataset.py:462:        else:  # read image
+  ultralytics\data\dataset.py:463:            im = cv2.imread(f)  # BGR
+  ultralytics\data\dataset.py:464:        # Convert NumPy array to PIL image
+  ultralytics\data\dataset.py:465:        im = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
+  ultralytics\data\dataset.py:466:        sample = self.torch_transforms(im)
+  ultralytics\data\dataset.py:467:        return {"img": sample, "cls": j}
+  ultralytics\data\dataset.py:468:
+  ultralytics\data\dataset.py:469:    def __len__(self) -> int:
+  ultralytics\data\dataset.py:470:        """Return the total number of samples in the dataset."""
+  ultralytics\data\dataset.py:471:        return len(self.samples)
+  ultralytics\data\dataset.py:472:
+  ultralytics\data\dataset.py:473:    def verify_images(self):
+  ultralytics\data\dataset.py:474:        """Verify all images in dataset."""
+  ultralytics\data\dataset.py:475:        desc = f"{self.prefix}Scanning {self.root}..."
+> ultralytics\data\dataset.py:476:        path = Path(self.root).with_suffix(".cache")  # *.cache file path
+  ultralytics\data\dataset.py:477:
+  ultralytics\data\dataset.py:478:        try:
+> ultralytics\data\dataset.py:479:            cache = load_dataset_cache_file(path)  # attempt to load a *.cache file
+> ultralytics\data\dataset.py:480:            assert cache["version"] == DATASET_CACHE_VERSION  # matches current version
+> ultralytics\data\dataset.py:481:            assert cache["hash"] == get_hash([x[0] for x in self.samples])  # identical hash
+> ultralytics\data\dataset.py:482:            nf, nc, n, samples = cache.pop("results")  # found, missing, empty, corrupt, total
+  ultralytics\data\dataset.py:483:            if LOCAL_RANK in {-1, 0}:
+  ultralytics\data\dataset.py:484:                d = f"{desc} {nf} images, {nc} corrupt"
+  ultralytics\data\dataset.py:485:                TQDM(None, desc=d, total=n, initial=n)
+> ultralytics\data\dataset.py:486:                if cache["msgs"]:
+> ultralytics\data\dataset.py:487:                    LOGGER.info("\n".join(cache["msgs"]))  # display warnings
+  ultralytics\data\dataset.py:488:            return samples
+  ultralytics\data\dataset.py:489:
+> ultralytics\data\dataset.py:490:        except (FileNotFoundError, AssertionError, AttributeError):
+> ultralytics\data\dataset.py:491:            # Run scan if *.cache retrieval failed
+  ultralytics\data\dataset.py:492:            nf, nc, msgs, samples, x = 0, 0, [], [], {}
+  ultralytics\data\dataset.py:493:            with ThreadPool(NUM_THREADS) as pool:
+  ultralytics\data\dataset.py:494:                results = pool.imap(func=verify_image, iterable=zip(self.samples, repeat(self.prefix)))
+  ultralytics\data\dataset.py:495:                pbar = TQDM(results, desc=desc, total=len(self.samples))
+  ultralytics\data\dataset.py:496:                for sample, nf_f, nc_f, msg in pbar:
+  ultralytics\data\dataset.py:497:                    if nf_f:
+  ultralytics\data\dataset.py:498:                        samples.append(sample)
+  ultralytics\data\dataset.py:499:                    if msg:
+  ultralytics\data\dataset.py:500:                        msgs.append(msg)
+  ultralytics\data\dataset.py:501:                    nf += nf_f
+  ultralytics\data\dataset.py:502:                    nc += nc_f
+  ultralytics\data\dataset.py:503:                    pbar.desc = f"{desc} {nf} images, {nc} corrupt"
+  ultralytics\data\dataset.py:504:                pbar.close()
+  ultralytics\data\dataset.py:505:            if msgs:
+  ultralytics\data\dataset.py:506:                LOGGER.info("\n".join(msgs))
+  ultralytics\data\dataset.py:507:            x["hash"] = get_hash([x[0] for x in self.samples])
+  ultralytics\data\dataset.py:508:            x["results"] = nf, nc, len(samples), samples
+  ultralytics\data\dataset.py:509:            x["msgs"] = msgs  # warnings
+> ultralytics\data\dataset.py:510:            save_dataset_cache_file(self.prefix, path, x, DATASET_CACHE_VERSION)
+  ultralytics\data\dataset.py:511:            return samples
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\tools\generate_grounding_cache.py :: ArgumentParser|json|cache|image|img|annotation|annotations|labels|torch\.save|np\.save|pickle
+============================================================
+
+> tools\generate_grounding_cache.py:1:import json
+  tools\generate_grounding_cache.py:2:from pathlib import Path
+  tools\generate_grounding_cache.py:3:from tqdm import tqdm
+  tools\generate_grounding_cache.py:4:import numpy as np
+  tools\generate_grounding_cache.py:5:from ultralytics.utils.ops import xyxy2xywhn, segments2boxes
+  tools\generate_grounding_cache.py:6:from ultralytics.data.converter import merge_multi_segment
+> tools\generate_grounding_cache.py:7:from argparse import ArgumentParser
+  tools\generate_grounding_cache.py:8:import os
+  tools\generate_grounding_cache.py:9:
+> tools\generate_grounding_cache.py:10:def count_instances(labels):
+  tools\generate_grounding_cache.py:11:    instance_count = 0
+> tools\generate_grounding_cache.py:12:    for label in labels:
+  tools\generate_grounding_cache.py:13:        instance_count += label["bboxes"].shape[0]
+  tools\generate_grounding_cache.py:14:    print("Instance count: ", instance_count)    
+  tools\generate_grounding_cache.py:15:
+> tools\generate_grounding_cache.py:16:def generate_cache(json_path, img_path):
+> tools\generate_grounding_cache.py:17:    labels = []
+> tools\generate_grounding_cache.py:18:    with open(json_path) as f:
+> tools\generate_grounding_cache.py:19:        annotations = json.load(f)
+> tools\generate_grounding_cache.py:20:    images = {f'{x["id"]:d}': x for x in annotations["images"]}
+  tools\generate_grounding_cache.py:21:
+> tools\generate_grounding_cache.py:22:    # Note: retain images without annotations
+> tools\generate_grounding_cache.py:23:    img_to_anns = {int(k): [] for k in images.keys()}
+  tools\generate_grounding_cache.py:24:
+> tools\generate_grounding_cache.py:25:    for ann in annotations["annotations"]:
+> tools\generate_grounding_cache.py:26:        img_to_anns[ann["image_id"]].append(ann)
+  tools\generate_grounding_cache.py:27:        
+> tools\generate_grounding_cache.py:28:    for img_id, anns in tqdm(img_to_anns.items()):
+> tools\generate_grounding_cache.py:29:        img = images[f"{img_id:d}"]
+> tools\generate_grounding_cache.py:30:        h, w, f = int(img["height"]), int(img["width"]), img["file_name"]
+> tools\generate_grounding_cache.py:31:        im_file = Path(img_path) / f
+  tools\generate_grounding_cache.py:32:        if not im_file.exists():
+  tools\generate_grounding_cache.py:33:            continue
+  tools\generate_grounding_cache.py:34:        bboxes = []
+  tools\generate_grounding_cache.py:35:        segments = []
+  tools\generate_grounding_cache.py:36:        cat2id = {}
+  tools\generate_grounding_cache.py:37:        texts = []
+  tools\generate_grounding_cache.py:38:        for ann in anns:
+  tools\generate_grounding_cache.py:39:            if ann["iscrowd"]:
+  tools\generate_grounding_cache.py:40:                continue
+  tools\generate_grounding_cache.py:41:            box = np.array(ann["bbox"], dtype=np.float64)
+  tools\generate_grounding_cache.py:42:            
+  tools\generate_grounding_cache.py:43:            box[2] += box[0]
+  tools\generate_grounding_cache.py:44:            box[3] += box[1]
+  tools\generate_grounding_cache.py:45:            
+  tools\generate_grounding_cache.py:46:            box = xyxy2xywhn(box, w=float(w), h=float(h), clip=True)
+  tools\generate_grounding_cache.py:47:            
+  tools\generate_grounding_cache.py:48:            if box[2] <= 0 or box[3] <= 0:
+  tools\generate_grounding_cache.py:49:                continue
+  tools\generate_grounding_cache.py:50:
+> tools\generate_grounding_cache.py:51:            cat_name = " ".join([img["caption"][t[0] : t[1]] for t in ann["tokens_positive"]]).lower().strip()
+  tools\generate_grounding_cache.py:52:            if not cat_name:
+  tools\generate_grounding_cache.py:53:                continue
+  tools\generate_grounding_cache.py:54:            
+  tools\generate_grounding_cache.py:55:            if cat_name not in cat2id:
+  tools\generate_grounding_cache.py:56:                cat2id[cat_name] = len(cat2id)
+  tools\generate_grounding_cache.py:57:                texts.append([cat_name])
+  tools\generate_grounding_cache.py:58:            cls = cat2id[cat_name]  # class
+  tools\generate_grounding_cache.py:59:            box = [cls] + box.tolist()
+  tools\generate_grounding_cache.py:60:            if box not in bboxes:
+  tools\generate_grounding_cache.py:61:                bboxes.append(box)
+  tools\generate_grounding_cache.py:62:                if ann.get("segmentation") is not None:
+  tools\generate_grounding_cache.py:63:                    if len(ann["segmentation"]) == 0:
+  tools\generate_grounding_cache.py:64:                        segments.append(box)
+  tools\generate_grounding_cache.py:65:                        continue
+  tools\generate_grounding_cache.py:66:                    elif len(ann["segmentation"]) > 1:
+  tools\generate_grounding_cache.py:69:                    else:
+  tools\generate_grounding_cache.py:70:                        s = [j for i in ann["segmentation"] for j in i]  # all segments concatenated
+  tools\generate_grounding_cache.py:71:                        s = (np.array(s).reshape(-1, 2) / np.array([w, h])).reshape(-1).tolist()
+  tools\generate_grounding_cache.py:72:                    s = [cls] + s
+  tools\generate_grounding_cache.py:73:                    segments.append(s)
+  tools\generate_grounding_cache.py:74:                else:
+  tools\generate_grounding_cache.py:75:                    assert(False)
+  tools\generate_grounding_cache.py:76:        lb = np.array(bboxes, dtype=np.float32) if len(bboxes) else np.zeros((0, 5), dtype=np.float32)
+  tools\generate_grounding_cache.py:77:
+  tools\generate_grounding_cache.py:78:        if len(segments) > 0:
+  tools\generate_grounding_cache.py:79:            classes = np.array([x[0] for x in segments], dtype=np.float32)
+  tools\generate_grounding_cache.py:80:            segments = [np.array(x[1:], dtype=np.float32).reshape(-1, 2) for x in segments]  # (cls, xy1...)
+  tools\generate_grounding_cache.py:81:            lb = np.concatenate((classes.reshape(-1, 1), segments2boxes(segments)), 1)  # (cls, xywh)
+  tools\generate_grounding_cache.py:82:        lb = np.array(lb, dtype=np.float32)
+  tools\generate_grounding_cache.py:83:
+> tools\generate_grounding_cache.py:84:        labels.append(
+  tools\generate_grounding_cache.py:85:            {
+  tools\generate_grounding_cache.py:86:                "im_file": im_file,
+  tools\generate_grounding_cache.py:87:                "shape": (h, w),
+  tools\generate_grounding_cache.py:88:                "cls": lb[:, 0:1],  # n, 1
+  tools\generate_grounding_cache.py:89:                "bboxes": lb[:, 1:],  # n, 4
+  tools\generate_grounding_cache.py:90:                "segments": segments,
+  tools\generate_grounding_cache.py:91:                "normalized": True,
+  tools\generate_grounding_cache.py:92:                "bbox_format": "xywh",
+  tools\generate_grounding_cache.py:93:                "texts": texts,
+  tools\generate_grounding_cache.py:94:            }
+  tools\generate_grounding_cache.py:95:        )
+> tools\generate_grounding_cache.py:96:    count_instances(labels)
+  tools\generate_grounding_cache.py:97:    
+> tools\generate_grounding_cache.py:98:    cache_path = Path(json_path).with_suffix('.cache')
+> tools\generate_grounding_cache.py:99:    np.save(str(cache_path), labels)
+> tools\generate_grounding_cache.py:100:    cache_path.with_suffix(".cache.npy").rename(cache_path)
+> tools\generate_grounding_cache.py:101:    print(f"Save {json_path} cache file {cache_path}") 
+> tools\generate_grounding_cache.py:102:    return labels
+  tools\generate_grounding_cache.py:103:
+  tools\generate_grounding_cache.py:104:if __name__ == '__main__':
+> tools\generate_grounding_cache.py:105:    parser = ArgumentParser()
+> tools\generate_grounding_cache.py:106:    parser.add_argument('--json-path', required=True, type=str)
+> tools\generate_grounding_cache.py:107:    parser.add_argument('--img-path', required=True, type=str)
+  tools\generate_grounding_cache.py:108:    
+  tools\generate_grounding_cache.py:109:    os.environ["PYTHONHASHSEED"] = "0"
+  tools\generate_grounding_cache.py:110:    args = parser.parse_args()
+> tools\generate_grounding_cache.py:111:    generate_cache(args.json_path, args.img_path)
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\tools\generate_objects365v1.py :: ArgumentParser|json|image|img|annotation|annotations|segment|mask|path|train
+============================================================
+
+  tools\generate_objects365v1.py:1:from tqdm import tqdm
+  tools\generate_objects365v1.py:2:
+  tools\generate_objects365v1.py:3:import numpy as np
+> tools\generate_objects365v1.py:4:from pathlib import Path
+  tools\generate_objects365v1.py:5:from pycocotools.coco import COCO
+  tools\generate_objects365v1.py:6:import shutil
+  tools\generate_objects365v1.py:7:from ultralytics.utils.ops import xyxy2xywhn
+  tools\generate_objects365v1.py:8:from ultralytics.utils import yaml_save
+> tools\generate_objects365v1.py:9:from ultralytics.data.converter import merge_multi_segment
+  tools\generate_objects365v1.py:10:
+  tools\generate_objects365v1.py:11:base = '../datasets/Objects365v1'
+  tools\generate_objects365v1.py:12:duplicates = 0
+  tools\generate_objects365v1.py:13:
+> tools\generate_objects365v1.py:14:for split in ['train']:
+> tools\generate_objects365v1.py:15:    labels = Path(f'{base}/labels') / split
+  tools\generate_objects365v1.py:16:    shutil.rmtree(labels, ignore_errors=True)
+  tools\generate_objects365v1.py:17:    labels.mkdir(parents=True, exist_ok=False)
+> tools\generate_objects365v1.py:18:    coco = COCO(f'{base}/annotations/objects365_{split}_segm.json')
+  tools\generate_objects365v1.py:19:    names = [x["name"] for x in coco.loadCats(sorted(coco.getCatIds()))]
+  tools\generate_objects365v1.py:20:    for cid, cat in enumerate(names):
+  tools\generate_objects365v1.py:21:        catIds = coco.getCatIds(catNms=[cat])
+> tools\generate_objects365v1.py:22:        imgIds = coco.getImgIds(catIds=catIds)
+> tools\generate_objects365v1.py:23:        for im in tqdm(coco.loadImgs(imgIds), desc=f'Class {cid + 1}/{len(names)} {cat}'):
+  tools\generate_objects365v1.py:24:            width, height = im["width"], im["height"]
+> tools\generate_objects365v1.py:25:            path = Path(im["file_name"])  # image filename
+> tools\generate_objects365v1.py:26:            segments = set()
+> tools\generate_objects365v1.py:27:            with open(labels / path.with_suffix('.txt').name, 'a') as file:
+> tools\generate_objects365v1.py:28:                annIds = coco.getAnnIds(imgIds=im["id"], catIds=catIds, iscrowd=None)
+  tools\generate_objects365v1.py:29:                for a in coco.loadAnns(annIds):
+  tools\generate_objects365v1.py:30:                    if a['iscrowd']:
+  tools\generate_objects365v1.py:31:                        continue
+  tools\generate_objects365v1.py:32:
+> tools\generate_objects365v1.py:33:                    if a.get("segmentation") is not None and len(a["segmentation"]) > 0:
+> tools\generate_objects365v1.py:34:                        if len(a["segmentation"]) > 1:
+> tools\generate_objects365v1.py:35:                            s = merge_multi_segment(a["segmentation"])
+  tools\generate_objects365v1.py:36:                            s = (np.concatenate(s, axis=0) / np.array([width, height])).reshape(-1).tolist()
+  tools\generate_objects365v1.py:37:                        else:
+> tools\generate_objects365v1.py:38:                            s = [j for i in a["segmentation"] for j in i]  # all segments concatenated
+  tools\generate_objects365v1.py:39:                            s = (np.array(s).reshape(-1, 2) / np.array([width, height])).reshape(-1).tolist()
+  tools\generate_objects365v1.py:40:                        s = tuple([cid] + s)
+> tools\generate_objects365v1.py:41:                        # de-duplicate as some images have the same segment labels (due to highly similar boxes)
+> tools\generate_objects365v1.py:42:                        if s not in segments:
+> tools\generate_objects365v1.py:43:                            segments.add(s)
+  tools\generate_objects365v1.py:44:                            file.write(("%g " * len(s)).rstrip() % s + "\n")
+  tools\generate_objects365v1.py:45:                            file.flush()
+  tools\generate_objects365v1.py:46:                        else:
+  tools\generate_objects365v1.py:47:                            duplicates += 1
+  tools\generate_objects365v1.py:48:                    else:
+  tools\generate_objects365v1.py:49:                        assert(False)
+  tools\generate_objects365v1.py:50:                        box = np.array(a["bbox"], dtype=np.float64)
+  tools\generate_objects365v1.py:51:                        
+  tools\generate_objects365v1.py:52:                        box[2] += box[0]
+  tools\generate_objects365v1.py:53:                        box[3] += box[1]
+  tools\generate_objects365v1.py:54:                        
+  tools\generate_objects365v1.py:55:                        box = xyxy2xywhn(box, w=width, h=height, clip=True)
+  tools\generate_objects365v1.py:56:                        
+  tools\generate_objects365v1.py:57:                        if box[2] <= 0 or box[3] <= 0:
+  tools\generate_objects365v1.py:58:                            continue
+  tools\generate_objects365v1.py:59:                        
+  tools\generate_objects365v1.py:60:                        file.write(f"{cid} {box[0]:g} {box[1]:g} {box[2]:g} {box[3]:g}\n")
+  tools\generate_objects365v1.py:61:                        file.flush()
+  tools\generate_objects365v1.py:62:
+> tools\generate_objects365v1.py:63:print("Total segmentation duplicates:", duplicates)
+  tools\generate_objects365v1.py:64:
+  tools\generate_objects365v1.py:65:# Create Objects365v1.yaml
+> tools\generate_objects365v1.py:66:coco = COCO(f'{base}/annotations/objects365_train.json')
+  tools\generate_objects365v1.py:67:data = dict()
+  tools\generate_objects365v1.py:68:
+> tools\generate_objects365v1.py:69:data['path'] = f'{base}'
+> tools\generate_objects365v1.py:70:data['train'] = 'images/train'
+  tools\generate_objects365v1.py:71:data['val'] = None
+  tools\generate_objects365v1.py:72:data['test'] = None
+  tools\generate_objects365v1.py:73:
+  tools\generate_objects365v1.py:74:cat_id = sorted(coco.getCatIds())
+  tools\generate_objects365v1.py:75:data['names'] = {x['id'] - 1: x['name'].strip().lower() for x in coco.loadCats(cat_id)}
+  tools\generate_objects365v1.py:76:
+  tools\generate_objects365v1.py:77:yaml_save('ultralytics/cfg/datasets/Objects365v1.yaml', data)
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\ultralytics\models\yolo\yoloe\train_yoloe.py :: GroundingDataset|YOLODataset|build_dataset|build_yolo_dataset|get_dataset|data|cache
+============================================================
+
+  ultralytics\models\yolo\yoloe\train_yoloe.py:1:# Ultralytics YOLO ??, AGPL-3.0 license
+  ultralytics\models\yolo\yoloe\train_yoloe.py:2:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:3:from ultralytics.data import YOLOConcatDataset, build_grounding, build_yolo_dataset
+> ultralytics\models\yolo\yoloe\train_yoloe.py:4:from ultralytics.data.utils import check_det_dataset
+  ultralytics\models\yolo\yoloe\train_yoloe.py:5:from ultralytics.models.yolo.yoloe import YOLOETrainer
+  ultralytics\models\yolo\yoloe\train_yoloe.py:6:from ultralytics.utils import DEFAULT_CFG
+  ultralytics\models\yolo\yoloe\train_yoloe.py:7:from ultralytics.utils.torch_utils import de_parallel
+  ultralytics\models\yolo\yoloe\train_yoloe.py:8:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:9:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:10:class YOLOETrainerFromScratch(YOLOETrainer):
+  ultralytics\models\yolo\yoloe\train_yoloe.py:11:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:12:    def __init__(self, cfg=DEFAULT_CFG, overrides=None, _callbacks=None):
+  ultralytics\models\yolo\yoloe\train_yoloe.py:13:        if overrides is None:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:14:            overrides = {}
+  ultralytics\models\yolo\yoloe\train_yoloe.py:15:        super().__init__(cfg, overrides, _callbacks)
+  ultralytics\models\yolo\yoloe\train_yoloe.py:16:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:17:    def build_dataset(self, img_path, mode="train", batch=None):
+  ultralytics\models\yolo\yoloe\train_yoloe.py:18:        """
+> ultralytics\models\yolo\yoloe\train_yoloe.py:19:        Build YOLO Dataset.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:20:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:21:        Args:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:22:            img_path (List[str] | str): Path to the folder containing images.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:23:            mode (str): `train` mode or `val` mode, users are able to customize different augmentations for each mode.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:24:            batch (int, optional): Size of batches, this is for `rect`. Defaults to None.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:25:        """
+  ultralytics\models\yolo\yoloe\train_yoloe.py:26:        gs = max(int(de_parallel(self.model).stride.max() if self.model else 0), 32)
+  ultralytics\models\yolo\yoloe\train_yoloe.py:27:        if mode != "train":
+> ultralytics\models\yolo\yoloe\train_yoloe.py:28:            return build_yolo_dataset(self.args, img_path, batch, self.data, mode=mode, rect=False, stride=gs, load_vp=False)
+> ultralytics\models\yolo\yoloe\train_yoloe.py:29:        dataset = [
+> ultralytics\models\yolo\yoloe\train_yoloe.py:30:            build_yolo_dataset(self.args, im_path, batch, self.training_data[im_path], stride=gs, multi_modal=True)
+  ultralytics\models\yolo\yoloe\train_yoloe.py:31:            if isinstance(im_path, str)
+  ultralytics\models\yolo\yoloe\train_yoloe.py:32:            else build_grounding(self.args, im_path["img_path"], im_path["json_file"], batch, stride=gs)
+  ultralytics\models\yolo\yoloe\train_yoloe.py:33:            for im_path in img_path
+  ultralytics\models\yolo\yoloe\train_yoloe.py:34:        ]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:35:        return YOLOConcatDataset(dataset) if len(dataset) > 1 else dataset[0]
+  ultralytics\models\yolo\yoloe\train_yoloe.py:36:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:37:    def get_dataset(self):
+  ultralytics\models\yolo\yoloe\train_yoloe.py:38:        """
+> ultralytics\models\yolo\yoloe\train_yoloe.py:39:        Get train, val path from data dict if it exists.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:40:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:41:        Returns None if data format is not recognized.
+  ultralytics\models\yolo\yoloe\train_yoloe.py:42:        """
+> ultralytics\models\yolo\yoloe\train_yoloe.py:43:        final_data = {}
+> ultralytics\models\yolo\yoloe\train_yoloe.py:44:        data_yaml = self.args.data
+> ultralytics\models\yolo\yoloe\train_yoloe.py:45:        assert data_yaml.get("train", False), "train dataset not found"  # object365.yaml
+> ultralytics\models\yolo\yoloe\train_yoloe.py:46:        assert data_yaml.get("val", False), "validation dataset not found"  # lvis.yaml
+> ultralytics\models\yolo\yoloe\train_yoloe.py:47:        data = {k: [check_det_dataset(d) for d in v.get("yolo_data", [])] for k, v in data_yaml.items()}
+> ultralytics\models\yolo\yoloe\train_yoloe.py:48:        assert len(data["val"]) == 1, f"Only support validating on 1 dataset for now, but got {len(data['val'])}."
+> ultralytics\models\yolo\yoloe\train_yoloe.py:49:        val_split = "minival" if "lvis" in data["val"][0]["val"] else "val"
+> ultralytics\models\yolo\yoloe\train_yoloe.py:50:        for d in data["val"]:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:51:            if d.get("minival") is None:  # for lvis dataset
+  ultralytics\models\yolo\yoloe\train_yoloe.py:52:                continue
+  ultralytics\models\yolo\yoloe\train_yoloe.py:53:            d["minival"] = str(d["path"] / d["minival"])
+  ultralytics\models\yolo\yoloe\train_yoloe.py:54:        for s in ["train", "val"]:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:55:            final_data[s] = [d["train" if s == "train" else val_split] for d in data[s]]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:56:            # save grounding data if there's one
+> ultralytics\models\yolo\yoloe\train_yoloe.py:57:            grounding_data = data_yaml[s].get("grounding_data")
+> ultralytics\models\yolo\yoloe\train_yoloe.py:58:            if grounding_data is None:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:59:                continue
+> ultralytics\models\yolo\yoloe\train_yoloe.py:60:            grounding_data = grounding_data if isinstance(grounding_data, list) else [grounding_data]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:61:            for g in grounding_data:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:62:                assert isinstance(g, dict), f"Grounding data should be provided in dict format, but got {type(g)}"
+> ultralytics\models\yolo\yoloe\train_yoloe.py:63:            final_data[s] += grounding_data
+  ultralytics\models\yolo\yoloe\train_yoloe.py:64:        # NOTE: to make training work properly, set `nc` and `names`
+> ultralytics\models\yolo\yoloe\train_yoloe.py:65:        final_data["nc"] = data["val"][0]["nc"]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:66:        final_data["names"] = data["val"][0]["names"]
+  ultralytics\models\yolo\yoloe\train_yoloe.py:67:        # NOTE: add path with lvis path
+> ultralytics\models\yolo\yoloe\train_yoloe.py:68:        final_data["path"] = data["val"][0]["path"]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:69:        self.data = final_data
+> ultralytics\models\yolo\yoloe\train_yoloe.py:70:        self.training_data = {}
+> ultralytics\models\yolo\yoloe\train_yoloe.py:71:        for d in data["train"]:
+> ultralytics\models\yolo\yoloe\train_yoloe.py:72:            self.training_data[d["train"]] = d
+> ultralytics\models\yolo\yoloe\train_yoloe.py:73:        return final_data["train"], final_data["val"][0]
+  ultralytics\models\yolo\yoloe\train_yoloe.py:74:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:75:    def plot_training_labels(self):
+  ultralytics\models\yolo\yoloe\train_yoloe.py:76:        """DO NOT plot labels."""
+  ultralytics\models\yolo\yoloe\train_yoloe.py:77:        pass
+  ultralytics\models\yolo\yoloe\train_yoloe.py:78:
+  ultralytics\models\yolo\yoloe\train_yoloe.py:79:    def final_eval(self):
+> ultralytics\models\yolo\yoloe\train_yoloe.py:80:        val = self.args.data["val"]["yolo_data"][0]
+> ultralytics\models\yolo\yoloe\train_yoloe.py:81:        self.validator.args.data = val
+  ultralytics\models\yolo\yoloe\train_yoloe.py:82:        self.validator.args.split = "minival" if isinstance(val, str) and "lvis" in val else "val"
+  ultralytics\models\yolo\yoloe\train_yoloe.py:83:        return super().final_eval()
+
+
+
+============================================================
+D:\Research\Yolo-E\YOLOE-RCAP\ultralytics\models\yolo\yoloe\train_yoloe_seg.py :: GroundingDataset|YOLODataset|build_dataset|build_yolo_dataset|get_dataset|data|cache
+============================================================
+
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:1:# Ultralytics YOLO ??, AGPL-3.0 license
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:2:
+> ultralytics\models\yolo\yoloe\train_yoloe_seg.py:3:from ultralytics.data import YOLOConcatDataset, build_grounding, build_yolo_dataset
+> ultralytics\models\yolo\yoloe\train_yoloe_seg.py:4:from ultralytics.data.utils import check_det_dataset
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:5:from ultralytics.models.yolo.yoloe.train_yoloe import YOLOETrainerFromScratch
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:6:from ultralytics.models.yolo.yoloe.train_seg import YOLOESegTrainer
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:7:from ultralytics.utils import DEFAULT_CFG
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:8:from ultralytics.utils.torch_utils import de_parallel
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:9:
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:10:
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:11:class YOLOESegTrainerFromScratch(YOLOETrainerFromScratch, YOLOESegTrainer):
+  ultralytics\models\yolo\yoloe\train_yoloe_seg.py:12:    pass
+
+
+

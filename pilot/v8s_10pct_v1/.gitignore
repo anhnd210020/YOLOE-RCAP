@@ -1,0 +1,6 @@
+data/
+runs/
+temp/
+__pycache__/
+*.pyc
+*_review*.zip

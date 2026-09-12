@@ -1,0 +1,49 @@
+﻿{
+    "project":  "YOLOE-v8-S 10pct pilot",
+    "version":  "v1",
+    "source":  {
+                   "official_yoloe_commit":  "40cd606cabdbe2b566d6f14a6b162c89206e9a1b",
+                   "reproducibility_commit":  "8f647e0d",
+                   "pilot_branch":  "pilot/yoloe-v8s-10pct-1gpu"
+               },
+    "model":  {
+                  "architecture":  "yoloe-v8s-seg.yaml",
+                  "task":  "segment",
+                  "prompt_mode":  "text",
+                  "imgsz":  640
+              },
+    "data":  {
+                 "fraction":  0.1,
+                 "sampling":  "deterministic per-source 10 percent",
+                 "subset_seed":  0,
+                 "sources":  [
+                                 "Objects365v1",
+                                 "GQA",
+                                 "Flickr30k"
+                             ],
+                 "evaluation":  "full LVIS minival",
+                 "lvis_minival_images":  4809
+             },
+    "training":  {
+                     "epochs":  30,
+                     "train_seed":  0,
+                     "deterministic":  true,
+                     "optimizer":  "AdamW",
+                     "lr0":  0.002,
+                     "warmup_bias_lr":  0,
+                     "official_weight_decay_arg":  0.025,
+                     "pilot_weight_decay_arg":  0.05,
+                     "expected_scaled_optimizer_weight_decay":  0.05,
+                     "momentum":  0.9,
+                     "close_mosaic":  2,
+                     "physical_batch":  "TBD_after_GPU_smoke",
+                     "target_effective_batch":  128,
+                     "device":  "single_GPU"
+                 },
+    "experiment_rule":  {
+                            "baseline_and_new_method_same_subset":  true,
+                            "same_seed":  true,
+                            "same_training_protocol":  true,
+                            "only_method_component_may_change":  true
+                        }
+}
