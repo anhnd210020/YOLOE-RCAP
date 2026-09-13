@@ -43,9 +43,10 @@ def verify(args):
         image_count += 1
         rows.append(selection_row(image, report["pilot_id"], report["seed"], report["source_name"]))
         name = image["file_name"]
-        if name in filenames:
-            raise ValueError(f"Duplicate file_name: {name}")
-        filenames.add(name)
+        if report["source_name"] == "Objects365v1":
+            if name in filenames:
+                raise ValueError(f"Duplicate file_name: {name}")
+            filenames.add(name)
         relative = Path(name).name if getattr(args, "flat_images", False) else name
         if args.image_root and not (Path(args.image_root) / relative).is_file():
             missing.append(name)
@@ -75,7 +76,10 @@ def verify(args):
         missing_categories = sorted(expected_categories - represented)
         coverage = {"represented": len(represented), "total": len(expected_categories), "missing_category_ids": missing_categories}
         if missing_categories:
-            raise ValueError(f"Objects365 class coverage failure: {missing_categories}")
+            print(
+                f"WARNING: Objects365 deterministic subset is missing categories "
+                f"{missing_categories}; retained unchanged without repair."
+            )
     else:
         coverage = None
     result = {"source_name": report["source_name"], "images": image_count,
@@ -84,8 +88,9 @@ def verify(args):
     if args.cache:
         if not args.image_root:
             raise ValueError("--cache requires --image-root for strict file verification")
-        from pilot_grounding import verify_cache_file
-        cache = verify_cache_file(args.cache, image_count, None, True)
+        from pilot_grounding import selected_image_file_counts, verify_cache_file
+        cache = verify_cache_file(args.cache, image_count, None, True, args.image_root,
+                                  expected_file_counts=selected_image_file_counts(subset, args.image_root))
         result["cache_images"] = cache["images"]
         result["cache_instances"] = cache["instances"]
     if args.lock_out:

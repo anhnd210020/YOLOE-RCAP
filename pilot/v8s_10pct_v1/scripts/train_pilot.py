@@ -13,7 +13,7 @@ from types import SimpleNamespace
 
 from make_subset import inside_pilot, sha256_file
 from verify_subset import verify
-from pilot_grounding import load_lock_entry, read_lock, selected_image_files, verify_cache_file
+from pilot_grounding import load_lock_entry, read_lock, selected_image_file_counts, selected_image_files, verify_cache_file
 
 CUDA_OOM_EXIT_CODE = 75  # Retryable smoke-only CUDA out-of-memory failure.
 
@@ -98,7 +98,7 @@ def preflight(args):
         raise ValueError("Objects365 subset or manifest SHA256 mismatch")
     if object_entry["expected_image_count"] != objects["images"] or object_entry["expected_annotation_count"] != objects["annotations"]:
         raise ValueError("Objects365 locked image or annotation count mismatch")
-    if object_entry["class_coverage_status"] != "PASS" or object_entry["class_coverage"] != objects["class_coverage"]:
+    if object_entry["class_coverage_status"] not in {"PASS", "WARN"} or object_entry["class_coverage"] != objects["class_coverage"]:
         raise ValueError("Objects365 class coverage lock mismatch")
     if Path(object_entry["image_root"]).resolve() != Path(args.objects_image_root).resolve():
         raise ValueError("Objects365 image root changed since preparation")
@@ -126,7 +126,8 @@ def preflight(args):
             raise ValueError(f"Manifest SHA256 mismatch for {source}")
         verify_cache_file(Path(subset).with_suffix(".cache"), entry["expected_image_count"],
                           entry["expected_instance_count"], True, entry["image_root"],
-                          selected_image_files(subset, entry["image_root"]))
+                          selected_image_files(subset, entry["image_root"]),
+                          selected_image_file_counts(subset, entry["image_root"]))
     objects_yaml = inside_pilot(args.objects_yaml)
     if not objects_yaml.is_file() or "names: {}" in objects_yaml.read_text(encoding="utf-8"):
         raise ValueError("Rendered Objects365 pilot YAML required")

@@ -1,13 +1,14 @@
 """Pilot-only GroundingDataset verification; official cache/transform logic is inherited."""
 import json
 import math
+from collections import Counter
 from pathlib import Path
 
 
-def verify_cache_labels(labels, expected_images, expected_instances, strict_files, expected_root=None, expected_files=None):
+def verify_cache_labels(labels, expected_images, expected_instances, strict_files, expected_root=None, expected_files=None, expected_file_counts=None):
     if len(labels) != expected_images:
         raise ValueError(f"Grounding cache images: expected {expected_images}, found {len(labels)}")
-    seen = set()
+    file_counts = Counter()
     resolved_files = set()
     instance_count = 0
     required = {"im_file", "shape", "cls", "bboxes", "segments", "normalized", "bbox_format", "texts"}
@@ -16,9 +17,8 @@ def verify_cache_labels(labels, expected_images, expected_instances, strict_file
         if missing_keys:
             raise ValueError(f"Grounding label {index} missing keys: {sorted(missing_keys)}")
         im_file = str(label["im_file"])
-        if im_file in seen:
-            raise ValueError(f"Duplicate grounding im_file: {im_file}")
-        seen.add(im_file)
+        # Distinct official image_id records may reference the same JPEG.
+        file_counts[str(Path(im_file).resolve())] += 1
         resolved_files.add(str(Path(im_file).resolve()))
         if strict_files and not Path(im_file).is_file():
             raise ValueError(f"Missing grounding image: {im_file}")
@@ -43,29 +43,35 @@ def verify_cache_labels(labels, expected_images, expected_instances, strict_file
         instance_count += cls.shape[0]
     if expected_instances is not None and instance_count != expected_instances:
         raise ValueError(f"Grounding cache instances: expected {expected_instances}, found {instance_count}")
+    if expected_file_counts is not None and file_counts != expected_file_counts:
+        raise ValueError("Grounding cache path multiplicities differ from selected image_id records")
     if expected_files is not None and resolved_files != expected_files:
         raise ValueError("Grounding cache im_file set differs from selected subset image paths")
     return {"images": len(labels), "instances": instance_count}
 
 
-def verify_cache_file(path, expected_images, expected_instances, strict_files=True, expected_root=None, expected_files=None):
+def verify_cache_file(path, expected_images, expected_instances, strict_files=True, expected_root=None, expected_files=None, expected_file_counts=None):
     import numpy as np
     labels = np.load(str(path), allow_pickle=True)
-    return verify_cache_labels(labels, expected_images, expected_instances, strict_files, expected_root, expected_files)
+    return verify_cache_labels(labels, expected_images, expected_instances, strict_files, expected_root, expected_files, expected_file_counts)
 
 
-def selected_image_files(subset_json, image_root):
+def selected_image_file_counts(subset_json, image_root):
     from make_subset import items
     root = Path(image_root).resolve(strict=True)
-    paths = set()
+    paths = Counter()
     for image in items(subset_json, "images.item"):
         path = (root / image["file_name"]).resolve()
         try:
             path.relative_to(root)
         except ValueError as exc:
             raise ValueError(f"Selected image path escapes grounding root: {image['file_name']}") from exc
-        paths.add(str(path))
+        paths[str(path)] += 1
     return paths
+
+
+def selected_image_files(subset_json, image_root):
+    return set(selected_image_file_counts(subset_json, image_root))
 
 
 def load_then_reduce_for_smoke(load_full, dataset, fraction):
@@ -139,7 +145,8 @@ class PilotGroundingDataset(GroundingDataset):
     def verify_labels(self, labels):
         entry = self.pilot_entry
         verify_cache_labels(labels, entry["expected_image_count"], entry["expected_instance_count"],
-                            self.pilot_strict_files, entry["image_root"])
+                            self.pilot_strict_files, entry["image_root"],
+                            expected_file_counts=selected_image_file_counts(entry["subset_json"], entry["image_root"]))
 
     def get_labels(self):
         # Official get_labels loads and verifies the entire pilot cache first.
@@ -175,7 +182,8 @@ def build_cache_and_lock(args):
     generate_cache(str(subset), str(Path(args.image_root).resolve(strict=True)))
     image_root = str(Path(args.image_root).resolve(strict=True))
     measured = verify_cache_file(cache_path, preflight["images"], None, True, image_root,
-                                 selected_image_files(subset, image_root))
+                                 selected_image_files(subset, image_root),
+                                 selected_image_file_counts(subset, image_root))
     source_name = preflight["source_name"]
     entry = {
         "subset_json": str(subset), "subset_sha256": preflight["subset_sha256"],

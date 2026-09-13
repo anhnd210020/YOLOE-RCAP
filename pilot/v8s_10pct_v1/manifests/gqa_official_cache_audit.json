@@ -1,0 +1,140 @@
+{
+  "status": "PASS_OFFICIAL_CACHE_SEMANTICS",
+  "subset_sha256": "023afe46980e08e392c8136871bd7a3bcf0572569c4920b8f323dbf83a93dabe",
+  "cache_path": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/gqa_pilot10_v1.cache",
+  "cache_sha256": "7013d5480d48e2e244563bf22e466acca0ae437b1b2e093af98cf338af557e1e",
+  "source_image_report": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/manifests/gqa_upstream_official_audit.json",
+  "source_image_report_sha256": "fe21a0ab00a78affdbde954dac37066b3e3f890422be7b867b9d6a1310e3c485",
+  "selected_image_records": 62114,
+  "image_records_dropped": 0,
+  "subset_annotation_count": 366049,
+  "official_cache_instance_count": 366039,
+  "official_annotation_filter_count": 10,
+  "filter_reasons": {
+    "duplicate_class_and_normalized_box": 6,
+    "zero_box_after_json_clipping": 4
+  },
+  "affected_image_records": [
+    {
+      "image_id": 515974,
+      "file_name": "2326556.jpg",
+      "subset_annotations": 4,
+      "cache_instances": 3,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 2673449,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 530480,
+      "file_name": "2340618.jpg",
+      "subset_annotations": 14,
+      "cache_instances": 13,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 2759994,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 551301,
+      "file_name": "2372535.jpg",
+      "subset_annotations": 4,
+      "cache_instances": 3,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 2882963,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 656605,
+      "file_name": "2395716.jpg",
+      "subset_annotations": 3,
+      "cache_instances": 2,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 3496548,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 740678,
+      "file_name": "498394.jpg",
+      "subset_annotations": 16,
+      "cache_instances": 15,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 3982968,
+          "reason": "zero_box_after_json_clipping"
+        }
+      ]
+    },
+    {
+      "image_id": 767966,
+      "file_name": "2334979.jpg",
+      "subset_annotations": 37,
+      "cache_instances": 36,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 4141894,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 774402,
+      "file_name": "713141.jpg",
+      "subset_annotations": 15,
+      "cache_instances": 14,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 4177773,
+          "reason": "zero_box_after_json_clipping"
+        }
+      ]
+    },
+    {
+      "image_id": 805495,
+      "file_name": "2412064.jpg",
+      "subset_annotations": 14,
+      "cache_instances": 13,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 4354298,
+          "reason": "duplicate_class_and_normalized_box"
+        }
+      ]
+    },
+    {
+      "image_id": 946554,
+      "file_name": "713010.jpg",
+      "subset_annotations": 21,
+      "cache_instances": 20,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 5161546,
+          "reason": "zero_box_after_json_clipping"
+        }
+      ]
+    },
+    {
+      "image_id": 1054667,
+      "file_name": "285638.jpg",
+      "subset_annotations": 7,
+      "cache_instances": 6,
+      "filtered_by_official_generator": [
+        {
+          "annotation_id": 5836277,
+          "reason": "zero_box_after_json_clipping"
+        }
+      ]
+    }
+  ],
+  "metadata_repaired": false
+}

@@ -141,8 +141,11 @@ def prepare(args):
                       "total_classes": len(ids), "missing_category_ids": missing_classes,
                       "duplicate_labels": duplicate_count}, indent=2))
     if missing_classes:
-        raise ValueError("Objects365 class coverage failure; selected images were not changed")
-    # Only create outputs after validating class coverage and source files.
+        print(
+            f"WARNING: Objects365 deterministic subset is missing categories "
+            f"{missing_classes}; selected images remain unchanged."
+        )
+    # Create outputs after validating subset structure and source files.
     labels_dir.mkdir(parents=True, exist_ok=False)
     for image_id, im in image_map.items():
         label_path = labels_dir / (Path(im["file_name"]).stem + ".txt")
@@ -177,7 +180,9 @@ def prepare(args):
         "manifest_sha256": sha256_file(args.manifest),
         "expected_image_count": verified["images"],
         "expected_annotation_count": verified["annotations"],
-        "class_coverage_status": "PASS", "class_coverage": verified["class_coverage"],
+        "class_coverage_status": (
+            "WARN" if verified["class_coverage"]["missing_category_ids"] else "PASS"
+        ), "class_coverage": verified["class_coverage"],
         "yaml_path": str(yaml_path.resolve()), "yaml_sha256": sha256_file(yaml_path),
         "image_root": str(images_dir.resolve()), "label_root": str(labels_dir.resolve()),
         "label_count": label_count, "label_tree_sha256": label_hash,

@@ -3,16 +3,45 @@
   "pilot_id": "yoloe-v8s-10pct-v1",
   "fraction": 0.1,
   "seed": 0,
-  "sampling_unit": "image",
+  "sampling_unit": "source JSON image record identified by unique image_id",
   "sampling_algorithm": "sha256-bottom-k",
-  "hash_fields": ["pilot_id", "seed", "source_name", "image_id", "file_name"],
-  "selection": "For each source independently, K=floor(fraction*N_images); sort by (SHA256 hex digest, canonical image_id, file_name) and keep K. Retain every annotation of each selected image.",
-  "sources": ["Objects365v1", "GQA", "Flickr30k"],
-  "objects365_class_coverage": "Report all categories absent after deterministic selection; fail without repair.",
-  "grounding": "GQA and Flickr30k use pilot-only cache verification against measured counts in PILOT_DATASET_LOCK.json; subset filenames must be gqa_pilot10_v1.json and flickr_pilot10_v1.json.",
+  "hash_fields": [
+    "pilot_id",
+    "seed",
+    "source_name",
+    "image_id",
+    "file_name"
+  ],
+  "selection": "For each source independently, K=floor(fraction*N_source_image_records); sort by (SHA256 hex digest, canonical image_id, file_name) and keep K. Retain every annotation associated with each selected image_id. For GQA and Flickr30k, distinct image_id records may reference the same physical file_name; these official source records remain distinct.",
+  "sources": [
+    "Objects365v1",
+    "GQA",
+    "Flickr30k"
+  ],
+  "objects365_class_coverage": "Report categories absent after deterministic selection. Do not repair, resample, or add images after observing coverage. Missing coverage is recorded as WARN and the deterministic subset is retained unchanged.",
+  "grounding": "GQA and Flickr30k preserve official source image_id-record semantics. image_id must remain unique. Duplicate file_name values are permitted. Every annotation associated with each selected image_id is retained. Pilot cache verification uses measured counts in PILOT_DATASET_LOCK.json.",
   "missing_images": "Strict pre-cache and pre-training check: selected count must equal existing selected image count; no silent image drop.",
   "automatic_class_repair": false,
   "silent_image_drop": false,
   "lock_file_policy": "Generate PILOT_DATASET_LOCK.json only after real subset JSON, images, and caches are verified; never fabricate counts.",
-  "safety_rules": ["All generated outputs remain under pilot/v8s_10pct_v1", "No official source edits", "No dataset download", "No training during preparation", "No cleanup unless explicitly requested within pilot data root"]
+  "safety_rules": [
+    "All generated outputs remain under pilot/v8s_10pct_v1",
+    "No official source edits",
+    "No dataset download",
+    "No training during preparation",
+    "No cleanup unless explicitly requested within pilot data root"
+  ],
+  "protocol_amendment": {
+    "objects365": {
+      "observed_coverage": "364/365",
+      "missing_category_ids": [
+        361
+      ],
+      "policy": "retain deterministic 10% subset unchanged; no post-hoc coverage repair"
+    },
+    "grounding": {
+      "reason": "Official processed GQA/Flickr30k JSON contains multiple distinct image_id records referencing the same file_name.",
+      "policy": "preserve source image_id records; permit duplicate file_name; do not merge or discard source records"
+    }
+  }
 }

@@ -11,6 +11,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import eval_pilot
+import verify_gqa_official_images
 import make_subset
 import pilot_grounding
 import pilot_text
@@ -22,6 +23,19 @@ PILOT = Path(__file__).resolve().parents[1]
 
 
 class PilotPreparationTests(unittest.TestCase):
+    def test_known_gqa_dimensions_warn_only_for_exact_official_record(self):
+        classify = verify_gqa_official_images.classify_dimensions
+        image = {"id": 770291, "file_name": "61564.jpg", "width": 1024, "height": 768}
+        warning = classify(image, (1024, 1022))
+        self.assertEqual(warning["status"], "WARN_UPSTREAM_OFFICIAL")
+        self.assertEqual((warning["json_height"], warning["jpeg_height"]), (768, 1022))
+        with self.assertRaises(ValueError):
+            classify({**image, "height": 1022}, (1024, 1022))
+        with self.assertRaises(ValueError):
+            classify(image, (1024, 1021))
+        with self.assertRaises(ValueError):
+            classify({**image, "id": 12345}, (1024, 1022))
+
     def test_subset_and_manifest_with_synthetic_images(self):
         with tempfile.TemporaryDirectory(prefix="pilot_test_", dir=PILOT) as directory:
             root = Path(directory)
@@ -74,6 +88,18 @@ class PilotPreparationTests(unittest.TestCase):
                      "normalized": True, "bbox_format": "xywh", "texts": [["sample"]]}
             self.assertEqual(pilot_grounding.verify_cache_labels([label], 1, 1, True, root, {str(image)}),
                              {"images": 1, "instances": 1})
+            # Repeated JPEGs are distinct grounding records; preserve multiplicity.
+            self.assertEqual(pilot_grounding.verify_cache_labels(
+                [label, label], 2, 2, True, root,
+                expected_file_counts={str(image): 2}), {"images": 2, "instances": 2})
+            other = root / "other.jpg"
+            other.write_bytes(b"synthetic image presence only")
+            other_label = {**label, "im_file": str(other)}
+            with self.assertRaises(ValueError):
+                # Same total record count and file set, wrong per-file counts.
+                pilot_grounding.verify_cache_labels(
+                    [label, label, other_label], 3, 3, True, root,
+                    expected_file_counts={str(image): 1, str(other): 2})
             label["bboxes"] = np.zeros((2, 4))
             with self.assertRaises(ValueError):
                 pilot_grounding.verify_cache_labels([label], 1, 1, True)

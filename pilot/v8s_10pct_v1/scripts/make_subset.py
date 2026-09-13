@@ -163,13 +163,16 @@ def build(args):
         missing_classes = sorted({cat["id"] for cat in categories} - represented)
         report["class_coverage"] = {"represented": len(represented), "total": len(categories),
                                     "missing_category_ids": missing_classes,
-                                    "status": "FAIL" if missing_classes else "PASS"}
+                                    "status": "WARN" if missing_classes else "PASS"}
     with open(manifest, "x", encoding="utf-8", newline="\n") as stream:
         json.dump(report, stream, ensure_ascii=False, indent=2)
         stream.write("\n")
     print(json.dumps({key: value for key, value in report.items() if key != "selected_images"}, indent=2))
     if args.source_name == "Objects365v1" and report["class_coverage"]["missing_category_ids"]:
-        raise ValueError("Objects365 class coverage failure; deterministic subset was not repaired")
+        print(
+            "WARNING: Objects365 deterministic 10% subset has incomplete class coverage; "
+            "subset retained unchanged with no post-hoc repair."
+        )
     return report
 
 

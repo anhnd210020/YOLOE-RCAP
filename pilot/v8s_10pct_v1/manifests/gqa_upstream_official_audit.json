@@ -1,0 +1,114 @@
+{
+  "source_name": "GQA",
+  "status": "WARN_UPSTREAM_OFFICIAL",
+  "subset_json": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/gqa_pilot10_v1.json",
+  "subset_sha256": "023afe46980e08e392c8136871bd7a3bcf0572569c4920b8f323dbf83a93dabe",
+  "manifest": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/manifests/gqa_pilot10_v1.json",
+  "manifest_sha256": "eb92abd346d778e892a09df865754bd85f8aed4ce88066f19b57857d88565ed9",
+  "official_processed_source": "/workspace/datasets/mixed_grounding/annotations/final_mixed_train_no_coco_segm.json",
+  "official_processed_source_sha256": "cdcbec2fb24ae8d9e412be4c3e6515f4c202cd144f6e24c474d3bcb09f498303",
+  "image_root": "/workspace/datasets/mixed_grounding/gqa/images",
+  "selected_records": 62114,
+  "selected_annotations": 366049,
+  "unique_physical_jpegs": 32265,
+  "repeated_file_name_references": 29849,
+  "missing": 0,
+  "decode_failures": 0,
+  "duplicate_image_ids": 0,
+  "dimension_mismatch_records": 10,
+  "dimension_mismatch_jpegs": 7,
+  "metadata_repaired": false,
+  "records_dropped": 0,
+  "warnings": [
+    {
+      "image_id": 597913,
+      "file_name": "285761.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 612,
+      "jpeg_height": 612,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 687015,
+      "file_name": "61530.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1000,
+      "jpeg_height": 586,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 687017,
+      "file_name": "61530.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1000,
+      "jpeg_height": 586,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 769131,
+      "file_name": "498098.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 683,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 769134,
+      "file_name": "498098.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 683,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 770291,
+      "file_name": "61564.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 1022,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 814367,
+      "file_name": "285743.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 683,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 827542,
+      "file_name": "286093.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 685,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 869127,
+      "file_name": "150417.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 683,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    },
+    {
+      "image_id": 869131,
+      "file_name": "150417.jpg",
+      "json_width": 1024,
+      "json_height": 768,
+      "jpeg_width": 1024,
+      "jpeg_height": 683,
+      "status": "WARN_UPSTREAM_OFFICIAL"
+    }
+  ]
+}

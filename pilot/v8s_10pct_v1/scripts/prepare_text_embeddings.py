@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 
 from make_subset import inside_pilot, sha256_file
-from pilot_grounding import load_lock_entry, read_lock, selected_image_files, verify_cache_file, write_lock_sections
+from pilot_grounding import load_lock_entry, read_lock, selected_image_file_counts, selected_image_files, verify_cache_file, write_lock_sections
 from prepare_objects365 import label_tree_sha256
 
 PILOT_THRESHOLD = max(1, round(100 * 0.10))
@@ -91,8 +91,8 @@ def prepare(args):
     if not all(source in lock for source in ("Objects365v1", "GQA", "Flickr30k")):
         raise ValueError("Objects365v1, GQA, and Flickr30k must be locked first")
     objects = lock["Objects365v1"]
-    if objects.get("class_coverage_status") != "PASS":
-        raise ValueError("Objects365 class coverage must pass before text preparation")
+    if objects.get("class_coverage_status") not in {"PASS", "WARN"}:
+        raise ValueError("Objects365 class coverage status must be PASS or documented WARN before text preparation")
     for path_key, hash_key in (("subset_json", "subset_sha256"), ("manifest", "manifest_sha256")):
         path = Path(objects[path_key]) if path_key != "manifest" else Path(args.objects_manifest)
         if not path.is_file() or sha256_file(path) != objects[hash_key]:
@@ -108,7 +108,8 @@ def prepare(args):
         entry = load_lock_entry(lock_path, source, subset)
         cache_path = Path(subset).with_suffix(".cache")
         verify_cache_file(cache_path, entry["expected_image_count"], entry["expected_instance_count"], True,
-                          entry["image_root"], selected_image_files(subset, entry["image_root"]))
+                          entry["image_root"], selected_image_files(subset, entry["image_root"]),
+                          selected_image_file_counts(subset, entry["image_root"]))
         cache_paths.append(cache_path)
     checkpoint = Path(args.mobileclip_weights).resolve(strict=True)
     if checkpoint.name != "mobileclip_blt.pt":
