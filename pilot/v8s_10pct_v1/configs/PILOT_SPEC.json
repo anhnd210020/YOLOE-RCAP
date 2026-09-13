@@ -36,7 +36,7 @@
                      "expected_scaled_optimizer_weight_decay":  0.05,
                      "momentum":  0.9,
                      "close_mosaic":  2,
-                     "physical_batch":  "TBD_after_GPU_smoke",
+                     "physical_batch":  32,
                      "target_effective_batch":  128,
                      "device":  "single_GPU"
                  },

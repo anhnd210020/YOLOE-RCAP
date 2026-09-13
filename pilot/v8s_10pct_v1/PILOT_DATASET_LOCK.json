@@ -1,0 +1,65 @@
+{
+  "version": "v1",
+  "pilot_id": "yoloe-v8s-10pct-v1",
+  "GQA": {
+    "subset_json": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/gqa_pilot10_v1.json",
+    "subset_sha256": "023afe46980e08e392c8136871bd7a3bcf0572569c4920b8f323dbf83a93dabe",
+    "manifest_sha256": "eb92abd346d778e892a09df865754bd85f8aed4ce88066f19b57857d88565ed9",
+    "expected_image_count": 62114,
+    "expected_instance_count": 366039,
+    "cache_sha256": "7013d5480d48e2e244563bf22e466acca0ae437b1b2e093af98cf338af557e1e",
+    "image_root": "/workspace/datasets/mixed_grounding/gqa/images"
+  },
+  "Flickr30k": {
+    "subset_json": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/flickr_pilot10_v1.json",
+    "subset_sha256": "cf82081f5721acd334425063927715c259e84c16bfebb624dd7f9bb5e357dd04",
+    "manifest_sha256": "5aa1bdc6626115dc6ebb1c8854530436961b346084355cf99eae627758b40b7d",
+    "expected_image_count": 14891,
+    "expected_instance_count": 63741,
+    "cache_sha256": "552c111a7108b537ffa14d018c52d965ab4ee1529c4a2bd6cadc655b306d8f25",
+    "image_root": "/workspace/datasets/flickr/images"
+  },
+  "Objects365v1": {
+    "subset_json": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/objects365_pilot10_v1.json",
+    "subset_sha256": "2b413d71b4c462b1b6d517eb48de72ab9bb02746127ad48722527667da9003dd",
+    "manifest_sha256": "c9cf8604f794e46f634d76a0c0358d6122830999882dbf06fa4e01562e53eebb",
+    "expected_image_count": 60860,
+    "expected_annotation_count": 959035,
+    "class_coverage_status": "WARN",
+    "class_coverage": {
+      "represented": 364,
+      "total": 365,
+      "missing_category_ids": [
+        361
+      ]
+    },
+    "yaml_path": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/prepared/Objects365v1-pilot10-v1.yaml",
+    "yaml_sha256": "52e49b2d89513b28a8e5553b26b1a6f79f5ba5697b9fce280bae05e93554429b",
+    "image_root": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/prepared/objects365/images/train",
+    "label_root": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/prepared/objects365/labels/train",
+    "label_count": 60860,
+    "label_tree_sha256": "597ec4a8453fde0afb12042b9450a495d9629e2ba92cb9e7e263ebad50d5fa53"
+  },
+  "text_artifacts": {
+    "text_model": "mobileclip:blt",
+    "mobileclip_checkpoint": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/text/checkpoints/mobileclip_blt.pt",
+    "mobileclip_checkpoint_sha256": "670844f7a886dd6eff7a9285adfc53f3d3c889c03bfc8354010cb5c6bf27441a",
+    "train_label_embeddings": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/text/train_label_embeddings.pt",
+    "train_label_embeddings_sha256": "256ef2d7a241d03917772c3b447b3d20abea066918797e750d7f637b3a6f86f6",
+    "global_negative_categories": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/text/global_grounding_neg_cat.json",
+    "global_negative_categories_sha256": "a56878d9e98fcc7078365b2977600c0f832d8b316c4c9a42667712093cc742a4",
+    "global_negative_embeddings": "/workspace/YOLOE-RCAP/pilot/v8s_10pct_v1/data/text/global_grounding_neg_embeddings.pt",
+    "global_negative_embeddings_sha256": "ae103c95f0beebbf23f9826aecbf6d421e7f775d8f6ca137f5bf41abeaa7b509",
+    "global_negative_threshold": 10,
+    "global_negative_count": 3500,
+    "train_label_count": 79798
+  },
+  "evaluation": {
+    "name": "LVIS v1 full minival",
+    "expected_image_count": 4809,
+    "minival_list": "/workspace/datasets/lvis/minival.txt",
+    "minival_list_sha256": "1b7c59904861001d0c0d71a024cee80617a4a74f565b38e9ab6c60d63123c4df",
+    "minival_annotation": "/workspace/datasets/lvis/annotations/lvis_v1_minival.json",
+    "minival_annotation_sha256": "02301f6ccd89d1ee3d35112cb57d000c3396f34e4073066c90b2c1fbf47b55ce"
+  }
+}

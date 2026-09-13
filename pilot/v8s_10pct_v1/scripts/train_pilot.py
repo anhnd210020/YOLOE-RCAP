@@ -82,6 +82,16 @@ def preflight(args):
     verify_evaluation(lock["evaluation"])
     verify_text_artifacts(lock["text_artifacts"], args.mobileclip_weights)
     local_lvis = Path(__file__).resolve().parents[4] / "datasets" / "lvis"
+    locked_minival = Path(lock["evaluation"]["minival_list"]).resolve()
+    local_val = local_lvis / "val.txt"
+    if not local_val.exists():
+        raise FileNotFoundError(
+            "Locked LVIS val.txt is required; refusing Ultralytics automatic dataset download"
+        )
+    if local_val.resolve() != locked_minival:
+        raise ValueError("LVIS val.txt must resolve to the locked minival.txt")
+    if sha256_file(local_val) != lock["evaluation"]["minival_list_sha256"]:
+        raise ValueError("LVIS val.txt SHA256 differs from the locked minival list")
     if Path(lock["evaluation"]["minival_list"]).resolve() != (local_lvis / "minival.txt").resolve():
         raise ValueError("Locked LVIS list path differs from the official relative dataset layout")
     if Path(lock["evaluation"]["minival_annotation"]).resolve() != (local_lvis / "annotations/lvis_v1_minival.json").resolve():
