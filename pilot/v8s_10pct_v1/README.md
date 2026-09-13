@@ -1,5 +1,79 @@
 # YOLOE-v8-S 10% pilot preparation
 
+## Advisor review summary
+
+This pilot is a **controlled reduced-data baseline**, not a claim of exact full-data reproduction of YOLOE.
+
+### Paper-aligned components
+
+- Architecture: `YOLOE-v8-S`
+- Training stage: Stage-1 text-prompt training
+- Training sources: Objects365 V1, GQA, Flickr30k
+- Epochs: 30
+- Image size: 640
+- Optimizer: AdamW
+- Evaluation set: full LVIS minival (4,809 images)
+- Primary final detection metrics: AP, APr, APc, APf
+
+Official YOLOE source is pinned at:
+
+`40cd606cabdbe2b566d6f14a6b162c89206e9a1b`
+
+The official `ultralytics/` source is intentionally kept unchanged. Pilot-specific code is isolated under `pilot/v8s_10pct_v1/`.
+
+### Deliberate pilot adaptations
+
+- One RTX 3090 instead of the paper's multi-GPU setup
+- Deterministic 10% subset from each training source
+- Physical batch 32 with `nbs=128`
+- Single training seed: 0 for the initial controlled pilot
+
+The same frozen dataset/protocol will later be used for:
+
+`YOLOE-v8-S 10% baseline` vs. `YOLOE-v8-S 10% + RCAP`
+
+Only the RCAP method component will be allowed to change.
+
+### Locked data
+
+- Objects365 V1: 60,860 selected image records, 959,035 annotations
+- GQA: 62,114 selected records, 32,265 physical JPEGs, 366,039 cache instances
+- Flickr30k: 14,891 selected records, 12,202 physical JPEGs, 63,741 instances
+- Dataset lock SHA256: `8b7fad638f8b16dc97cca3ad9640d0d12b0b9413ca69be98afa148ea6175f058`
+
+Objects365 category 361 is absent from the deterministic 10% subset and is retained as a documented warning rather than repaired post hoc.
+
+A small set of upstream GQA records has JSON image dimensions inconsistent with decoded JPEG dimensions. Those records are preserved unchanged to maintain released-pipeline semantics.
+
+### Evaluation policy
+
+The final scientific checkpoint is the model after exactly 30 epochs (`last.pt`).
+
+Final evaluation is run separately on all 4,809 LVIS minival images using:
+
+- `imgsz=640`
+- `conf=0.001`
+- `iou=0.7`
+- `max_det=1000`
+- text prompt
+
+The validated primary evaluator is the bbox Fixed-AP path. In-training segmentation validation is bypassed only in pilot-owned code because the pinned environment triggers an OpenCV mask-resize failure. The official YOLOE source is not patched.
+
+Any segmentation-performance claim will require a separate validated mask-AP evaluation.
+
+### Current status
+
+- Data preparation and lock: PASS
+- Source-integrity checks: PASS
+- CPU tests: PASS
+- Batch-32 GPU smoke: PASS
+- 30-epoch baseline training: IN PROGRESS
+- Final LVIS evaluation: PENDING
+- RCAP implementation: NOT STARTED
+
+---
+
+
 This directory contains the pilot preparation code and selected manifests. Generated datasets, caches, locks, and runs are produced on the preparation host. The main experiment is stage-1 text-prompt segmentation for 30 epochs on one GPU, with full LVIS minival evaluation (4,809 images). Official YOLOE files remain unchanged.
 
 ## Requirements and sampling
