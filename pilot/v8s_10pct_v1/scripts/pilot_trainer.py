@@ -36,6 +36,32 @@ class PilotYOLOESegTrainerFromScratch(YOLOESegTrainerFromScratch):
         return YOLOConcatDataset(datasets) if len(datasets) > 1 else datasets[0]
 
 
+class PilotTrainOnlyTrainer(PilotYOLOESegTrainerFromScratch):
+    """Main pilot: save normal checkpoints without in-training mask evaluation.
+
+    The inherited validator is constructed only for loss names/metric schema.
+    Its zero metrics and constant fitness are bookkeeping, not scientific AP.
+    Equal fitness does not select a model or trigger early stopping in the pinned
+    loop. Evaluate epoch-30 last.pt independently with eval_pilot.py. Keeping
+    save_model inherited also preserves EMA, optimizer state and epoch metadata;
+    skipping final_eval leaves that checkpoint intact (no optimizer stripping).
+    """
+
+    def get_dataloader(self, dataset_path, batch_size=16, rank=0, mode="train"):
+        if mode == "val":
+            return None
+        return super().get_dataloader(dataset_path, batch_size=batch_size, rank=rank, mode=mode)
+
+    def validate(self):
+        # Also covers the pinned loop's forced final-epoch validation.
+        self.best_fitness = 0.0
+        return self.metrics, 0.0
+
+    def final_eval(self):
+        # Final scientific evaluation is a separate, locked bbox Fixed-AP run.
+        return None
+
+
 class PilotSmokeTrainer(PilotYOLOESegTrainerFromScratch):
     """Use the real training loop while bypassing forced final-epoch science I/O."""
 

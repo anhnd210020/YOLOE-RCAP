@@ -171,7 +171,7 @@ def main():
     from ultralytics import YOLOE
     from ultralytics.nn.tasks import guess_model_scale
     from ultralytics.utils import yaml_load
-    from pilot_trainer import PilotYOLOESegTrainerFromScratch
+    from pilot_trainer import PilotTrainOnlyTrainer, PilotYOLOESegTrainerFromScratch
     from pilot_text import install_pilot_text
     install_pilot_text(lock["text_artifacts"])
     model_path = "yoloe-v8s-seg.yaml"
@@ -187,7 +187,7 @@ def main():
         {"source_name": "GQA", "img_path": str(Path(args.gqa_image_root).resolve()), "json_file": str(Path(args.gqa_json).resolve())}]},
         "val": {"yolo_data": ["lvis.yaml"]}}
     kwargs = dict(extends)
-    kwargs.update(dict(data=data, trainer=PilotYOLOESegTrainerFromScratch, task="segment", imgsz=640,
+    kwargs.update(dict(data=data, trainer=PilotTrainOnlyTrainer, task="segment", imgsz=640,
                        batch=args.physical_batch, epochs=1 if args.smoke else 30,
                        nbs=128, close_mosaic=2, optimizer="AdamW", lr0=0.002,
                        warmup_bias_lr=0.0, weight_decay=0.05, momentum=0.9,
@@ -208,6 +208,8 @@ def main():
             print(f"Smoke CUDA OOM; dedicated retry exit code {CUDA_OOM_EXIT_CODE}", file=sys.stderr)
             return CUDA_OOM_EXIT_CODE
         return 0
+    print("Main pilot is train-only: validation metrics/fitness are placeholders. "
+          "Evaluate epoch-30 weights/last.pt separately with the locked LVIS evaluator.", flush=True)
     YOLOE(model_path).train(**kwargs)
     return 0
 
