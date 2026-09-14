@@ -1,5 +1,6 @@
 # Ultralytics YOLO 🚀, AGPL-3.0 license
 
+import math
 import shutil
 import subprocess
 import sys
@@ -144,6 +145,7 @@ CFG_FLOAT_KEYS = {  # integer or float arguments, i.e. x=2 and x=2.0
     "warmup_epochs",
     "box",
     "cls",
+    "robust_vocab_tau",
     "dfl",
     "degrees",
     "shear",
@@ -369,6 +371,11 @@ def check_cfg(cfg, hard=True):
                         f"'{k}' must be a bool (i.e. '{k}=True' or '{k}=False')"
                     )
                 cfg[k] = bool(v)
+
+    if "robust_vocab_tau" in cfg:
+        tau = cfg["robust_vocab_tau"]
+        if isinstance(tau, bool) or not isinstance(tau, (int, float)) or not math.isfinite(tau) or tau < 0:
+            raise ValueError("'robust_vocab_tau' must be a finite, nonnegative number")
 
 
 def get_save_dir(args, name=None):

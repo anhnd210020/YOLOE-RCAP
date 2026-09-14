@@ -165,6 +165,8 @@ def main():
     parser.add_argument("--flickr-manifest", required=True)
     parser.add_argument("--flickr-image-root", required=True)
     parser.add_argument("--mobileclip-weights", required=True)
+    parser.add_argument("--robust-vocab-tau", type=float, default=0.0,
+                        help="Region-wise robust negative vocabulary strength; 0 uses original BCE")
     parser.add_argument("--smoke", action="store_true", help="Later GPU trial only: one epoch on 0.1%% of pilot data")
     args = parser.parse_args()
     lock_path, objects_yaml, lock, runs_root, run_name = preflight(args)
@@ -193,6 +195,7 @@ def main():
                        warmup_bias_lr=0.0, weight_decay=0.05, momentum=0.9,
                        workers=4, seed=0, deterministic=True, device=0,
                        text_model="mobileclip:blt",
+                       robust_vocab_tau=args.robust_vocab_tau,
                        fraction=0.001 if args.smoke else 1.0,
                        val=not args.smoke, save=not args.smoke, plots=False,
                        project=str(runs_root), name=run_name, exist_ok=False))

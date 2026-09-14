@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 from ultralytics.utils.metrics import OKS_SIGMA
 from ultralytics.utils.ops import crop_mask, xywh2xyxy, xyxy2xywh
+from ultralytics.utils.robust_vocab_loss import robust_vocab_classification_loss
 from ultralytics.utils.tal import RotatedTaskAlignedAssigner, TaskAlignedAssigner, dist2bbox, dist2rbox, make_anchors
 from ultralytics.utils.torch_utils import autocast
 
@@ -324,7 +325,13 @@ class v8SegmentationLoss(v8DetectionLoss):
 
         # Cls loss
         # loss[1] = self.varifocal_loss(pred_scores, target_scores, target_labels) / target_scores_sum  # VFL way
-        loss[2] = self.bce(pred_scores, target_scores.to(dtype)).sum() / target_scores_sum  # BCE
+        robust_vocab_tau = getattr(self.hyp, "robust_vocab_tau", 0.0)
+        if robust_vocab_tau == 0:
+            loss[2] = self.bce(pred_scores, target_scores.to(dtype)).sum() / target_scores_sum  # BCE
+        else:
+            loss[2] = robust_vocab_classification_loss(
+                pred_scores, target_scores, target_scores_sum, self.bce, robust_vocab_tau
+            )
 
         if fg_mask.sum():
             # Bbox loss
