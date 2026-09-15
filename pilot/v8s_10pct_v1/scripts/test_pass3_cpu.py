@@ -185,16 +185,38 @@ class PilotPreparationTests(unittest.TestCase):
             args = SimpleNamespace(checkpoint=str(checkpoint), lock=str(PILOT / "PILOT_DATASET_LOCK.json"),
                                    name="pass3_cpu_test")
             with patch.object(eval_pilot, "read_lock", return_value=lock), \
-                    patch.object(eval_pilot, "verify_text_artifacts", return_value={}):
+                    patch.object(eval_pilot, "verify_evaluation_text_artifacts", return_value={}):
                 result = eval_pilot.preflight(args)
-                self.assertEqual((result[1], len(result[4]), len(result[5])),
-                                 (make_subset.sha256_file(checkpoint), 4809, 4809))
+                self.assertEqual((result[1], result[2], result[3], len(result[6]), len(result[7])),
+                                 (make_subset.sha256_file(checkpoint), eval_pilot.DATASET_LOCK.resolve(),
+                                  eval_pilot.DATASET_LOCK_SHA256, 4809, 4809))
                 lock["evaluation"]["minival_annotation_sha256"] = "0" * 64
                 with self.assertRaises(ValueError):
                     eval_pilot.preflight(args)
             args.checkpoint = str(Path(directory) / "missing.pt")
             with self.assertRaises(FileNotFoundError):
                 eval_pilot.preflight(args)
+
+    def test_eval_accepts_exact_locked_baseline_input_and_rejects_arbitrary_outside_path(self):
+        lock = json.loads(eval_pilot.DATASET_LOCK.read_text(encoding="utf-8"))
+        text = lock["text_artifacts"]
+        accepted = eval_pilot.locked_evaluation_text_input(
+            text["global_negative_categories"], text["global_negative_categories_sha256"],
+            "global_negative_categories")
+        self.assertEqual(accepted, Path(text["global_negative_categories"]).resolve())
+        with tempfile.TemporaryDirectory(prefix="pilot_eval_outside_") as directory:
+            outside = Path(directory) / "cats.json"
+            outside.write_bytes(accepted.read_bytes())
+            with self.assertRaisesRegex(ValueError, "outside an allowed pilot root"):
+                eval_pilot.locked_evaluation_text_input(
+                    outside, text["global_negative_categories_sha256"], "global_negative_categories")
+
+    def test_eval_output_scope_is_strictly_robust_runs_eval(self):
+        allowed = eval_pilot.EVAL_OUTPUT_ROOT / "new_run"
+        self.assertEqual(eval_pilot.evaluation_output(allowed), allowed.resolve())
+        for outside in (PILOT / "runs" / "new_run", eval_pilot.BASELINE_PILOT / "runs" / "eval" / "new_run"):
+            with self.subTest(outside=outside), self.assertRaisesRegex(ValueError, "Evaluation output must be inside"):
+                eval_pilot.evaluation_output(outside)
 
     def test_fixed_ap_uses_module_invocation(self):
         annotation = Path("/tmp/annotations.json")

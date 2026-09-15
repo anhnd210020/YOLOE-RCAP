@@ -16,13 +16,16 @@ import subprocess
 import sys
 import types
 
-from make_subset import inside_pilot, sha256_file
+from make_subset import sha256_file
 from pilot_grounding import read_lock
 from prepare_text_embeddings import verify_evaluation
-from pilot_text import verify_text_artifacts
 
 PILOT = Path(__file__).resolve().parents[1]
 ROOT = Path(__file__).resolve().parents[3]
+BASELINE_PILOT = ROOT.parent / "YOLOE-RCAP" / "pilot" / "v8s_10pct_v1"
+DATASET_LOCK = PILOT / "PILOT_DATASET_LOCK.json"
+DATASET_LOCK_SHA256 = "8b7fad638f8b16dc97cca3ad9640d0d12b0b9413ca69be98afa148ea6175f058"
+EVAL_OUTPUT_ROOT = PILOT / "runs" / "eval"
 LVIS = ROOT.parent / "datasets" / "lvis"
 BASELINE_VALIDATOR = ROOT / "reproducibility/yoloe_v8_sml_20260905/scripts/bbox_inference.py"
 BASELINE_VALIDATOR_SHA256 = "325ffb30892f732a9b906c18cd8d7ce922fd9f248a1c46c584460dba724dd15e"
@@ -34,17 +37,77 @@ AR_METRICS = {"all": "AR", "s": "ARs", "m": "ARm", "l": "ARl"}
 PRIMARY_AP_METRICS = ("AP", "APr", "APc", "APf")
 
 
+def locked_evaluation_text_input(raw, expected_sha256, label):
+    """Verify one lock-pinned text input without using the training output guard."""
+    path = Path(raw)
+    if not path.is_absolute():
+        raise ValueError(f"Locked evaluation text path must be absolute: {label}")
+    try:
+        path = path.resolve(strict=True)
+    except FileNotFoundError as error:
+        raise FileNotFoundError(f"Required locked evaluation text input missing: {path}") from error
+    allowed_roots = (PILOT.resolve(), BASELINE_PILOT.resolve())
+    if not any(path == root or root in path.parents for root in allowed_roots):
+        raise ValueError(f"Locked evaluation text input is outside an allowed pilot root: {path}")
+    if not path.is_file():
+        raise ValueError(f"Locked evaluation text input must be a file: {path}")
+    if sha256_file(path) != expected_sha256:
+        raise ValueError(f"Locked evaluation text input SHA256 mismatch: {path}")
+    return path
+
+
+def verify_evaluation_text_artifacts(entry):
+    """Evaluation-local verifier for artifacts named by the exact pinned lock."""
+    if entry.get("text_model") != "mobileclip:blt":
+        raise ValueError("Pilot text model must be mobileclip:blt")
+    if entry.get("global_negative_threshold") != 10:
+        raise ValueError("Pilot global negative threshold must be 10")
+    pairs = (
+        ("mobileclip_checkpoint", "mobileclip_checkpoint_sha256"),
+        ("train_label_embeddings", "train_label_embeddings_sha256"),
+        ("global_negative_categories", "global_negative_categories_sha256"),
+        ("global_negative_embeddings", "global_negative_embeddings_sha256"),
+    )
+    paths = {}
+    for path_key, hash_key in pairs:
+        raw, expected_hash = entry.get(path_key), entry.get(hash_key)
+        if not raw or not expected_hash:
+            raise ValueError(f"Text lock missing {path_key} or {hash_key}")
+        paths[path_key] = locked_evaluation_text_input(raw, expected_hash, path_key)
+    if paths["mobileclip_checkpoint"].name != "mobileclip_blt.pt":
+        raise ValueError("Official MobileCLIP expects checkpoint basename mobileclip_blt.pt")
+    cats = json.loads(paths["global_negative_categories"].read_text(encoding="utf-8"))
+    if not isinstance(cats, list) or len(cats) != entry.get("global_negative_count") or len(cats) < 80:
+        raise ValueError("Pilot global negative categories must match lock and contain at least 80 names")
+    return entry
+
+
+def evaluation_output(path):
+    """Confine generated evaluator state to this worktree's runs/eval tree."""
+    output = Path(path).resolve()
+    root = EVAL_OUTPUT_ROOT.resolve()
+    if output == root or root not in output.parents:
+        raise ValueError(f"Evaluation output must be inside {root}: {output}")
+    return output
+
+
 def preflight(args):
     """Verify immutable inputs and the output reservation before loading a model."""
     checkpoint = Path(args.checkpoint).resolve(strict=True)
     if not checkpoint.is_file():
         raise ValueError("--checkpoint must be a file")
     checkpoint_sha256 = sha256_file(checkpoint)
-    lock = read_lock(inside_pilot(args.lock))
+    lock_path = Path(args.lock).resolve(strict=True)
+    if lock_path != DATASET_LOCK.resolve():
+        raise ValueError(f"--lock must be the robust-worktree pilot lock: {DATASET_LOCK}")
+    lock_sha256 = sha256_file(lock_path)
+    if lock_sha256 != DATASET_LOCK_SHA256:
+        raise ValueError("Pilot dataset lock SHA256 mismatch")
+    lock = read_lock(lock_path)
     if lock.get("version") != "v1" or lock.get("pilot_id") != "yoloe-v8s-10pct-v1":
         raise ValueError("Wrong pilot dataset lock")
     evaluation = verify_evaluation(lock["evaluation"])
-    verify_text_artifacts(lock["text_artifacts"])
+    verify_evaluation_text_artifacts(lock["text_artifacts"])
     if Path(evaluation["minival_list"]).resolve() != (LVIS / "minival.txt").resolve():
         raise ValueError("Locked minival list does not match official lvis.yaml layout")
     annotation = (LVIS / "annotations/lvis_v1_minival.json").resolve()
@@ -62,7 +125,7 @@ def preflight(args):
         raise ValueError("Minival annotation image IDs or categories differ from expected full LVIS")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", args.name):
         raise ValueError("--name must be a simple directory name")
-    output = inside_pilot(PILOT / "runs" / "eval" / args.name)
+    output = evaluation_output(EVAL_OUTPUT_ROOT / args.name)
     if output.exists():
         raise FileExistsError(f"Refusing existing evaluation output directory: {output}")
     if not BASELINE_VALIDATOR.is_file():
@@ -74,7 +137,7 @@ def preflight(args):
         raise ValueError("Validated baseline bbox evaluator source differs from its manifest")
     if not FIXED_AP.is_file():
         raise FileNotFoundError(FIXED_AP)
-    return checkpoint, checkpoint_sha256, lock, annotation, paths, ids, output
+    return checkpoint, checkpoint_sha256, lock_path, lock_sha256, lock, annotation, paths, ids, output
 
 
 def import_validated_validator():
@@ -218,7 +281,7 @@ def parse_fixed_ap(output):
 
 
 def evaluate(args):
-    checkpoint, checkpoint_hash, lock, annotation, paths, ids, output = preflight(args)
+    checkpoint, checkpoint_hash, lock_path, lock_hash, lock, annotation, paths, ids, output = preflight(args)
     provenance = evaluator_provenance()
     from ultralytics import YOLOE
     validator_class = import_validated_validator()
@@ -271,6 +334,7 @@ def evaluate(args):
     metrics = parse_fixed_ap(result.stdout + "\n" + result.stderr)
     payload = {"protocol": "full LVIS v1 minival bbox Fixed AP; validated segmentation bbox-only serializer",
                "images_evaluated": EXPECTED, "checkpoint": str(checkpoint), "checkpoint_sha256": checkpoint_hash,
+               "dataset_lock": str(lock_path), "dataset_lock_sha256": lock_hash,
                "model": identity, "validator_source": str(BASELINE_VALIDATOR),
                "validator_manifest_lf_sha256": BASELINE_VALIDATOR_SHA256,
                "validator_checkout_sha256": sha256_file(BASELINE_VALIDATOR), "fixed_ap_tool": str(FIXED_AP),
