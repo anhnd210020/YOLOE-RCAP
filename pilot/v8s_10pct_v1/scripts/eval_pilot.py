@@ -27,7 +27,11 @@ LVIS = ROOT.parent / "datasets" / "lvis"
 BASELINE_VALIDATOR = ROOT / "reproducibility/yoloe_v8_sml_20260905/scripts/bbox_inference.py"
 BASELINE_VALIDATOR_SHA256 = "325ffb30892f732a9b906c18cd8d7ce922fd9f248a1c46c584460dba724dd15e"
 FIXED_AP = ROOT / "tools/eval_fixed_ap.py"
+FIXED_AP_MODULE = "tools.eval_fixed_ap"
 EXPECTED = 4809
+AP_METRICS = ("AP", "AP50", "AP75", "APs", "APm", "APl", "APr", "APc", "APf")
+AR_METRICS = {"all": "AR", "s": "ARs", "m": "ARm", "l": "ARl"}
+PRIMARY_AP_METRICS = ("AP", "APr", "APc", "APf")
 
 
 def preflight(args):
@@ -142,22 +146,80 @@ def check_model_identity(model):
             "parameters": sum(p.numel() for p in network.parameters())}
 
 
+def fixed_ap_command(annotation, prediction):
+    """Build an import-safe invocation which cannot let tools/lvis shadow lvis-api."""
+    return [sys.executable, "-m", FIXED_AP_MODULE, str(annotation), str(prediction), "--type", "bbox"]
+
+
+def evaluator_provenance():
+    """Identify both the evaluator bytes and the checkout in which they ran."""
+    git_sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
+                             capture_output=True, check=True).stdout.strip()
+    git_branch = subprocess.run(["git", "branch", "--show-current"], cwd=ROOT, text=True,
+                                capture_output=True, check=True).stdout.strip()
+    return {"eval_pilot_sha256": sha256_file(Path(__file__).resolve()),
+            "evaluation_git_sha": git_sha, "evaluation_git_branch": git_branch or "DETACHED"}
+
+
 def parse_fixed_ap(output):
-    lines = [re.sub(r"\x1b\[[0-9;]*m", "", line).split("copypaste:", 1)[-1].strip()
-             for line in output.splitlines() if "copypaste:" in line]
-    for header, values in zip(lines, lines[1:]):
-        keys = header.split(",")
-        if all(key in keys for key in ("AP", "APr", "APc", "APf")):
-            metrics = dict(zip(keys, (float(v) for v in values.split(","))))
-            selected = {key: metrics[key] for key in ("AP", "APr", "APc", "APf")}
-            if not all(math.isfinite(value) and 0 <= value <= 100 for value in selected.values()):
-                raise ValueError("Fixed AP values are not finite AP percentages")
-            return selected
-    raise ValueError("Official Fixed AP tool did not emit AP/APr/APc/APf copypaste values")
+    """Parse the official AP-point block and recall fractions into AP-point units."""
+    clean_lines = [re.sub(r"\x1b\[[0-9;]*m", "", line).strip() for line in output.splitlines()]
+    copy_lines = [line.split("copypaste:", 1)[1].strip()
+                  for line in clean_lines if "copypaste:" in line]
+    ap_metrics = None
+    for header, values in zip(copy_lines, copy_lines[1:]):
+        keys = [key.strip() for key in header.split(",")]
+        if "AP" not in keys:
+            continue
+        if len(keys) != len(set(keys)) or any(key not in AP_METRICS for key in keys):
+            raise ValueError("Malformed Fixed AP copypaste metric header")
+        missing = [key for key in AP_METRICS if key not in keys]
+        if missing:
+            raise ValueError(f"Fixed AP copypaste output is missing metrics: {', '.join(missing)}")
+        value_tokens = [value.strip() for value in values.split(",")]
+        if len(value_tokens) != len(keys):
+            raise ValueError("Fixed AP copypaste metric/value counts differ")
+        try:
+            parsed = dict(zip(keys, (float(value) for value in value_tokens)))
+        except ValueError as error:
+            raise ValueError("Fixed AP copypaste output contains a non-numeric value") from error
+        ap_metrics = {key: parsed[key] for key in AP_METRICS}
+        break
+    if ap_metrics is None:
+        raise ValueError("Official Fixed AP tool did not emit its complete AP copypaste values")
+
+    recall_pattern = re.compile(
+        r"Average Recall\s+\(AR\)\s+@\[[^]]*\|\s*area=\s*(all|s|m|l)\s*\|[^]]*\]\s*=\s*(\S+)\s*$"
+    )
+    recall_metrics = {}
+    for line in clean_lines:
+        match = recall_pattern.search(line)
+        if not match:
+            continue
+        key = AR_METRICS[match.group(1)]
+        if key in recall_metrics:
+            raise ValueError(f"Fixed AP output contains duplicate {key} values")
+        try:
+            recall_metrics[key] = round(float(match.group(2)) * 100, 10)
+        except ValueError as error:
+            raise ValueError(f"Fixed AP output contains a non-numeric {key} value") from error
+    missing_recall = [key for key in AR_METRICS.values() if key not in recall_metrics]
+    if missing_recall:
+        raise ValueError(f"Fixed AP output is missing recall metrics: {', '.join(missing_recall)}")
+
+    metrics = {**ap_metrics, **recall_metrics}
+    invalid = [key for key, value in metrics.items()
+               if not math.isfinite(value) or not 0 <= value <= 100]
+    if invalid:
+        raise ValueError(f"Fixed AP values are not finite percentages in [0, 100]: {', '.join(invalid)}")
+    if any(key not in metrics for key in PRIMARY_AP_METRICS):
+        raise ValueError("Fixed AP output omitted legacy AP/APr/APc/APf metrics")
+    return metrics
 
 
 def evaluate(args):
     checkpoint, checkpoint_hash, lock, annotation, paths, ids, output = preflight(args)
+    provenance = evaluator_provenance()
     from ultralytics import YOLOE
     validator_class = import_validated_validator()
     model = YOLOE(str(checkpoint))
@@ -204,7 +266,7 @@ def evaluate(args):
     allowed_ids = set(ids)
     if not isinstance(rows, list) or not rows or any(row.get("image_id") not in allowed_ids for row in rows):
         raise ValueError("BBox predictions are empty or contain foreign image IDs")
-    command = [sys.executable, str(FIXED_AP), str(annotation), str(prediction), "--type", "bbox"]
+    command = fixed_ap_command(annotation, prediction)
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=True)
     metrics = parse_fixed_ap(result.stdout + "\n" + result.stderr)
     payload = {"protocol": "full LVIS v1 minival bbox Fixed AP; validated segmentation bbox-only serializer",
@@ -213,6 +275,7 @@ def evaluate(args):
                "validator_manifest_lf_sha256": BASELINE_VALIDATOR_SHA256,
                "validator_checkout_sha256": sha256_file(BASELINE_VALIDATOR), "fixed_ap_tool": str(FIXED_AP),
                "fixed_ap_tool_sha256": sha256_file(FIXED_AP),
+               **provenance,
                "minival_list_sha256": lock["evaluation"]["minival_list_sha256"],
                "minival_annotation_sha256": lock["evaluation"]["minival_annotation_sha256"],
                "predictions": str(prediction), "predictions_sha256": sha256_file(prediction),

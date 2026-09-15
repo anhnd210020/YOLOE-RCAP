@@ -20,6 +20,23 @@ import train_pilot
 import verify_subset
 
 PILOT = Path(__file__).resolve().parents[1]
+FIXED_AP_OUTPUT = """\
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= -1 catIds=all] = 0.197
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= -1 catIds=all] = 0.277
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= -1 catIds=all] = 0.211
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     s | maxDets= -1 catIds=all] = 0.125
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     m | maxDets= -1 catIds=all] = 0.270
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=     l | maxDets= -1 catIds=all] = 0.379
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= -1 catIds=  r] = 0.133
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= -1 catIds=  c] = 0.188
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= -1 catIds=  f] = 0.216
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= -1 catIds=all] = 0.342
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     s | maxDets= -1 catIds=all] = 0.184
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     m | maxDets= -1 catIds=all] = 0.413
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=     l | maxDets= -1 catIds=all] = 0.569
+copypaste: AP,AP50,AP75,APs,APm,APl,APr,APc,APf
+copypaste: 19.66,27.70,21.09,12.53,26.98,37.86,13.26,18.81,21.57
+"""
 
 
 class PilotPreparationTests(unittest.TestCase):
@@ -178,9 +195,39 @@ class PilotPreparationTests(unittest.TestCase):
             args.checkpoint = str(Path(directory) / "missing.pt")
             with self.assertRaises(FileNotFoundError):
                 eval_pilot.preflight(args)
-            self.assertEqual(eval_pilot.parse_fixed_ap("copypaste: AP,AP50,APr,APc,APf\n"
-                                                       "copypaste: 12.30,22.00,1.00,2.00,3.00"),
-                             {"AP": 12.3, "APr": 1.0, "APc": 2.0, "APf": 3.0})
+
+    def test_fixed_ap_uses_module_invocation(self):
+        annotation = Path("/tmp/annotations.json")
+        prediction = Path("/tmp/predictions.json")
+        command = eval_pilot.fixed_ap_command(annotation, prediction)
+        self.assertEqual(command, [sys.executable, "-m", "tools.eval_fixed_ap", str(annotation),
+                                   str(prediction), "--type", "bbox"])
+        self.assertNotIn(str(eval_pilot.FIXED_AP), command)
+
+    def test_fixed_ap_parser_extracts_complete_actual_summary(self):
+        metrics = eval_pilot.parse_fixed_ap(FIXED_AP_OUTPUT)
+        self.assertEqual(metrics, {
+            "AP": 19.66, "AP50": 27.7, "AP75": 21.09, "APs": 12.53,
+            "APm": 26.98, "APl": 37.86, "APr": 13.26, "APc": 18.81,
+            "APf": 21.57, "AR": 34.2, "ARs": 18.4, "ARm": 41.3, "ARl": 56.9,
+        })
+        self.assertTrue(set(eval_pilot.PRIMARY_AP_METRICS) <= metrics.keys())
+
+    def test_fixed_ap_parser_rejects_malformed_missing_nonfinite_and_out_of_range(self):
+        invalid_outputs = {
+            "malformed": FIXED_AP_OUTPUT.replace(
+                "19.66,27.70,21.09,12.53,26.98,37.86,13.26,18.81,21.57",
+                "19.66,27.70"),
+            "missing": FIXED_AP_OUTPUT.replace(
+                "copypaste: AP,AP50,AP75,APs,APm,APl,APr,APc,APf",
+                "copypaste: AP,AP50,AP75,APs,APm,APl,APr,APc"),
+            "nonfinite_ap": FIXED_AP_OUTPUT.replace("19.66,27.70", "nan,27.70"),
+            "nonfinite_ar": FIXED_AP_OUTPUT.replace("= 0.342", "= inf"),
+            "out_of_range": FIXED_AP_OUTPUT.replace("19.66,27.70", "100.01,27.70"),
+        }
+        for name, output in invalid_outputs.items():
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                eval_pilot.parse_fixed_ap(output)
 
     def test_validated_bbox_class_is_reused(self):
         tree = ast.parse(eval_pilot.BASELINE_VALIDATOR.read_text(encoding="utf-8"))
